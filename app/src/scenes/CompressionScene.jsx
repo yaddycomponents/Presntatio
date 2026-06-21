@@ -44,7 +44,7 @@ export default function CompressionScene() {
     <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '3vw' }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: 18 }}>
         <Diamond size={9} color={tokens.text.eyebrow} delay={0.3} />
-        <Kicker delay={0.2}>What "transferred" means</Kicker>
+        <Kicker delay={0.2}>The Payoff · Reading the numbers honestly</Kicker>
         <Diamond size={9} color={tokens.text.eyebrow} delay={0.3} />
       </div>
 

@@ -31,11 +31,11 @@ export default function RulesScene() {
     <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '2vw' }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
         <Diamond size={8} color={tokens.text.eyebrow} delay={0.3} />
-        <Kicker delay={0.2}>Part B — Takeaways</Kicker>
+        <Kicker delay={0.2}>The Rebuild · Principles</Kicker>
         <Diamond size={8} color={tokens.text.eyebrow} delay={0.3} />
       </div>
 
-      <MaskReveal delay={0.4} size={tokens.type.h2}>Rules we learned</MaskReveal>
+      <MaskReveal delay={0.4} size={tokens.type.h2}>Principles we'll keep</MaskReveal>
 
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 18, width: 'min(880px, 92vw)', marginTop: '1vw' }}>
         {rules.map((r, i) => (

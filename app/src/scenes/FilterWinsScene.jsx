@@ -31,11 +31,11 @@ export default function FilterWinsScene() {
     <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '1.6vw' }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
         <Diamond size={8} color={tokens.text.eyebrow} delay={0.3} />
-        <Kicker delay={0.2}>Part D — Architecture wins</Kicker>
+        <Kicker delay={0.2}>The Rebuild · Architecture</Kicker>
         <Diamond size={8} color={tokens.text.eyebrow} delay={0.3} />
       </div>
 
-      <MaskReveal delay={0.4} size={tokens.type.h2}>More than fewer lines</MaskReveal>
+      <MaskReveal delay={0.4} size={tokens.type.h2}>Architecture that compounds</MaskReveal>
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: 20, marginTop: '1vw', width: 'min(680px, 90vw)' }}>
         {wins.map((w, i) => (

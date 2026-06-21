@@ -17,7 +17,7 @@ export default function OneLineScene() {
     <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '0.5vw' }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: 18, marginBottom: '2vw' }}>
         <Diamond size={9} color={tokens.text.onDarkMuted} delay={0.3} />
-        <Kicker delay={0.2} color={tokens.text.onDarkMuted}>In one line</Kicker>
+        <Kicker delay={0.2} color={tokens.text.onDarkMuted}>The bottom line</Kicker>
         <Diamond size={9} color={tokens.text.onDarkMuted} delay={0.3} />
       </div>
 

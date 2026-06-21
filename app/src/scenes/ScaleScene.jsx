@@ -37,7 +37,7 @@ function CodeBar({ sign, value, barColor, numColor, dir, width, delay }) {
 export default function ScaleScene() {
   return (
     <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '2.4vw' }}>
-      <Kicker delay={0.2}>The scope of the change</Kicker>
+      <Kicker delay={0.2}>The scale of the rebuild</Kicker>
 
       <div style={{ display: 'flex', gap: 'clamp(40px, 8vw, 130px)' }}>
         <Stat value={229} label="commits" delay={0.4} />

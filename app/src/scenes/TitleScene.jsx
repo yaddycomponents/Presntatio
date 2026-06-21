@@ -10,7 +10,7 @@ export default function TitleScene() {
       <Frame delay={0.05} color={tokens.text.onDark} />
 
       <div style={{ textAlign: 'center', zIndex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.35em' }}>
-        <Kicker delay={0.9} color={tokens.text.onDarkMuted}>The Modernization of</Kicker>
+        <Kicker delay={0.9} color={tokens.text.onDarkMuted}>A Platform Modernization Story</Kicker>
 
         <div>
           <MaskReveal delay={0.4} size={tokens.type.hero} color={tokens.text.onDark}>Heisenberg</MaskReveal>
@@ -21,7 +21,7 @@ export default function TitleScene() {
           style={{ width: 'min(38vw, 460px)', height: 2, background: tokens.text.onDarkMuted, transformOrigin: 'center', marginTop: '0.5em' }}
         />
 
-        <Kicker delay={1.5} color={tokens.text.onDarkMuted}>A Tech-Debt Story</Kicker>
+        <Kicker delay={1.5} color={tokens.text.onDarkMuted}>Faster · Lighter · Built to Scale</Kicker>
       </div>
     </div>
   )

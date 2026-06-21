@@ -34,11 +34,11 @@ export default function CustomerImpactScene() {
     <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '1.4vw' }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
         <Diamond size={8} color={tokens.text.eyebrow} delay={0.3} />
-        <Kicker delay={0.2}>Part A — Impact</Kicker>
+        <Kicker delay={0.2}>The Payoff · For customers</Kicker>
         <Diamond size={8} color={tokens.text.eyebrow} delay={0.3} />
       </div>
 
-      <MaskReveal delay={0.4} size={tokens.type.h2}>What the user feels</MaskReveal>
+      <MaskReveal delay={0.4} size={tokens.type.h2}>What customers feel now</MaskReveal>
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: 16, marginTop: '1vw', width: 'min(640px, 86vw)' }}>
         {wins.map((w, i) => (

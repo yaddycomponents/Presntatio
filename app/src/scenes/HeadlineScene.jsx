@@ -61,7 +61,7 @@ export default function HeadlineScene() {
     <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '2.2vw' }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: 18 }}>
         <Diamond size={9} color={tokens.text.eyebrow} delay={0.3} />
-        <Kicker delay={0.2}>The Headline</Kicker>
+        <Kicker delay={0.2}>The Payoff · By the numbers</Kicker>
         <Diamond size={9} color={tokens.text.eyebrow} delay={0.3} />
       </div>
 

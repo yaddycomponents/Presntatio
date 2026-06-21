@@ -1,13 +1,13 @@
 import Chapter from '../components/Chapter'
 
-export const ChapterB = () => (
-  <Chapter part="Part B" title="Bundle Optimization" subtitle="The centerpiece speed win" letter="B" />
+export const ChapterProblem = () => (
+  <Chapter part="Act I" title="The Weight of Growth" subtitle="When every win quietly adds a little drag" />
 )
 
-export const ChapterC = () => (
-  <Chapter part="Part C" title="Zero-Runtime CSS" subtitle="Styling out of JavaScript" letter="C" />
+export const ChapterRebuild = () => (
+  <Chapter part="Act II" title="The Rebuild" subtitle="Deliberate moves to take the weight back off" />
 )
 
-export const ChapterD = () => (
-  <Chapter part="Part D" title="Filter Revamp" subtitle="One system, fifteen pages" letter="D" />
+export const ChapterPayoff = () => (
+  <Chapter part="Act III" title="The Payoff" subtitle="What it delivered — for customers and the team" />
 )

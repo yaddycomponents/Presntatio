@@ -25,7 +25,7 @@ export default function FilterKeyboardScene() {
     <div style={{ position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '2vw' }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
         <Diamond size={8} color={tokens.text.eyebrow} delay={0.3} />
-        <Kicker delay={0.2}>Part D — Faster to use</Kicker>
+        <Kicker delay={0.2}>The Rebuild · Experience</Kicker>
         <Diamond size={8} color={tokens.text.eyebrow} delay={0.3} />
       </div>
 

@@ -10,7 +10,7 @@ export default function ClosingScene() {
       <Frame delay={0.05} color={tokens.text.onDark} />
 
       <div style={{ textAlign: 'center', zIndex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.4em' }}>
-        <Kicker delay={0.8} color={tokens.text.onDarkMuted}>Shipped on new-bundle</Kicker>
+        <Kicker delay={0.8} color={tokens.text.onDarkMuted}>The platform, re-engineered</Kicker>
 
         <MaskReveal delay={0.4} size={tokens.type.hero} color={tokens.text.onDark}>Heisenberg</MaskReveal>
 
@@ -23,7 +23,7 @@ export default function ClosingScene() {
           2.6× faster · 5× lighter · one filter system · less code
         </Line>
         <Line delay={1.9} size={tokens.type.label} color={tokens.text.onDarkMuted}>
-          Thank you.
+          Built for what's next.
         </Line>
       </div>
     </div>
