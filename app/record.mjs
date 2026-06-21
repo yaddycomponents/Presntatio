@@ -15,6 +15,7 @@
 import { build, preview } from 'vite'
 import { chromium } from 'playwright'
 import { spawn, spawnSync } from 'node:child_process'
+import ffmpegStatic from 'ffmpeg-static'
 
 const FPS = Number(process.env.FPS || 30)
 const SCALE = Number(process.env.SCALE || 2)
@@ -23,8 +24,13 @@ const TAIL_S = 8
 const frameMs = 1000 / FPS
 const maxFrames = 260 * FPS
 
-if (spawnSync('ffmpeg', ['-version']).status !== 0) {
-  console.error('✗ ffmpeg not found. Install it (brew install ffmpeg) — it is required for the crisp render.')
+// Prefer the bundled static binary; fall back to a system ffmpeg.
+const FFMPEG = (ffmpegStatic && spawnSync(ffmpegStatic, ['-version']).status === 0)
+  ? ffmpegStatic
+  : (spawnSync('ffmpeg', ['-version']).status === 0 ? 'ffmpeg' : null)
+
+if (!FFMPEG) {
+  console.error('✗ no ffmpeg available (ffmpeg-static failed and none on PATH). Run: npm i -D ffmpeg-static')
   process.exit(1)
 }
 
@@ -40,12 +46,13 @@ const browser = await chromium.launch({ args: [`--force-device-scale-factor=${SC
 const context = await browser.newContext({ viewport: { width: 1920, height: 1080 }, deviceScaleFactor: SCALE })
 const page = await context.newPage()
 await page.clock.install({ time: 0 })
+await page.clock.pauseAt(1) // freeze wall-clock; only runFor advances time (deterministic pacing)
 await page.goto(url, { waitUntil: 'load', timeout: 60000 })
 await page.waitForSelector('[data-scene]')
 
 console.log(`▸ rendering ${url}  (${FPS}fps · ${SCALE}x capture → 1080p)`)
 
-const ff = spawn('ffmpeg', [
+const ff = spawn(FFMPEG, [
   '-y', '-f', 'image2pipe', '-framerate', String(FPS), '-i', '-',
   '-vf', 'scale=1920:1080:flags=lanczos',
   '-c:v', 'libx264', '-crf', '18', '-preset', 'slow', '-pix_fmt', 'yuv420p', OUT,
