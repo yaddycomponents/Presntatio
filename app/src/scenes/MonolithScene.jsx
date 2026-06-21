@@ -60,21 +60,21 @@ export default function MonolithScene() {
       <div style={{ display: 'flex', width: W, marginTop: '0.4vw' }}>
         <div style={{ width: MONO, textAlign: 'center' }}>
           <motion.div {...fadeIn({ delay: 1.0 })}>
-            <div style={{ fontFamily: tokens.font.mono, fontSize: tokens.type.eyebrow, letterSpacing: tokens.track.label, textTransform: 'uppercase', color: tokens.text.muted }}>Production · 18 files</div>
-            <div style={{ fontFamily: tokens.font.mono, fontWeight: 700, fontSize: tokens.type.metric, color: tokens.data.beforeNum, marginTop: 2 }}>13 MB</div>
+            <div style={{ fontFamily: tokens.font.mono, fontSize: tokens.type.eyebrow, letterSpacing: tokens.track.label, textTransform: 'uppercase', color: tokens.text.muted }}>dev-master · eager boot</div>
+            <div style={{ fontFamily: tokens.font.mono, fontWeight: 700, fontSize: tokens.type.metric, color: tokens.data.beforeNum, marginTop: 2 }}>7.7 MB gz</div>
           </motion.div>
         </div>
         <div style={{ flex: 1 }} />
         <div style={{ width: GRID_W + 30, textAlign: 'center' }}>
           <motion.div {...fadeIn({ delay: 2.8 })}>
-            <div style={{ fontFamily: tokens.font.mono, fontSize: tokens.type.eyebrow, letterSpacing: tokens.track.label, textTransform: 'uppercase', color: tokens.text.muted }}>New Bundle · 249 chunks</div>
-            <div style={{ fontFamily: tokens.font.mono, fontWeight: 700, fontSize: tokens.type.metric, color: tokens.data.afterNum, marginTop: 2 }}>1.29 MB eager</div>
+            <div style={{ fontFamily: tokens.font.mono, fontSize: tokens.type.eyebrow, letterSpacing: tokens.track.label, textTransform: 'uppercase', color: tokens.text.muted }}>new-bundle · 249 chunks</div>
+            <div style={{ fontFamily: tokens.font.mono, fontWeight: 700, fontSize: tokens.type.metric, color: tokens.data.afterNum, marginTop: 2 }}>1.2 MB gz</div>
           </motion.div>
         </div>
       </div>
 
       <Line delay={3.2} size={tokens.type.label} color={tokens.text.muted}>
-        Split by route & feature — heavy libraries isolated, loaded on demand.
+        Split by route & feature — an 8.5× smaller boot graph (−85%), loaded on demand.
       </Line>
     </div>
   )

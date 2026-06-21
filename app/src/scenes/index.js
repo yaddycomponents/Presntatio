@@ -10,6 +10,7 @@ import DeveloperImpactScene from './DeveloperImpactScene'
 import { ChapterProblem, ChapterRebuild, ChapterPayoff } from './chapters'
 import BundleScene from './BundleScene'
 import MonolithScene from './MonolithScene'
+import ChunkBarsScene from './ChunkBarsScene'
 import EagerBootScene from './EagerBootScene'
 import BytesWentScene from './BytesWentScene'
 import CaveatsScene from './CaveatsScene'
@@ -37,6 +38,7 @@ export const scenes = [
   { id: 'chapter-rebuild', bg: tokens.bg.title, dur: 4.5, Component: ChapterRebuild },
   { id: 'scale', bg: tokens.bg.primary, dur: 5.5, Component: ScaleScene },
   { id: 'monolith', bg: tokens.bg.primary, dur: 6.5, Component: MonolithScene },
+  { id: 'chunk-bars', bg: tokens.bg.primary, dur: 6.5, Component: ChunkBarsScene },
   { id: 'eager-boot', bg: tokens.bg.primary, dur: 6.5, Component: EagerBootScene },
   { id: 'preload', bg: tokens.bg.primary, dur: 6.5, Component: PreloadScene },
   { id: 'import-chain', bg: tokens.bg.primary, dur: 6, Component: ImportChainScene },
