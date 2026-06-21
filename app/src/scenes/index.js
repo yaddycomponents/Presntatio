@@ -24,6 +24,11 @@ import FilterConsolidationScene from './FilterConsolidationScene'
 import FilterUXScene from './FilterUXScene'
 import FilterKeyboardScene from './FilterKeyboardScene'
 import FilterWinsScene from './FilterWinsScene'
+import WindowedScene from './WindowedScene'
+import VirtualListScene from './VirtualListScene'
+import UrlStateScene from './UrlStateScene'
+import UpgradesScene from './UpgradesScene'
+import HardeningScene from './HardeningScene'
 import ClosingScene from './ClosingScene'
 
 export const scenes = [
@@ -47,10 +52,15 @@ export const scenes = [
   { id: 'rules', bg: tokens.bg.primary, dur: 5.5, Component: RulesScene },
   { id: 'css-flow', bg: tokens.bg.primary, dur: 8, Component: CssFlowScene },
   { id: 'layer', bg: tokens.bg.primary, dur: 8.5, Component: LayerScene },
-  { id: 'consolidation', bg: tokens.bg.primary, dur: 6, Component: FilterConsolidationScene },
+  { id: 'consolidation', bg: tokens.bg.primary, dur: 8, Component: FilterConsolidationScene },
   { id: 'filter-ux', bg: tokens.bg.primary, dur: 6, Component: FilterUXScene },
   { id: 'filter-keyboard', bg: tokens.bg.primary, dur: 6, Component: FilterKeyboardScene },
   { id: 'filter-wins', bg: tokens.bg.primary, dur: 5.5, Component: FilterWinsScene },
+  { id: 'windowed', bg: tokens.bg.primary, dur: 6.5, Component: WindowedScene },
+  { id: 'virtual-list', bg: tokens.bg.primary, dur: 6, Component: VirtualListScene },
+  { id: 'url-state', bg: tokens.bg.primary, dur: 9, Component: UrlStateScene },
+  { id: 'upgrades', bg: tokens.bg.primary, dur: 6, Component: UpgradesScene },
+  { id: 'hardening', bg: tokens.bg.primary, dur: 6, Component: HardeningScene },
 
   // — Act III: The Payoff —
   { id: 'chapter-payoff', bg: tokens.bg.title, dur: 4.5, Component: ChapterPayoff },

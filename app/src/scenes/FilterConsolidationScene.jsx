@@ -47,7 +47,7 @@ export default function FilterConsolidationScene() {
               key={p.label}
               initial={{ opacity: 0, scale: 0.6, x: 0, y: 0 }}
               animate={{ opacity: [0, 1, 1, 0], scale: [0.6, 1, 1, 0.4], x: [0, 0, 0, dx], y: [0, 0, 0, dy] }}
-              transition={{ delay: 1.0 + i * 0.07, duration: 2.8, times: [0, 0.1, 0.45, 1], ease: ease.inOut }}
+              transition={{ delay: 1.0 + i * 0.09, duration: 4.2, times: [0, 0.1, 0.5, 1], ease: ease.inOut }}
               style={{ position: 'absolute', left: p.x, top: p.y, width: BW, height: BH, border: `1.5px solid ${tokens.data.beforeNum}`, background: 'rgba(168,83,106,0.08)', borderRadius: 6, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
             >
               <span style={{ fontFamily: tokens.font.mono, fontSize: 11, color: tokens.data.beforeNum }}>{p.label}</span>
@@ -58,7 +58,7 @@ export default function FilterConsolidationScene() {
         <motion.div
           initial={{ opacity: 0, scale: 0.5 }}
           animate={{ opacity: 1, scale: 1 }}
-          transition={{ delay: 2.6, duration: 0.8, ease: ease.out }}
+          transition={{ delay: 3.6, duration: 0.9, ease: ease.out }}
           style={{ position: 'absolute', left: CX - UW / 2, top: CY - UH / 2, width: UW, height: UH, border: `2px solid ${tokens.data.afterNum}`, background: 'rgba(91,125,119,0.12)', borderRadius: 10, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 6 }}
         >
           <span style={{ fontFamily: tokens.font.body, fontWeight: 600, fontSize: tokens.type.rowLabel, color: tokens.data.afterNum }}>GrowFilter</span>
@@ -66,14 +66,14 @@ export default function FilterConsolidationScene() {
         </motion.div>
       </div>
 
-      <motion.div {...fadeIn({ delay: 3.4 })} style={{ display: 'flex', alignItems: 'baseline', gap: 14, fontFamily: tokens.font.mono, fontWeight: 700 }}>
+      <motion.div {...fadeIn({ delay: 4.6 })} style={{ display: 'flex', alignItems: 'baseline', gap: 14, fontFamily: tokens.font.mono, fontWeight: 700 }}>
         <span style={{ fontSize: tokens.type.metric, color: tokens.data.afterNum }}>
-          −<CountUp to={12.2} decimals={1} suffix="k LOC" delay={3.4} duration={1.2} />
+          −<CountUp to={12.2} decimals={1} suffix="k LOC" delay={4.6} duration={1.2} />
         </span>
         <span style={{ fontSize: tokens.type.label, color: tokens.text.muted }}>≈ 65% of the filter layer</span>
       </motion.div>
 
-      <Line delay={4.0} size={tokens.type.label} color={tokens.text.primary}>
+      <Line delay={5.4} size={tokens.type.label} color={tokens.text.primary}>
         Now a bug is fixed once — and it's fixed on all fifteen.
       </Line>
     </div>
