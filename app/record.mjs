@@ -24,10 +24,13 @@ const base = server.resolvedUrls.local[0].replace(/\/$/, '')
 const url = `${base}/?play`
 console.log(`▸ recording ${url}`)
 
-const browser = await chromium.launch()
+// Render at 2x (retina) so text is crisp; record at 4K, then downscale to a
+// sharp 1080p with x264 (supersampling beats recording at native 1080p).
+const browser = await chromium.launch({ args: ['--force-device-scale-factor=2'] })
 const context = await browser.newContext({
   viewport: { width: 1920, height: 1080 },
-  recordVideo: { dir: 'video', size: { width: 1920, height: 1080 } },
+  deviceScaleFactor: 2,
+  recordVideo: { dir: 'video', size: { width: 3840, height: 2160 } },
 })
 const page = await context.newPage()
 await page.goto(url, { waitUntil: 'load', timeout: 60000 })
@@ -53,11 +56,14 @@ const webm = readdirSync('video')
 
 if (!webm) { console.log('✗ no video produced'); process.exit(1) }
 
-const ff = spawnSync('ffmpeg', ['-y', '-i', webm, '-c:v', 'libx264', '-crf', '20', '-pix_fmt', 'yuv420p', 'heisenberg.mp4'], { stdio: 'inherit' })
+const vf = 'scale=1920:1080:flags=lanczos,unsharp=5:5:0.4:5:5:0.0'
+const ffArgs = ['-y', '-i', webm, '-vf', vf, '-c:v', 'libx264', '-crf', '18', '-preset', 'slow', '-pix_fmt', 'yuv420p', 'heisenberg.mp4']
+const ff = spawnSync('ffmpeg', ffArgs, { stdio: 'inherit' })
 if (ff.status === 0) {
-  console.log('✓ heisenberg.mp4 ready')
+  console.log('✓ heisenberg.mp4 ready (crisp 1080p)')
 } else {
-  console.log(`✓ video saved: ${webm}`)
-  console.log('  (ffmpeg not found — convert with: ffmpeg -i ' + webm + ' -c:v libx264 -crf 20 -pix_fmt yuv420p heisenberg.mp4)')
+  console.log(`✓ video saved: ${webm}  (4K source)`)
+  console.log('  ffmpeg not found — install it (brew install ffmpeg), then:')
+  console.log(`  ffmpeg -i ${webm} -vf "${vf}" -c:v libx264 -crf 18 -preset slow -pix_fmt yuv420p heisenberg.mp4`)
 }
 process.exit(0)

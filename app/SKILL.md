@@ -116,9 +116,23 @@ import { fadeUp } from '../motion'
 
 ## Export as a video
 
-The deck is a web page, so you record it playing. Two ways:
+### Easiest — one command
+```bash
+cd app
+npx playwright install chromium   # one-time (downloads the browser)
+brew install ffmpeg               # one-time (converter + the step that sharpens text)
+npm run record                    # build → preview → record 4K → downscale → heisenberg.mp4
+```
+`npm run record` runs `record.mjs`: it builds, starts preview itself, records the full autoplay
+at **2× / 4K**, then downscales to a **crisp 1080p `heisenberg.mp4`** (supersampling from 4K is
+what keeps text sharp — recording at native 1080p looks blurry). No manual timing; it stops at
+the last scene automatically. Without ffmpeg you still get a 4K `.webm` + the convert command.
 
-### A. Screen recording (easiest, no setup)
+---
+
+### Manual alternatives
+
+### A. Screen recording (no tooling)
 1. `npm run build && npm run preview` (or just `npm run dev`).
 2. Open the deck with autoplay + go fullscreen:
    `http://localhost:4173/?play` then **Cmd-Ctrl-F** (Chrome fullscreen) — hides browser chrome.
