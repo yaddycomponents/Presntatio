@@ -23,11 +23,12 @@ const page = await context.newPage()
 await page.goto(URL, { waitUntil: 'load' })
 
 // wait until autoplay reaches the last scene
+// NOTE: waitForFunction signature is (fn, arg, options) — options MUST be the 3rd arg.
 await page.waitForFunction(() => {
   const el = document.querySelector('[data-scene]')
   if (!el) return false
   return Number(el.getAttribute('data-scene')) >= Number(el.getAttribute('data-scene-count')) - 1
-}, { timeout: 240000 })
+}, null, { timeout: 240000, polling: 500 })
 
 await page.waitForTimeout(TAIL_MS)
 
