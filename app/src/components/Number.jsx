@@ -1,5 +1,5 @@
-import { useEffect, useRef, useState } from 'react'
-import { animate, useInView } from 'framer-motion'
+import { useEffect, useState } from 'react'
+import { animate } from 'framer-motion'
 import { ease, dur, tokens } from '../theme'
 
 export default function CountUp({
@@ -11,12 +11,9 @@ export default function CountUp({
   prefix = '',
   suffix = '',
 }) {
-  const ref = useRef(null)
-  const inView = useInView(ref, { once: true })
   const [val, setVal] = useState(from)
 
   useEffect(() => {
-    if (!inView) return
     const controls = animate(from, to, {
       duration,
       delay,
@@ -24,10 +21,10 @@ export default function CountUp({
       onUpdate: (v) => setVal(v),
     })
     return () => controls.stop()
-  }, [to, from, duration, delay, inView])
+  }, [to, from, duration, delay])
 
   return (
-    <span ref={ref} style={{ fontFamily: tokens.font.mono, fontVariantNumeric: 'tabular-nums' }}>
+    <span style={{ fontFamily: tokens.font.mono, fontVariantNumeric: 'tabular-nums' }}>
       {prefix}
       {val.toLocaleString('en-US', { minimumFractionDigits: decimals, maximumFractionDigits: decimals })}
       {suffix}

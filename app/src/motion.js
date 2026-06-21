@@ -69,8 +69,10 @@ export const flash = ({ delay = 0, good = true } = {}) => ({
   transition: { delay, duration: 1.1, times: [0, 0.15, 1], ease: ease.out },
 })
 
+// No `exit`: under the frozen render clock, AnimatePresence exit-completion never
+// fires (old scenes would freeze/pile up). Dropping exit removes the old scene
+// instantly; the new scene's enter animation carries the transition.
 export const sceneSwap = {
-  initial: { opacity: 0, x: 70, scale: 0.985 },
-  animate: { opacity: 1, x: 0, scale: 1, transition: { duration: 0.6, ease: ease.out } },
-  exit: { opacity: 0, x: -70, scale: 1.02, transition: { duration: 0.5, ease: ease.soft } },
+  initial: { opacity: 0, x: 60, scale: 0.99 },
+  animate: { opacity: 1, x: 0, scale: 1, transition: { duration: 0.55, ease: ease.out } },
 }

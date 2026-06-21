@@ -1,5 +1,5 @@
 import { useEffect, useState, useCallback } from 'react'
-import { AnimatePresence, motion } from 'framer-motion'
+import { motion } from 'framer-motion'
 import { tokens, ease, dur } from '../theme'
 import { sceneSwap } from '../motion'
 
@@ -48,11 +48,9 @@ export default function Stage({ scenes }) {
       transition={{ duration: dur.fast, ease: ease.soft }}
       style={{ position: 'fixed', inset: 0, cursor: 'pointer', userSelect: 'none' }}
     >
-      <AnimatePresence mode="wait">
-        <motion.div key={i} {...sceneSwap} style={{ position: 'absolute', inset: 0 }}>
-          <Scene />
-        </motion.div>
-      </AnimatePresence>
+      <motion.div key={i} {...sceneSwap} style={{ position: 'absolute', inset: 0 }}>
+        <Scene />
+      </motion.div>
 
       <div style={{ position: 'fixed', bottom: 26, left: '50%', transform: 'translateX(-50%)', display: 'flex', gap: 10, alignItems: 'center' }}>
         {scenes.map((s, idx) => (
