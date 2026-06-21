@@ -1,4 +1,5 @@
 import { tokens } from '../theme'
+import IntroScene from './IntroScene'
 import TitleScene from './TitleScene'
 import ProblemScene from './ProblemScene'
 import ScaleScene from './ScaleScene'
@@ -33,6 +34,7 @@ import ClosingScene from './ClosingScene'
 
 export const scenes = [
   // — Open —
+  { id: 'intro', bg: tokens.bg.title, dur: 3.5, Component: IntroScene },
   { id: 'title', bg: tokens.bg.title, dur: 5, Component: TitleScene },
 
   // — Act I: The Problem —
