@@ -33,7 +33,7 @@ await build()
 console.log('▸ starting preview…')
 const server = await preview({ preview: { port: 4173, strictPort: false } })
 const base = server.resolvedUrls.local[0].replace(/\/$/, '')
-const url = `${base}/?play`
+const url = `${base}/?play${process.env.HOLD ? `&hold=${process.env.HOLD}` : ''}`
 
 rmSync(DIR, { recursive: true, force: true })
 mkdirSync(DIR, { recursive: true })

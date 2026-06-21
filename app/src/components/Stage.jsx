@@ -7,6 +7,8 @@ export default function Stage({ scenes }) {
   const [i, setI] = useState(0)
   const [playing, setPlaying] = useState(() => new URLSearchParams(window.location.search).has('play'))
   const count = scenes.length
+  // extra seconds each scene lingers after its animation, for reading. Tune with ?hold=2
+  const readHold = Number(new URLSearchParams(window.location.search).get('hold') ?? 1.4)
 
   const go = useCallback((d) => {
     setI((prev) => Math.min(count - 1, Math.max(0, prev + d)))
@@ -27,10 +29,10 @@ export default function Stage({ scenes }) {
   useEffect(() => {
     if (!playing) return
     if (i >= count - 1) { setPlaying(false); return }
-    const ms = (scenes[i].dur ?? 6) * 1000
+    const ms = ((scenes[i].dur ?? 6) + readHold) * 1000
     const t = setTimeout(() => setI((p) => p + 1), ms)
     return () => clearTimeout(t)
-  }, [playing, i, count, scenes])
+  }, [playing, i, count, scenes, readHold])
 
   const scene = scenes[i]
   const Scene = scene.Component
