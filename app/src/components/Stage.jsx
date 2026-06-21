@@ -48,7 +48,7 @@ export default function Stage({ scenes }) {
       transition={{ duration: dur.fast, ease: ease.soft }}
       style={{ position: 'fixed', inset: 0, cursor: 'pointer', userSelect: 'none' }}
     >
-      <AnimatePresence mode="wait">
+      <AnimatePresence>
         <motion.div key={i} {...sceneSwap} style={{ position: 'absolute', inset: 0 }}>
           <Scene />
         </motion.div>

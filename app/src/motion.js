@@ -70,8 +70,7 @@ export const flash = ({ delay = 0, good = true } = {}) => ({
 })
 
 export const sceneSwap = {
-  initial: { opacity: 1 },
-  animate: { opacity: 1 },
-  exit: { opacity: 0 },
-  transition: { duration: 0.18, ease: ease.soft },
+  initial: { opacity: 0, x: 70, scale: 0.985 },
+  animate: { opacity: 1, x: 0, scale: 1, transition: { duration: 0.6, ease: ease.out } },
+  exit: { opacity: 0, x: -70, scale: 1.02, transition: { duration: 0.5, ease: ease.soft } },
 }
