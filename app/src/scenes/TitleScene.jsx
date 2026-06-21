@@ -1,5 +1,4 @@
 import { motion } from 'framer-motion'
-import Frame from '../components/Frame'
 import { Kicker, MaskReveal } from '../components/Text'
 import { tokens } from '../theme'
 import { growXFade } from '../motion'
@@ -7,8 +6,6 @@ import { growXFade } from '../motion'
 export default function TitleScene() {
   return (
     <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-      <Frame delay={0.05} color={tokens.text.onDark} />
-
       <div style={{ textAlign: 'center', zIndex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.35em' }}>
         <Kicker delay={0.9} color={tokens.text.onDarkMuted}>A Platform Modernization Story</Kicker>
 

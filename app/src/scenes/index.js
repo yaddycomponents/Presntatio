@@ -9,6 +9,7 @@ import CustomerImpactScene from './CustomerImpactScene'
 import DeveloperImpactScene from './DeveloperImpactScene'
 import { ChapterProblem, ChapterRebuild, ChapterPayoff } from './chapters'
 import BundleScene from './BundleScene'
+import MonolithScene from './MonolithScene'
 import PreloadScene from './PreloadScene'
 import ImportChainScene from './ImportChainScene'
 import ImportFixScene from './ImportFixScene'
@@ -32,6 +33,7 @@ export const scenes = [
   // — Act II: The Rebuild —
   { id: 'chapter-rebuild', bg: tokens.bg.title, dur: 4.5, Component: ChapterRebuild },
   { id: 'scale', bg: tokens.bg.primary, dur: 5.5, Component: ScaleScene },
+  { id: 'monolith', bg: tokens.bg.primary, dur: 6.5, Component: MonolithScene },
   { id: 'preload', bg: tokens.bg.primary, dur: 6.5, Component: PreloadScene },
   { id: 'import-chain', bg: tokens.bg.primary, dur: 6, Component: ImportChainScene },
   { id: 'import-fix', bg: tokens.bg.primary, dur: 6, Component: ImportFixScene },
