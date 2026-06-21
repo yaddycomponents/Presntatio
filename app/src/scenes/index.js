@@ -16,6 +16,7 @@ import CssFlowScene from './CssFlowScene'
 import LayerScene from './LayerScene'
 import FilterConsolidationScene from './FilterConsolidationScene'
 import FilterUXScene from './FilterUXScene'
+import FilterKeyboardScene from './FilterKeyboardScene'
 import FilterWinsScene from './FilterWinsScene'
 import ClosingScene from './ClosingScene'
 
@@ -39,6 +40,7 @@ export const scenes = [
   { id: 'chapter-d', bg: tokens.bg.title, dur: 4, Component: ChapterD },
   { id: 'consolidation', bg: tokens.bg.primary, dur: 6, Component: FilterConsolidationScene },
   { id: 'filter-ux', bg: tokens.bg.primary, dur: 6, Component: FilterUXScene },
+  { id: 'filter-keyboard', bg: tokens.bg.primary, dur: 6, Component: FilterKeyboardScene },
   { id: 'filter-wins', bg: tokens.bg.primary, dur: 5.5, Component: FilterWinsScene },
   { id: 'closing', bg: tokens.bg.title, dur: 6, Component: ClosingScene },
 ]

@@ -40,6 +40,9 @@ export default function Stage({ scenes }) {
 
   return (
     <motion.div
+      data-scene={i}
+      data-scene-count={count}
+      data-playing={playing ? '1' : '0'}
       onClick={(e) => { setPlaying(false); go(e.shiftKey ? -1 : 1) }}
       animate={{ backgroundColor: bg }}
       transition={{ duration: dur.fast, ease: ease.soft }}

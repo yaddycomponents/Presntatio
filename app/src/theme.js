@@ -70,6 +70,7 @@ export const tokens = {
     metric: 'clamp(17px, 2.1vw, 28px)',
     delta: 'clamp(12px, 1.3vw, 16px)',
     h2: 'clamp(26px, 4vw, 58px)',
+    chapter: 'clamp(34px, 5.5vw, 76px)',
     statement: 'clamp(38px, 7vw, 92px)',
     display: 'clamp(40px, 8vw, 120px)',
     hero: 'clamp(64px, 13vw, 200px)',
