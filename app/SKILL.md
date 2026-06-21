@@ -123,10 +123,13 @@ npx playwright install chromium   # one-time (downloads the browser)
 brew install ffmpeg               # one-time (converter + the step that sharpens text)
 npm run record                    # build → preview → record 4K → downscale → heisenberg.mp4
 ```
-`npm run record` runs `record.mjs`: it builds, starts preview itself, records the full autoplay
-at **2× / 4K**, then downscales to a **crisp 1080p `heisenberg.mp4`** (supersampling from 4K is
-what keeps text sharp — recording at native 1080p looks blurry). No manual timing; it stops at
-the last scene automatically. Without ffmpeg you still get a 4K `.webm` + the convert command.
+`npm run record` runs `record.mjs`. It does **not** use lossy video recording (that's what made
+text blurry). Instead it drives the deck with a fake clock and captures **pixel-perfect PNG frames
+at 2× (4K)**, piping them straight into ffmpeg, then downscales to a **crisp 1080p `heisenberg.mp4`**.
+No manual timing — it stops at the last scene automatically.
+
+Tunables: `FPS=30 SCALE=2 OUT=heisenberg.mp4 npm run record`
+(`SCALE=1` captures at 1080p — faster/smaller, still lossless). ffmpeg is **required**.
 
 ---
 
