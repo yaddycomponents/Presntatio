@@ -1,38 +1,31 @@
-// Render the deck to a CRISP mp4 — lossless frame capture, no VP8.
+// Render the deck to a CRISP, smooth mp4 — real-time CDP screencast (JPEG q100).
 //
 //   npm run record
 //
-// How it stays sharp: it drives the deck with a fake clock and captures
-// pixel-perfect PNG frames at 2x (4K), piping them straight into ffmpeg
-// (no lossy intermediate video), then downscales to a clean 1080p mp4.
+// Why real-time: Framer Motion's declarative fades use the Web Animations API
+// (compositor timeline), which fake/virtual clocks don't drive reliably — they
+// render invisible. So we capture the page playing in real time via Chrome's
+// screencast (near-lossless JPEG of the actual compositor), then assemble the
+// frames into a constant-fps mp4 with ffmpeg. Correct animations + crisp text.
 //
-// Requires ffmpeg:  brew install ffmpeg
-// And the browser:  npx playwright install chromium
-//
-// Tunables:  FPS=30  SCALE=2  OUT=heisenberg.mp4  node record.mjs
-//   SCALE=1 → capture at 1080p (faster, smaller, still lossless)
+// ffmpeg is bundled (ffmpeg-static). Browser: npx playwright install chromium
 
 import { build, preview } from 'vite'
 import { chromium } from 'playwright'
-import { spawn, spawnSync } from 'node:child_process'
+import { spawnSync } from 'node:child_process'
+import { mkdirSync, rmSync, writeFileSync, readdirSync } from 'node:fs'
+import { join } from 'node:path'
 import ffmpegStatic from 'ffmpeg-static'
 
-const FPS = Number(process.env.FPS || 30)
-const SCALE = Number(process.env.SCALE || 2)
 const OUT = process.env.OUT || 'heisenberg.mp4'
-const TAIL_S = 8
-const frameMs = 1000 / FPS
-const maxFrames = 260 * FPS
+const OUTFPS = Number(process.env.FPS || 30)
+const TAIL_MS = 7000
+const DIR = 'frames'
 
-// Prefer the bundled static binary; fall back to a system ffmpeg.
 const FFMPEG = (ffmpegStatic && spawnSync(ffmpegStatic, ['-version']).status === 0)
   ? ffmpegStatic
   : (spawnSync('ffmpeg', ['-version']).status === 0 ? 'ffmpeg' : null)
-
-if (!FFMPEG) {
-  console.error('✗ no ffmpeg available (ffmpeg-static failed and none on PATH). Run: npm i -D ffmpeg-static')
-  process.exit(1)
-}
+if (!FFMPEG) { console.error('✗ no ffmpeg (run: npm i -D ffmpeg-static)'); process.exit(1) }
 
 console.log('▸ building…')
 await build()
@@ -42,45 +35,58 @@ const server = await preview({ preview: { port: 4173, strictPort: false } })
 const base = server.resolvedUrls.local[0].replace(/\/$/, '')
 const url = `${base}/?play`
 
-const browser = await chromium.launch({ args: [`--force-device-scale-factor=${SCALE}`] })
-const context = await browser.newContext({ viewport: { width: 1920, height: 1080 }, deviceScaleFactor: SCALE })
+rmSync(DIR, { recursive: true, force: true })
+mkdirSync(DIR, { recursive: true })
+
+const browser = await chromium.launch()
+const context = await browser.newContext({ viewport: { width: 1920, height: 1080 } })
 const page = await context.newPage()
-await page.clock.install({ time: 0 })
-await page.clock.pauseAt(1) // freeze wall-clock; only runFor advances time (deterministic pacing)
-await page.goto(url, { waitUntil: 'load', timeout: 60000 })
-await page.waitForSelector('[data-scene]')
+const client = await context.newCDPSession(page)
 
-console.log(`▸ rendering ${url}  (${FPS}fps · ${SCALE}x capture → 1080p)`)
-
-const ff = spawn(FFMPEG, [
-  '-y', '-f', 'image2pipe', '-framerate', String(FPS), '-i', '-',
-  '-vf', 'scale=1920:1080:flags=lanczos',
-  '-c:v', 'libx264', '-crf', '18', '-preset', 'slow', '-pix_fmt', 'yuv420p', OUT,
-], { stdio: ['pipe', 'inherit', 'inherit'] })
-
-const writeFrame = (buf) => new Promise((res) => {
-  if (ff.stdin.write(buf)) res()
-  else ff.stdin.once('drain', res)
+let n = 0
+let firstTs = null
+let lastTs = null
+client.on('Page.screencastFrame', async (e) => {
+  n += 1
+  if (firstTs === null) firstTs = e.metadata.timestamp
+  lastTs = e.metadata.timestamp
+  writeFileSync(join(DIR, `f${String(n).padStart(6, '0')}.jpg`), Buffer.from(e.data, 'base64'))
+  try { await client.send('Page.screencastFrameAck', { sessionId: e.sessionId }) } catch {}
 })
 
+await page.goto(url, { waitUntil: 'load', timeout: 60000 })
+await page.waitForSelector('[data-scene]')
+await page.evaluate(() => document.fonts && document.fonts.ready).catch(() => {})
+
 const lastIndex = Number(await page.getAttribute('[data-scene]', 'data-scene-count')) - 1
-let frames = 0
-let tail = 0
-const tailFrames = TAIL_S * FPS
+console.log(`▸ recording ${url} (real-time, JPEG q100)…`)
+await client.send('Page.startScreencast', { format: 'jpeg', quality: 100, everyNthFrame: 1 })
 
-while (frames < maxFrames) {
-  await page.clock.runFor(frameMs)
-  await writeFrame(await page.screenshot({ type: 'png' }))
-  frames++
+// wait (real time) until autoplay reaches the last scene, then a tail
+for (;;) {
+  await page.waitForTimeout(500)
   const cur = Number(await page.getAttribute('[data-scene]', 'data-scene'))
-  if (cur >= lastIndex) { if (++tail >= tailFrames) break }
-  if (frames % FPS === 0) process.stdout.write(`\r  ${(frames / FPS).toFixed(0)}s captured…`)
+  if (cur >= lastIndex) break
 }
+await page.waitForTimeout(TAIL_MS)
+await client.send('Page.stopScreencast')
+await new Promise((r) => setTimeout(r, 300)) // flush trailing frames
 
-ff.stdin.end()
-await new Promise((res) => ff.on('close', res))
+const captured = readdirSync(DIR).filter((f) => f.endsWith('.jpg')).length
+const inFps = (captured > 1 && lastTs > firstTs) ? (captured - 1) / (lastTs - firstTs) : OUTFPS
+console.log(`▸ ${captured} frames @ ${inFps.toFixed(1)}fps → encoding ${OUTFPS}fps…`)
+
 await context.close()
 await browser.close()
 await server.httpServer.close()
-console.log(`\n✓ ${OUT} ready — crisp 1080p (${frames} frames @ ${FPS}fps)`)
+
+const ff = spawnSync(FFMPEG, [
+  '-y', '-framerate', inFps.toFixed(4), '-i', join(DIR, 'f%06d.jpg'),
+  '-vf', 'scale=1920:1080:flags=lanczos', '-r', String(OUTFPS),
+  '-c:v', 'libx264', '-crf', '18', '-preset', 'slow', '-pix_fmt', 'yuv420p', OUT,
+], { stdio: 'inherit' })
+
+rmSync(DIR, { recursive: true, force: true })
+if (ff.status === 0) console.log(`✓ ${OUT} ready — crisp, real-time motion`)
+else { console.error('✗ ffmpeg failed'); process.exit(1) }
 process.exit(0)
