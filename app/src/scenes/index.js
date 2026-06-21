@@ -10,6 +10,9 @@ import DeveloperImpactScene from './DeveloperImpactScene'
 import { ChapterProblem, ChapterRebuild, ChapterPayoff } from './chapters'
 import BundleScene from './BundleScene'
 import MonolithScene from './MonolithScene'
+import EagerBootScene from './EagerBootScene'
+import BytesWentScene from './BytesWentScene'
+import CaveatsScene from './CaveatsScene'
 import PreloadScene from './PreloadScene'
 import ImportChainScene from './ImportChainScene'
 import ImportFixScene from './ImportFixScene'
@@ -34,6 +37,7 @@ export const scenes = [
   { id: 'chapter-rebuild', bg: tokens.bg.title, dur: 4.5, Component: ChapterRebuild },
   { id: 'scale', bg: tokens.bg.primary, dur: 5.5, Component: ScaleScene },
   { id: 'monolith', bg: tokens.bg.primary, dur: 6.5, Component: MonolithScene },
+  { id: 'eager-boot', bg: tokens.bg.primary, dur: 6.5, Component: EagerBootScene },
   { id: 'preload', bg: tokens.bg.primary, dur: 6.5, Component: PreloadScene },
   { id: 'import-chain', bg: tokens.bg.primary, dur: 6, Component: ImportChainScene },
   { id: 'import-fix', bg: tokens.bg.primary, dur: 6, Component: ImportFixScene },
@@ -49,7 +53,9 @@ export const scenes = [
   // — Act III: The Payoff —
   { id: 'chapter-payoff', bg: tokens.bg.title, dur: 4.5, Component: ChapterPayoff },
   { id: 'headline', bg: tokens.bg.primary, dur: 6.5, Component: HeadlineScene },
+  { id: 'bytes-went', bg: tokens.bg.primary, dur: 6, Component: BytesWentScene },
   { id: 'compression', bg: tokens.bg.primary, dur: 7, Component: CompressionScene },
+  { id: 'caveats', bg: tokens.bg.primary, dur: 6.5, Component: CaveatsScene },
   { id: 'oneline', bg: tokens.bg.alt, dur: 5.5, Component: OneLineScene },
   { id: 'customer', bg: tokens.bg.primary, dur: 5.5, Component: CustomerImpactScene },
   { id: 'developer', bg: tokens.bg.primary, dur: 5.5, Component: DeveloperImpactScene },
