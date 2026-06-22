@@ -13,17 +13,25 @@ const pains = [
   { icon: 'layers', title: 'Styling trapped inside JavaScript', why: 'Recomputed in the browser, every render' },
 ]
 
-function Pain({ icon, title, why, delay }) {
+function Pain({ icon, title, why, delay, wide }) {
   return (
-    <div style={{ display: 'grid', gridTemplateColumns: '48px 1fr', columnGap: 22, alignItems: 'center' }}>
+    <motion.div
+      {...fadeUp({ delay, y: 14 })}
+      style={{
+        gridColumn: wide ? '1 / -1' : 'auto',
+        display: 'grid', gridTemplateColumns: '52px 1fr', columnGap: 20, alignItems: 'center',
+        padding: '20px 26px', borderRadius: 14,
+        border: `1.5px solid ${tokens.border}`, background: 'rgba(176,109,113,0.05)',
+      }}
+    >
       <div style={{ display: 'flex', justifyContent: 'center' }}>
-        <Glyph name={icon} color={tokens.data.beforeNum} delay={delay} />
+        <Glyph name={icon} color={tokens.data.beforeNum} delay={delay + 0.1} />
       </div>
-      <motion.div {...fadeUp({ delay: delay + 0.05, y: 12 })}>
+      <div>
         <div style={{ fontFamily: tokens.font.body, fontWeight: 500, fontSize: tokens.type.rowLabel, color: tokens.text.primary, lineHeight: 1.15 }}>{title}</div>
-        <div style={{ fontFamily: tokens.font.mono, fontSize: tokens.type.eyebrow, color: tokens.text.muted, marginTop: 3 }}>{why}</div>
-      </motion.div>
-    </div>
+        <div style={{ fontFamily: tokens.font.mono, fontSize: tokens.type.eyebrow, color: tokens.text.muted, marginTop: 5 }}>{why}</div>
+      </div>
+    </motion.div>
   )
 }
 
@@ -38,9 +46,9 @@ export default function ProblemScene() {
 
       <MaskReveal delay={0.4} size={tokens.type.h2}>Success had a weight problem</MaskReveal>
 
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 16, marginTop: '1vw', width: 'min(660px, 88vw)' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 18, marginTop: '1vw', width: 'min(1040px, 92vw)' }}>
         {pains.map((p, i) => (
-          <Pain key={p.icon} {...p} delay={0.9 + i * 0.16} />
+          <Pain key={p.icon} {...p} wide={i === pains.length - 1} delay={0.9 + i * 0.14} />
         ))}
       </div>
     </div>

@@ -4,11 +4,14 @@ import { tokens, ease, dur } from '../theme'
 import { sceneSwap } from '../motion'
 
 export default function Stage({ scenes }) {
+  const params = new URLSearchParams(window.location.search)
   const [i, setI] = useState(0)
-  const [playing, setPlaying] = useState(() => new URLSearchParams(window.location.search).has('play'))
+  const [playing, setPlaying] = useState(() => params.has('play'))
   const count = scenes.length
   // extra seconds each scene lingers after its animation, for reading. Tune with ?hold=2
-  const readHold = Number(new URLSearchParams(window.location.search).get('hold') ?? 1.4)
+  const readHold = Number(params.get('hold') ?? 1.4)
+  // clean capture mode: no dots, no badge, no cursor — pure motion graphics for screen recording
+  const clean = params.has('clean')
 
   const go = useCallback((d) => {
     setI((prev) => Math.min(count - 1, Math.max(0, prev + d)))
@@ -48,12 +51,13 @@ export default function Stage({ scenes }) {
       onClick={(e) => { setPlaying(false); go(e.shiftKey ? -1 : 1) }}
       animate={{ backgroundColor: bg }}
       transition={{ duration: dur.fast, ease: ease.soft }}
-      style={{ position: 'fixed', inset: 0, cursor: 'pointer', userSelect: 'none' }}
+      style={{ position: 'fixed', inset: 0, cursor: (clean || playing) ? 'none' : 'pointer', userSelect: 'none' }}
     >
       <motion.div key={i} {...sceneSwap} style={{ position: 'absolute', inset: 0 }}>
         <Scene />
       </motion.div>
 
+      {!clean && (
       <div style={{ position: 'fixed', bottom: 26, left: '50%', transform: 'translateX(-50%)', display: 'flex', gap: 10, alignItems: 'center' }}>
         {scenes.map((s, idx) => (
           <div
@@ -69,8 +73,9 @@ export default function Stage({ scenes }) {
           />
         ))}
       </div>
+      )}
 
-      {playing && (
+      {playing && !clean && (
         <div style={{ position: 'fixed', bottom: 24, right: 28, fontFamily: tokens.font.mono, fontSize: 10, letterSpacing: '0.1em', textTransform: 'uppercase', color: dotColor, opacity: 0.7 }}>
           ▶ auto
         </div>
