@@ -58,7 +58,7 @@ function GroupLabel({ children, delay }) {
 
 export const FeedR = () => {
   const f = useCurrentFrame()
-  const y = interpolate(f, [sec(0), sec(2.08), sec(4.68), sec(6.5)], [0, 0, -300, -300], { ...clamp, easing: EASE_INOUT })
+  const y = interpolate(f, [sec(0), sec(1.0), sec(3.4), sec(5)], [0, 0, -300, -300], { ...clamp, easing: EASE_INOUT })
   return (
     <AbsoluteFill style={{ display: 'flex', flexDirection: 'column' }}>
       <div style={{ height: 50, borderBottom: `1px solid ${t.border}`, background: t.panel, display: 'flex', alignItems: 'center', padding: '0 32px', gap: 26, flexShrink: 0, zIndex: 2 }}>
@@ -77,7 +77,7 @@ export const FeedR = () => {
         </div>
         <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: 70, background: `linear-gradient(transparent, ${t.canvas})`, pointerEvents: 'none' }} />
       </div>
-      <Caption delay={4.6}>AI-created disputes &amp; tasks appear in the <Grad style={{ fontWeight: 600 }}>activity feed</Grad></Caption>
+      <Caption delay={3.5}>AI-created disputes &amp; tasks appear in the <Grad style={{ fontWeight: 600 }}>activity feed</Grad></Caption>
     </AbsoluteFill>
   )
 }
