@@ -16,8 +16,11 @@ export default function Stage({ scenes }) {
   })
   const [playing, setPlaying] = useState(() => params.has('play'))
   const count = scenes.length
-  // extra seconds each scene lingers after its animation, for reading. Tune with ?hold=2
-  const readHold = Number(params.get('hold') ?? 1.4)
+  // Extra seconds each scene lingers after its animation. Defaults to 0 because scene
+  // durations are now locked to the narration track (8:25) and already include the
+  // inter-paragraph pause — any hold here would drift the audio out of sync.
+  // Override with ?hold=1.4 for silent reading.
+  const readHold = Number(params.get('hold') ?? 0)
   // clean capture mode: no dots, no badge, no cursor — pure motion graphics for screen recording
   const clean = params.has('clean')
 
