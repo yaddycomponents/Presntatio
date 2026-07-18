@@ -8,7 +8,9 @@ import CompressionScene from './CompressionScene'
 import OneLineScene from './OneLineScene'
 import CustomerImpactScene from './CustomerImpactScene'
 import DeveloperImpactScene from './DeveloperImpactScene'
-import { ChapterProblem, ChapterRebuild, ChapterPayoff } from './chapters'
+import { ChapterProblem, ChapterRebuild, ChapterAgents, ChapterPayoff } from './chapters'
+import AgentsScene from './AgentsScene'
+import NeoScene from './NeoScene'
 import BundleScene from './BundleScene'
 import MonolithScene from './MonolithScene'
 import ChunkBarsScene from './ChunkBarsScene'
@@ -32,6 +34,7 @@ import UrlStateScene from './UrlStateScene'
 import UpgradesScene from './UpgradesScene'
 import HardeningScene from './HardeningScene'
 import ClosingScene from './ClosingScene'
+import SafetyNetsScene from './SafetyNetsScene'
 import BuildTimeScene from './BuildTimeScene'
 
 export const scenes = [
@@ -53,6 +56,7 @@ export const scenes = [
   { id: 'import-chain', bg: tokens.bg.primary, dur: 6, Component: ImportChainScene },
   { id: 'import-fix', bg: tokens.bg.primary, dur: 6, Component: ImportFixScene },
   { id: 'bundle', bg: tokens.bg.primary, dur: 5.5, Component: BundleScene },
+  { id: 'safety-nets', bg: tokens.bg.primary, dur: 11, Component: SafetyNetsScene },
   { id: 'rules', bg: tokens.bg.primary, dur: 5.5, Component: RulesScene },
   { id: 'css-flow', bg: tokens.bg.primary, dur: 8, Component: CssFlowScene },
   { id: 'layer', bg: tokens.bg.primary, dur: 8.5, Component: LayerScene },
@@ -77,5 +81,11 @@ export const scenes = [
   { id: 'oneline', bg: tokens.bg.alt, dur: 5.5, Component: OneLineScene },
   { id: 'customer', bg: tokens.bg.primary, dur: 5.5, Component: CustomerImpactScene },
   { id: 'developer', bg: tokens.bg.primary, dur: 5.5, Component: DeveloperImpactScene },
+
+  // — Act IV: The Agents —
+  { id: 'chapter-agents', bg: tokens.bg.title, dur: 4.5, Component: ChapterAgents },
+  { id: 'agents', bg: tokens.bg.primary, dur: 9, Component: AgentsScene },
+  { id: 'neo', bg: tokens.bg.primary, dur: 9, Component: NeoScene },
+
   { id: 'closing', bg: tokens.bg.title, dur: 6, Component: ClosingScene },
 ]
