@@ -22,7 +22,14 @@ Pauses are written as SSML: `<break time="500ms"/>`.
 - **Anything else:** replace each tag with a single ellipsis `…`.
 
 **Timing:** each scene shows for `dur + 1.4s` (the reader-hold). The budget column is that
-total. Lines are written a little under budget so the pauses have room to breathe.
+total.
+
+> ⚠ **The narration currently runs long.** At 2.2 words/sec plus break time it totals
+> **~7.2 min against a 5.2 min film** — 31 of 40 scenes overrun their slot. Run
+> `node scripts/tts.mjs --dry` to see per-scene estimates, and read `suggestedDur` in
+> `narration.json` for the duration each scene would need. Either extend the scene
+> durations (narration drives pacing) or trim the four worst overruns:
+> `safety-nets`, `neo`, `agents`, `prefetch`.
 
 ---
 
