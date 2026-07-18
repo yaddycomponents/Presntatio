@@ -18,39 +18,39 @@
       "n": 1,
       "id": "intro",
       "budget": 4.9,
-      "text": "A platform modernization, in four acts, beginning with the trouble.",
-      "speechSeconds": 4.5,
-      "suggestedDur": 3.8
+      "text": "A platform modernization. In four acts, with an intermission nobody took.",
+      "speechSeconds": 5,
+      "suggestedDur": 4.3
     },
     {
       "n": 2,
       "id": "title",
       "budget": 6.4,
-      "text": "Faster, lighter, built to scale. Those were the instructions, and this is what happened.",
-      "speechSeconds": 6.4,
-      "suggestedDur": 5.7
+      "text": "Faster. Lighter. Built to scale. Three words on a slide, and eleven months of consequences.",
+      "speechSeconds": 6.8,
+      "suggestedDur": 6.1
     },
     {
       "n": 3,
       "id": "chapter-problem",
       "budget": 5.9,
-      "text": "Act One, in which a decade of good news quietly becomes heavy.",
-      "speechSeconds": 5.5,
-      "suggestedDur": 4.8
+      "text": "Act One. In which a decade of good news arrives, one feature at a time, and quietly becomes heavy.",
+      "speechSeconds": 8.6,
+      "suggestedDur": 7.9
     },
     {
       "n": 4,
       "id": "problem",
       "budget": 7.4,
-      "text": "Thirteen megabytes on every visit, six seconds of waiting, and fifteen filter systems that all disagreed.",
-      "speechSeconds": 7.3,
-      "suggestedDur": 6.6
+      "text": "Thirteen megabytes on every visit. Six seconds of waiting. And fifteen filter systems, none of which were on speaking terms.",
+      "speechSeconds": 9.1,
+      "suggestedDur": 8.4
     },
     {
       "n": 5,
       "id": "chapter-rebuild",
       "budget": 5.9,
-      "text": "Act Two, in which they begin, as one does, by deleting things.",
+      "text": "Act Two. In which they begin, as one does, by deleting things.",
       "speechSeconds": 5.5,
       "suggestedDur": 4.8
     },
@@ -58,111 +58,111 @@
       "n": 6,
       "id": "scale",
       "budget": 6.9,
-      "text": "Two hundred twenty-nine commits, one thousand seven hundred sixty-eight files, and rather more deleted than written.",
-      "speechSeconds": 7.3,
-      "suggestedDur": 6.6
+      "text": "Two hundred twenty-nine commits. One thousand seven hundred sixty-eight files. They removed sixty-three thousand lines and wrote fifty-two. The arithmetic was intentional.",
+      "speechSeconds": 10,
+      "suggestedDur": 9.3
     },
     {
       "n": 7,
       "id": "monolith",
       "budget": 7.9,
-      "text": "Shipped as one enormous parcel, it was opened, sorted, and repacked into two hundred forty-nine smaller ones.",
-      "speechSeconds": 7.7,
-      "suggestedDur": 7
+      "text": "It had been shipped as one enormous parcel, addressed to everybody. They opened it, sorted it, and sent it back out in two hundred forty-nine smaller ones.",
+      "speechSeconds": 12.3,
+      "suggestedDur": 11.6
     },
     {
       "n": 8,
       "id": "chunk-bars",
       "budget": 7.9,
-      "text": "Here is where the weight had been living: four bundles, comfortable and undisturbed, downloaded by everyone.",
-      "speechSeconds": 7.3,
-      "suggestedDur": 6.6
+      "text": "Here is where the weight had been living. Four bundles — comfortable, undisturbed, and downloaded by every single person who ever visited.",
+      "speechSeconds": 10,
+      "suggestedDur": 9.3
     },
     {
       "n": 9,
       "id": "eager-boot",
       "budget": 7.9,
-      "text": "The dashboard used to ask for everything at once. Now it asks only for what a dashboard needs.",
-      "speechSeconds": 8.2,
-      "suggestedDur": 7.5
+      "text": "The dashboard asked for everything, whether or not it meant to use it. It now asks only for what a dashboard needs. This took rather longer to think of than to do.",
+      "speechSeconds": 14.5,
+      "suggestedDur": 13.8
     },
     {
       "n": 10,
       "id": "preload",
       "budget": 7.9,
-      "text": "Without preload the browser finds its files one by one; with it, all at once, and the page begins sooner.",
-      "speechSeconds": 9.1,
-      "suggestedDur": 8.4
+      "text": "Without preload, the browser finds its files one clue at a time, like a detective. With it, it is simply handed the file, and the page begins sooner.",
+      "speechSeconds": 12.7,
+      "suggestedDur": 12
     },
     {
       "n": 11,
       "id": "prefetch",
       "budget": 10.9,
-      "text": "The pointer rests on Inbox without clicking, and the page's bundles begin arriving quietly in the background — assets only, no requests to the server, nothing yet decided.",
-      "speechSeconds": 12.7,
-      "suggestedDur": 12
+      "text": "Observe the pointer. It rests on Inbox. It does not click — it merely considers — and the bundles begin arriving quietly in the background, like staff preparing a room before the guest has decided to enter.",
+      "speechSeconds": 16.8,
+      "suggestedDur": 16.1
     },
     {
       "n": 12,
       "id": "import-chain",
       "budget": 7.4,
-      "text": "One function, three hundred fifty-seven kilobytes, delivered faithfully on every page load to people who never used it.",
-      "speechSeconds": 8.2,
-      "suggestedDur": 7.5
+      "text": "One function. Three hundred fifty-seven kilobytes. Delivered faithfully, on every page load, to a great many people who never once had occasion to use it.",
+      "speechSeconds": 11.4,
+      "suggestedDur": 10.7
     },
     {
       "n": 13,
       "id": "import-fix",
       "budget": 7.4,
-      "text": "The remedy was a single line, and three hundred fifty-seven kilobytes became nothing at all.",
-      "speechSeconds": 6.8,
-      "suggestedDur": 6.1
+      "text": "The remedy was one line. Three hundred fifty-seven kilobytes became nothing at all. These are the most satisfying repairs, and nobody will ever notice them.",
+      "speechSeconds": 11.4,
+      "suggestedDur": 10.7
     },
     {
       "n": 14,
       "id": "bundle",
       "budget": 6.9,
-      "text": "Time to paint, halved. The screen now arrives before you have finished deciding to wait.",
-      "speechSeconds": 6.8,
-      "suggestedDur": 6.1
+      "text": "Time to paint: halved. The screen now arrives before you have finished deciding whether to wait for it.",
+      "speechSeconds": 8.2,
+      "suggestedDur": 7.5
     },
     {
       "n": 15,
       "id": "safety-nets",
       "budget": 12.4,
-      "text": "For years the build needed twelve gigabytes of heap and a ten-gigabyte swap file to keep from collapsing. Rolldown builds in Rust, off the heap entirely, so both were simply deleted.",
-      "speechSeconds": 14.1,
-      "suggestedDur": 13.4
+      "text": "For years the build required twelve gigabytes of memory and a ten-gigabyte swap file, simply to avoid collapsing. Rolldown builds in Rust, off the heap entirely. Both were deleted on a Tuesday, and nothing fell down.",
+      "speechSeconds": 16.4,
+      "suggestedDur": 15.7
     },
     {
       "n": 16,
       "id": "rules",
       "budget": 6.9,
-      "text": "Certain lessons were written down, so they would not have to be learned twice.",
-      "speechSeconds": 6.4,
-      "suggestedDur": 5.7
+      "text": "Certain lessons were written down, in a document, so that they would not have to be learned a second time.",
+      "speechSeconds": 9.1,
+      "suggestedDur": 8.4
     },
     {
       "n": 17,
       "id": "css-flow",
       "budget": 9.4,
-      "text": "The styles had been living inside the JavaScript, recomputed on every render. They live in ordinary files now, computed once, by the build.",
-      "speechSeconds": 10.5,
-      "suggestedDur": 9.8
+      "text": "The styles had been living inside the JavaScript — recomputed, in the browser, on every single render. They have been moved into ordinary files, where they are calculated once and then left alone.",
+      "speechSeconds": 15,
+      "suggestedDur": 14.3
     },
     {
       "n": 18,
       "id": "layer",
       "budget": 9.9,
-      "text": "Cascade layers decide who wins, and ours are ordered so the last one does. Then version six arrived with unlayered styles, sitting above them all. This was handled.",
-      "speechSeconds": 12.7,
-      "suggestedDur": 12
+      "text": "Cascade layers decide who wins, and ours are ordered so the last one does. Then version six arrived with its styles in no layer at all, which placed them above everybody. This was dealt with.",
+      "speechSeconds": 15.9,
+      "suggestedDur": 15.2
     },
     {
       "n": 19,
       "id": "consolidation",
       "budget": 9.4,
-      "text": "There had been fifteen filter systems, so every fix had to be made fifteen times. They are now a single configuration-driven module.",
+      "text": "There had been fifteen filter systems. Every fix, therefore, had to be performed fifteen times, in fifteen places. There is now one.",
       "speechSeconds": 10,
       "suggestedDur": 9.3
     },
@@ -170,39 +170,39 @@
       "n": 20,
       "id": "filter-ux",
       "budget": 7.4,
-      "text": "One filter now — the same pills, the same saved views, across fifteen pages that never once agreed.",
-      "speechSeconds": 8.2,
-      "suggestedDur": 7.5
+      "text": "One filter. The same pills, the same saved views, across fifteen pages that had never previously agreed on anything.",
+      "speechSeconds": 8.6,
+      "suggestedDur": 7.9
     },
     {
       "n": 21,
       "id": "filter-keyboard",
       "budget": 7.4,
-      "text": "It can be driven entirely from the keyboard, which the people who live in it all day notice first.",
-      "speechSeconds": 8.6,
-      "suggestedDur": 7.9
+      "text": "It can be operated entirely from the keyboard — a detail nobody requests, and everybody who works here all day notices within the hour.",
+      "speechSeconds": 10.9,
+      "suggestedDur": 10.2
     },
     {
       "n": 22,
       "id": "filter-wins",
       "budget": 6.9,
-      "text": "Architecture that compounds: each thing built upon it costs less than the thing before.",
-      "speechSeconds": 6.4,
-      "suggestedDur": 5.7
+      "text": "Architecture that compounds. Each thing built upon it costs a little less than the thing built before it.",
+      "speechSeconds": 8.2,
+      "suggestedDur": 7.5
     },
     {
       "n": 23,
       "id": "windowed",
       "budget": 7.9,
-      "text": "Every tile used to fetch at once, looked at or not. Now a tile fetches when it comes into view.",
-      "speechSeconds": 9.1,
-      "suggestedDur": 8.4
+      "text": "Every tile used to fetch at once — looked at or not, wanted or not. A tile now fetches when it enters view, and not one moment sooner.",
+      "speechSeconds": 12.7,
+      "suggestedDur": 12
     },
     {
       "n": 24,
       "id": "virtual-list",
       "budget": 7.4,
-      "text": "The list renders only what is on screen — a thousand rows, or ten, and the browser cannot tell the difference.",
+      "text": "The list renders only what is on screen. A thousand rows, or ten. The browser is not informed of the difference.",
       "speechSeconds": 9.5,
       "suggestedDur": 8.8
     },
@@ -210,95 +210,95 @@
       "n": 25,
       "id": "url-state",
       "budget": 10.4,
-      "text": "Your place is kept in the address bar: the filters, the page, the customer. Send a colleague a link, and they see precisely what you saw.",
-      "speechSeconds": 11.8,
-      "suggestedDur": 11.1
+      "text": "Your place is kept in the address bar: the filters, the page, the customer. You may now send a colleague a link and be entirely confident about what they will find at the other end.",
+      "speechSeconds": 15.9,
+      "suggestedDur": 15.2
     },
     {
       "n": 26,
       "id": "upgrades",
       "budget": 7.4,
-      "text": "React eighteen, Vite eight, React Query — the foundation replaced while the building stayed open.",
-      "speechSeconds": 6.8,
-      "suggestedDur": 6.1
+      "text": "React eighteen. Vite eight. React Query. The foundation was replaced while the building remained open, and the tenants were not told.",
+      "speechSeconds": 9.5,
+      "suggestedDur": 8.8
     },
     {
       "n": 27,
       "id": "hardening",
       "budget": 7.4,
-      "text": "Four leaks were found in the startup path, objects made on every render and never once closed.",
-      "speechSeconds": 7.7,
-      "suggestedDur": 7
+      "text": "Four leaks were discovered in the startup path — objects created on every render, and never once closed. They are closed now.",
+      "speechSeconds": 10,
+      "suggestedDur": 9.3
     },
     {
       "n": 28,
       "id": "chapter-payoff",
       "budget": 5.9,
-      "text": "Act Three, in which we total up what all of it actually bought.",
-      "speechSeconds": 5.9,
-      "suggestedDur": 5.2
+      "text": "Act Three. In which we total the receipts.",
+      "speechSeconds": 3.6,
+      "suggestedDur": 4.5
     },
     {
       "n": 29,
       "id": "headline",
       "budget": 7.9,
-      "text": "The dashboard loads in seven hundred fifty-five milliseconds, two and a half megabytes, on fourteen startup calls where there were once forty-three.",
-      "speechSeconds": 10,
-      "suggestedDur": 9.3
+      "text": "The dashboard loads in seven hundred fifty-five milliseconds. Two and a half megabytes. Fourteen startup calls, where there had been forty-three.",
+      "speechSeconds": 9.5,
+      "suggestedDur": 8.8
     },
     {
       "n": 30,
       "id": "bytes-went",
       "budget": 7.4,
-      "text": "Every line moves the same direction, which is rarer than it sounds and was not guaranteed.",
-      "speechSeconds": 7.3,
-      "suggestedDur": 6.6
+      "text": "Every line moves in the same direction, which is rarer than it sounds, and was promised to nobody.",
+      "speechSeconds": 8.2,
+      "suggestedDur": 7.5
     },
     {
       "n": 31,
       "id": "compression",
       "budget": 8.4,
-      "text": "Two thirds less code was written, and compression did the remaining third. We cite bytes over the wire, because those are the ones you wait for.",
-      "speechSeconds": 11.8,
-      "suggestedDur": 11.1
+      "text": "Two thirds less code was written. Compression accounted for the remaining third. We quote the bytes that crossed the network, because those are the ones you waited for.",
+      "speechSeconds": 12.7,
+      "suggestedDur": 12
     },
     {
       "n": 32,
       "id": "build-time",
       "budget": 9.4,
-      "text": "The build once took one minute forty-four. It now takes fifteen seconds — ninety seconds returned on every push, to every engineer, forever.",
-      "speechSeconds": 10.5,
-      "suggestedDur": 9.8
+      "text": "The build once took one minute and forty-four seconds. It now takes fifteen. Ninety seconds, returned to every engineer, on every push, for the rest of the project's life.",
+      "speechSeconds": 13.2,
+      "suggestedDur": 12.5
     },
     {
       "n": 33,
       "id": "caveats",
       "budget": 7.9,
-      "text": "A word of honesty: different deployments, different datasets, cold loads. Read the direction, and not the decimals.",
-      "speechSeconds": 7.7,
-      "suggestedDur": 7
+      "text": "A word of honesty. Different deployments. Different datasets. Cold loads, every one. Read the direction, and not the decimals.",
+      "speechSeconds": 8.6,
+      "suggestedDur": 7.9
     },
     {
       "n": 34,
       "id": "oneline",
       "budget": 6.9,
-      "text": "One filter system, not fifteen. If you remember one line, we would prefer it were that one.",
-      "speechSeconds": 7.7,
-      "suggestedDur": 7
+      "text": "One filter system. Not fifteen. If you remember only one line of this, we would rather it were that one.",
+      "speechSeconds": 9.1,
+      "suggestedDur": 8.4
     },
     {
       "n": 35,
       "id": "customer",
       "budget": 6.9,
-      "text": "It loads two and a half times faster, and the feeds no longer freeze. Nobody had to be told.",
-      "speechSeconds": 8.6,
-      "suggestedDur": 7.9
+      "text": "It loads two and a half times faster, and the feeds no longer freeze. No customer was informed of any of this. They simply stopped waiting.",
+      "speechSeconds": 11.8,
+      "suggestedDur": 11.1
     },
     {
       "n": 36,
       "id": "developer",
       "budget": 6.9,
-      "text": "One toolkit, less code to own, and a team now spending its time on things that did not exist last year.",
+      "text": "One toolkit. Less code to own. A team that now spends its time on things which did not exist last year.",
       "speechSeconds": 9.5,
       "suggestedDur": 8.8
     },
@@ -306,7 +306,7 @@
       "n": 37,
       "id": "chapter-agents",
       "budget": 5.9,
-      "text": "Act Four, in which a faster build invents an entirely new kind of mistake.",
+      "text": "Act Four. In which a faster build invents an entirely new kind of mistake.",
       "speechSeconds": 6.4,
       "suggestedDur": 5.7
     },
@@ -314,23 +314,23 @@
       "n": 38,
       "id": "agents",
       "budget": 10.4,
-      "text": "The library now ships its own expertise. Alfred keeps the house and writes nothing himself; he decides who should. Real work is sent away, and reports back.",
-      "speechSeconds": 12.3,
-      "suggestedDur": 11.6
+      "text": "The library now ships its own expertise. Alfred keeps the house. He writes nothing himself — he determines who should, and says so politely. The work is sent away, and it reports back.",
+      "speechSeconds": 15,
+      "suggestedDur": 14.3
     },
     {
       "n": 39,
       "id": "neo",
       "budget": 10.4,
-      "text": "Neo reads every pull request first. On this one it found a command-injection hole in the workflow written to harden the pipeline — one dollar seventy-six, seven minutes, no human involved.",
-      "speechSeconds": 14.1,
-      "suggestedDur": 13.4
+      "text": "Neo reads every pull request before anyone else has opened it. On this one, it found a command-injection hole in the workflow written to harden the pipeline. One dollar and seventy-six cents. Seven minutes. No human present.",
+      "speechSeconds": 16.8,
+      "suggestedDur": 16.1
     },
     {
       "n": 40,
       "id": "closing",
       "budget": 7.4,
-      "text": "The platform, re-engineered: faster, lighter, and considerably harder to break. Thank you for your attention.",
+      "text": "The platform, re-engineered. Faster, lighter, and considerably harder to break. Thank you for your attention.",
       "speechSeconds": 6.8,
       "suggestedDur": 6.1
     }
