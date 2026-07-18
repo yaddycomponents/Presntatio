@@ -3,7 +3,6 @@
     "title": "A Platform Modernization Story",
     "voiceDirection": "Wes Anderson register: a chronicler reading from a ledger. Deadpan, unhurried, faintly amused, never excited. Numbers read evenly, like an inventory.",
     "recommendedModel": "eleven_multilingual_v2",
-    "modelNote": "break tags are reliable on multilingual_v2. Newer models may ignore them - use textV3 (breaks converted to em-dashes and ellipses) if you switch to v3.",
     "voiceSettings": {
       "stability": 0.75,
       "similarity_boost": 0.75,
@@ -11,15 +10,15 @@
       "speed": 0.92
     },
     "wordsPerSecond": 2.2,
-    "readerHoldSeconds": 1.4
+    "readerHoldSeconds": 1.4,
+    "pauseNote": "No SSML. Pauses come from line breaks - each sentence sits on its own line, blank-line separated. Keep the blank lines when pasting."
   },
   "scenes": [
     {
       "n": 1,
       "id": "intro",
       "budget": 4.9,
-      "text": "A platform modernization. <break time=\"400ms\"/> In four acts.",
-      "textV3": "A platform modernization. — In four acts.",
+      "text": "A platform modernization.\n\nIn four acts.",
       "speechSeconds": 3.1,
       "suggestedDur": 3.5
     },
@@ -27,8 +26,7 @@
       "n": 2,
       "id": "title",
       "budget": 6.4,
-      "text": "Faster. Lighter. Built to scale. <break time=\"600ms\"/> Those were the instructions. <break time=\"400ms\"/> What follows is what happened.",
-      "textV3": "Faster. Lighter. Built to scale. … Those were the instructions. — What follows is what happened.",
+      "text": "Faster.\n\nLighter.\n\nBuilt to scale.\n\nThose were the instructions.\n\nWhat follows is what happened.",
       "speechSeconds": 7.4,
       "suggestedDur": 6.9
     },
@@ -36,8 +34,7 @@
       "n": 3,
       "id": "chapter-problem",
       "budget": 5.9,
-      "text": "Act One. The Weight of Growth. <break time=\"600ms\"/> Every success arrived carrying luggage.",
-      "textV3": "Act One. The Weight of Growth. … Every success arrived carrying luggage.",
+      "text": "Act One.\n\nThe Weight of Growth.\n\nEvery success arrived carrying luggage.",
       "speechSeconds": 5.6,
       "suggestedDur": 5.1
     },
@@ -45,8 +42,7 @@
       "n": 4,
       "id": "problem",
       "budget": 7.4,
-      "text": "Thirteen megabytes, on every visit. <break time=\"400ms\"/> Six seconds before anything appeared. <break time=\"400ms\"/> And fifteen filter systems — each of them slightly different.",
-      "textV3": "Thirteen megabytes, on every visit. — Six seconds before anything appeared. — And fifteen filter systems — each of them slightly different.",
+      "text": "Thirteen megabytes, on every visit.\n\nSix seconds before anything appeared.\n\nAnd fifteen filter systems — each of them slightly different.",
       "speechSeconds": 9.9,
       "suggestedDur": 9.4
     },
@@ -54,8 +50,7 @@
       "n": 5,
       "id": "chapter-rebuild",
       "budget": 5.9,
-      "text": "Act Two. The Rebuild. <break time=\"600ms\"/> They began, as one does, by deleting things.",
-      "textV3": "Act Two. The Rebuild. … They began, as one does, by deleting things.",
+      "text": "Act Two.\n\nThe Rebuild.\n\nThey began, as one does, by deleting things.",
       "speechSeconds": 6.1,
       "suggestedDur": 5.6
     },
@@ -63,8 +58,7 @@
       "n": 6,
       "id": "scale",
       "budget": 6.9,
-      "text": "Two hundred twenty-nine commits. One thousand seven hundred sixty-eight files. <break time=\"500ms\"/> They deleted more than they wrote. <break time=\"300ms\"/> On purpose.",
-      "textV3": "Two hundred twenty-nine commits. One thousand seven hundred sixty-eight files. — They deleted more than they wrote. — On purpose.",
+      "text": "Two hundred twenty-nine commits.\n\nOne thousand seven hundred sixty-eight files.\n\nThey deleted more than they wrote.\n\nOn purpose.",
       "speechSeconds": 9,
       "suggestedDur": 8.5
     },
@@ -72,8 +66,7 @@
       "n": 7,
       "id": "monolith",
       "budget": 7.9,
-      "text": "The application had been shipped as one enormous parcel. <break time=\"500ms\"/> It was opened, sorted, and repacked. <break time=\"300ms\"/> Two hundred forty-nine smaller ones.",
-      "textV3": "The application had been shipped as one enormous parcel. — It was opened, sorted, and repacked. — Two hundred forty-nine smaller ones.",
+      "text": "The application had been shipped as one enormous parcel.\n\nIt was opened, sorted, and repacked.\n\nTwo hundred forty-nine smaller ones.",
       "speechSeconds": 9.9,
       "suggestedDur": 9.4
     },
@@ -81,8 +74,7 @@
       "n": 8,
       "id": "chunk-bars",
       "budget": 7.9,
-      "text": "This is where the weight had been living. <break time=\"600ms\"/> Four bundles, comfortable, undisturbed, <break time=\"300ms\"/> and downloaded by every single visitor.",
-      "textV3": "This is where the weight had been living. … Four bundles, comfortable, undisturbed, — and downloaded by every single visitor.",
+      "text": "This is where the weight had been living.\n\nFour bundles, comfortable, undisturbed, and downloaded by every single visitor.",
       "speechSeconds": 9.1,
       "suggestedDur": 8.6
     },
@@ -90,8 +82,7 @@
       "n": 9,
       "id": "eager-boot",
       "budget": 7.9,
-      "text": "Previously, the dashboard asked for everything. <break time=\"500ms\"/> Now it asks for what the dashboard needs. <break time=\"400ms\"/> A modest idea, arrived at late.",
-      "textV3": "Previously, the dashboard asked for everything. — Now it asks for what the dashboard needs. — A modest idea, arrived at late.",
+      "text": "Previously, the dashboard asked for everything.\n\nNow it asks for what the dashboard needs.\n\nA modest idea, arrived at late.",
       "speechSeconds": 10,
       "suggestedDur": 9.5
     },
@@ -99,8 +90,7 @@
       "n": 10,
       "id": "preload",
       "budget": 7.9,
-      "text": "Without preload, the browser discovers its files one after another. <break time=\"500ms\"/> With it, it collects the important ones at once. <break time=\"300ms\"/> The page begins sooner.",
-      "textV3": "Without preload, the browser discovers its files one after another. — With it, it collects the important ones at once. — The page begins sooner.",
+      "text": "Without preload, the browser discovers its files one after another.\n\nWith it, it collects the important ones at once.\n\nThe page begins sooner.",
       "speechSeconds": 11.3,
       "suggestedDur": 10.8
     },
@@ -108,8 +98,7 @@
       "n": 11,
       "id": "prefetch",
       "budget": 10.9,
-      "text": "Consider the sidebar. <break time=\"500ms\"/> The pointer merely rests on Inbox — it does not click — <break time=\"400ms\"/> and the page's bundles begin arriving quietly in the background. <break time=\"500ms\"/> Assets only. <break time=\"300ms\"/> Zero requests to the server. <break time=\"400ms\"/> Nobody has decided anything yet.",
-      "textV3": "Consider the sidebar. — The pointer merely rests on Inbox — it does not click — and the page's bundles begin arriving quietly in the background. — Assets only. — Zero requests to the server. — Nobody has decided anything yet.",
+      "text": "Consider the sidebar.\n\nThe pointer merely rests on Inbox — it does not click — and the page's bundles begin arriving quietly in the background.\n\nAssets only.\n\nZero requests to the server.\n\nNobody has decided anything yet.",
       "speechSeconds": 18.9,
       "suggestedDur": 18.4
     },
@@ -117,8 +106,7 @@
       "n": 12,
       "id": "import-chain",
       "budget": 7.4,
-      "text": "One function. <break time=\"400ms\"/> Three hundred fifty-seven kilobytes. <break time=\"500ms\"/> Delivered faithfully, on every page load, <break time=\"300ms\"/> to people who never once used it.",
-      "textV3": "One function. — Three hundred fifty-seven kilobytes. — Delivered faithfully, on every page load, — to people who never once used it.",
+      "text": "One function.\n\nThree hundred fifty-seven kilobytes.\n\nDelivered faithfully, on every page load, to people who never once used it.",
       "speechSeconds": 9.8,
       "suggestedDur": 9.3
     },
@@ -126,8 +114,7 @@
       "n": 13,
       "id": "import-fix",
       "budget": 7.4,
-      "text": "The remedy was a single line. <break time=\"600ms\"/> Three hundred fifty-seven kilobytes became zero. <break time=\"400ms\"/> These are the most satisfying repairs, and the least visible.",
-      "textV3": "The remedy was a single line. … Three hundred fifty-seven kilobytes became zero. — These are the most satisfying repairs, and the least visible.",
+      "text": "The remedy was a single line.\n\nThree hundred fifty-seven kilobytes became zero.\n\nThese are the most satisfying repairs, and the least visible.",
       "speechSeconds": 11,
       "suggestedDur": 10.5
     },
@@ -135,8 +122,7 @@
       "n": 14,
       "id": "bundle",
       "budget": 6.9,
-      "text": "Time to paint: halved. <break time=\"500ms\"/> The screen now arrives before the user has finished deciding to wait for it.",
-      "textV3": "Time to paint: halved. — The screen now arrives before the user has finished deciding to wait for it.",
+      "text": "Time to paint: halved.\n\nThe screen now arrives before the user has finished deciding to wait for it.",
       "speechSeconds": 8.7,
       "suggestedDur": 8.2
     },
@@ -144,8 +130,7 @@
       "n": 15,
       "id": "safety-nets",
       "budget": 12.4,
-      "text": "For years the build required twelve gigabytes of heap <break time=\"300ms\"/> and a ten-gigabyte swap file, <break time=\"400ms\"/> to keep it from collapsing. <break time=\"600ms\"/> Rolldown bundles in Rust — off the Node heap entirely. <break time=\"500ms\"/> So the swap file was deleted. The heap fell to four. <break time=\"500ms\"/> The scaffolding came down, <break time=\"300ms\"/> because the building no longer falls down.",
-      "textV3": "For years the build required twelve gigabytes of heap — and a ten-gigabyte swap file, — to keep it from collapsing. … Rolldown bundles in Rust — off the Node heap entirely. — So the swap file was deleted. The heap fell to four. — The scaffolding came down, — because the building no longer falls down.",
+      "text": "For years the build required twelve gigabytes of heap and a ten-gigabyte swap file, to keep it from collapsing.\n\nRolldown bundles in Rust — off the Node heap entirely.\n\nSo the swap file was deleted.\n\nThe heap fell to four.\n\nThe scaffolding came down, because the building no longer falls down.",
       "speechSeconds": 25.8,
       "suggestedDur": 25.3
     },
@@ -153,8 +138,7 @@
       "n": 16,
       "id": "rules",
       "budget": 6.9,
-      "text": "Certain lessons were written down, <break time=\"400ms\"/> so that they would not have to be learned a second time.",
-      "textV3": "Certain lessons were written down, — so that they would not have to be learned a second time.",
+      "text": "Certain lessons were written down, so that they would not have to be learned a second time.",
       "speechSeconds": 8.1,
       "suggestedDur": 7.6
     },
@@ -162,8 +146,7 @@
       "n": 17,
       "id": "css-flow",
       "budget": 9.4,
-      "text": "The styles had been living inside the JavaScript, <break time=\"400ms\"/> recomputed in the browser on every render. <break time=\"600ms\"/> They were moved into ordinary files. <break time=\"400ms\"/> They are now computed once — by the build.",
-      "textV3": "The styles had been living inside the JavaScript, — recomputed in the browser on every render. … They were moved into ordinary files. — They are now computed once — by the build.",
+      "text": "The styles had been living inside the JavaScript, recomputed in the browser on every render.\n\nThey were moved into ordinary files.\n\nThey are now computed once — by the build.",
       "speechSeconds": 15,
       "suggestedDur": 14.5
     },
@@ -171,8 +154,7 @@
       "n": 18,
       "id": "layer",
       "budget": 9.9,
-      "text": "Cascade layers decide who wins. <break time=\"500ms\"/> Ours are ordered; the last one always does. <break time=\"600ms\"/> Then version six arrived with unlayered styles — <break time=\"400ms\"/> outside every layer, and therefore above them all. <break time=\"300ms\"/> This was handled.",
-      "textV3": "Cascade layers decide who wins. — Ours are ordered; the last one always does. … Then version six arrived with unlayered styles — outside every layer, and therefore above them all. — This was handled.",
+      "text": "Cascade layers decide who wins.\n\nOurs are ordered; the last one always does.\n\nThen version six arrived with unlayered styles — outside every layer, and therefore above them all.\n\nThis was handled.",
       "speechSeconds": 16.3,
       "suggestedDur": 15.8
     },
@@ -180,8 +162,7 @@
       "n": 19,
       "id": "consolidation",
       "budget": 9.4,
-      "text": "There had been fifteen filter systems. <break time=\"500ms\"/> One fix required fifteen fixes. <break time=\"600ms\"/> They became a single configuration-driven module — <break time=\"400ms\"/> roughly sixty-five percent of the filter layer, simply gone.",
-      "textV3": "There had been fifteen filter systems. — One fix required fifteen fixes. … They became a single configuration-driven module — roughly sixty-five percent of the filter layer, simply gone.",
+      "text": "There had been fifteen filter systems.\n\nOne fix required fifteen fixes.\n\nThey became a single configuration-driven module — roughly sixty-five percent of the filter layer, simply gone.",
       "speechSeconds": 13.8,
       "suggestedDur": 13.3
     },
@@ -189,8 +170,7 @@
       "n": 20,
       "id": "filter-ux",
       "budget": 7.4,
-      "text": "One filter now. <break time=\"400ms\"/> The same pills, the same saved views, <break time=\"300ms\"/> across fifteen pages that had never once agreed.",
-      "textV3": "One filter now. — The same pills, the same saved views, — across fifteen pages that had never once agreed.",
+      "text": "One filter now.\n\nThe same pills, the same saved views, across fifteen pages that had never once agreed.",
       "speechSeconds": 8.9,
       "suggestedDur": 8.4
     },
@@ -198,8 +178,7 @@
       "n": 21,
       "id": "filter-keyboard",
       "budget": 7.4,
-      "text": "It can be operated entirely by keyboard. <break time=\"600ms\"/> The people who work here all day <break time=\"300ms\"/> tend to notice this first.",
-      "textV3": "It can be operated entirely by keyboard. … The people who work here all day — tend to notice this first.",
+      "text": "It can be operated entirely by keyboard.\n\nThe people who work here all day tend to notice this first.",
       "speechSeconds": 9.5,
       "suggestedDur": 9
     },
@@ -207,8 +186,7 @@
       "n": 22,
       "id": "filter-wins",
       "budget": 6.9,
-      "text": "Architecture that compounds. <break time=\"500ms\"/> Each thing built on it is cheaper than the thing before it.",
-      "textV3": "Architecture that compounds. — Each thing built on it is cheaper than the thing before it.",
+      "text": "Architecture that compounds.\n\nEach thing built on it is cheaper than the thing before it.",
       "speechSeconds": 7.3,
       "suggestedDur": 6.8
     },
@@ -216,8 +194,7 @@
       "n": 23,
       "id": "windowed",
       "budget": 7.9,
-      "text": "Formerly, every tile fetched at once, whether or not you looked at it. <break time=\"600ms\"/> Now a tile fetches when it enters view. <break time=\"300ms\"/> Not before.",
-      "textV3": "Formerly, every tile fetched at once, whether or not you looked at it. … Now a tile fetches when it enters view. — Not before.",
+      "text": "Formerly, every tile fetched at once, whether or not you looked at it.\n\nNow a tile fetches when it enters view.\n\nNot before.",
       "speechSeconds": 11.4,
       "suggestedDur": 10.9
     },
@@ -225,8 +202,7 @@
       "n": 24,
       "id": "virtual-list",
       "budget": 7.4,
-      "text": "The list renders only what is on screen. <break time=\"500ms\"/> A thousand rows, or ten. <break time=\"400ms\"/> The browser cannot tell the difference.",
-      "textV3": "The list renders only what is on screen. — A thousand rows, or ten. — The browser cannot tell the difference.",
+      "text": "The list renders only what is on screen.\n\nA thousand rows, or ten.\n\nThe browser cannot tell the difference.",
       "speechSeconds": 9.5,
       "suggestedDur": 9
     },
@@ -234,8 +210,7 @@
       "n": 25,
       "id": "url-state",
       "budget": 10.4,
-      "text": "Your place is kept in the address bar. <break time=\"500ms\"/> The filters, the page, the customer — all of it. <break time=\"600ms\"/> You may now send a colleague a link <break time=\"400ms\"/> and be entirely confident about what they will see.",
-      "textV3": "Your place is kept in the address bar. — The filters, the page, the customer — all of it. … You may now send a colleague a link — and be entirely confident about what they will see.",
+      "text": "Your place is kept in the address bar.\n\nThe filters, the page, the customer — all of it.\n\nYou may now send a colleague a link and be entirely confident about what they will see.",
       "speechSeconds": 17.4,
       "suggestedDur": 16.9
     },
@@ -243,8 +218,7 @@
       "n": 26,
       "id": "upgrades",
       "budget": 7.4,
-      "text": "React eighteen. Vite eight. React Query. <break time=\"500ms\"/> The foundation was replaced while the building remained open.",
-      "textV3": "React eighteen. Vite eight. React Query. — The foundation was replaced while the building remained open.",
+      "text": "React eighteen.\n\nVite eight.\n\nReact Query.\n\nThe foundation was replaced while the building remained open.",
       "speechSeconds": 7.3,
       "suggestedDur": 6.8
     },
@@ -252,8 +226,7 @@
       "n": 27,
       "id": "hardening",
       "budget": 7.4,
-      "text": "Four leaks were found in the startup path. <break time=\"500ms\"/> Objects created on every render, and never once closed. <break time=\"300ms\"/> They are closed now.",
-      "textV3": "Four leaks were found in the startup path. — Objects created on every render, and never once closed. — They are closed now.",
+      "text": "Four leaks were found in the startup path.\n\nObjects created on every render, and never once closed.\n\nThey are closed now.",
       "speechSeconds": 10.3,
       "suggestedDur": 9.8
     },
@@ -261,8 +234,7 @@
       "n": 28,
       "id": "chapter-payoff",
       "budget": 5.9,
-      "text": "Act Three. The Payoff. <break time=\"600ms\"/> What all of it actually bought.",
-      "textV3": "Act Three. The Payoff. … What all of it actually bought.",
+      "text": "Act Three.\n\nThe Payoff.\n\nWhat all of it actually bought.",
       "speechSeconds": 5.1,
       "suggestedDur": 4.6
     },
@@ -270,8 +242,7 @@
       "n": 29,
       "id": "headline",
       "budget": 7.9,
-      "text": "The dashboard loads in seven hundred fifty-five milliseconds. <break time=\"400ms\"/> Two and a half megabytes. <break time=\"400ms\"/> Fourteen startup calls, where there had been forty-three.",
-      "textV3": "The dashboard loads in seven hundred fifty-five milliseconds. — Two and a half megabytes. — Fourteen startup calls, where there had been forty-three.",
+      "text": "The dashboard loads in seven hundred fifty-five milliseconds.\n\nTwo and a half megabytes.\n\nFourteen startup calls, where there had been forty-three.",
       "speechSeconds": 10.3,
       "suggestedDur": 9.8
     },
@@ -279,8 +250,7 @@
       "n": 30,
       "id": "bytes-went",
       "budget": 7.4,
-      "text": "Every line moves in the same direction. <break time=\"600ms\"/> This is rarer than it sounds, <break time=\"300ms\"/> and was not guaranteed.",
-      "textV3": "Every line moves in the same direction. … This is rarer than it sounds, — and was not guaranteed.",
+      "text": "Every line moves in the same direction.\n\nThis is rarer than it sounds, and was not guaranteed.",
       "speechSeconds": 8.6,
       "suggestedDur": 8.1
     },
@@ -288,8 +258,7 @@
       "n": 31,
       "id": "compression",
       "budget": 8.4,
-      "text": "Two thirds less code was written. <break time=\"400ms\"/> Compression did the remaining third. <break time=\"600ms\"/> We cite the bytes that crossed the network — <break time=\"300ms\"/> those are the ones the user waits for.",
-      "textV3": "Two thirds less code was written. — Compression did the remaining third. … We cite the bytes that crossed the network — those are the ones the user waits for.",
+      "text": "Two thirds less code was written.\n\nCompression did the remaining third.\n\nWe cite the bytes that crossed the network — those are the ones the user waits for.",
       "speechSeconds": 14,
       "suggestedDur": 13.5
     },
@@ -297,8 +266,7 @@
       "n": 32,
       "id": "build-time",
       "budget": 9.4,
-      "text": "The build once took one minute and forty-four seconds. <break time=\"600ms\"/> It now takes fifteen. <break time=\"500ms\"/> Ninety seconds returned, on every push, <break time=\"300ms\"/> to every engineer, forever.",
-      "textV3": "The build once took one minute and forty-four seconds. … It now takes fifteen. — Ninety seconds returned, on every push, — to every engineer, forever.",
+      "text": "The build once took one minute and forty-four seconds.\n\nIt now takes fifteen.\n\nNinety seconds returned, on every push, to every engineer, forever.",
       "speechSeconds": 11.9,
       "suggestedDur": 11.4
     },
@@ -306,8 +274,7 @@
       "n": 33,
       "id": "caveats",
       "budget": 7.9,
-      "text": "Some honesty, briefly. <break time=\"500ms\"/> Different deployments. Different datasets. Cold loads. <break time=\"400ms\"/> Read the direction — <break time=\"300ms\"/> and not the decimals.",
-      "textV3": "Some honesty, briefly. — Different deployments. Different datasets. Cold loads. — Read the direction — and not the decimals.",
+      "text": "Some honesty, briefly.\n\nDifferent deployments.\n\nDifferent datasets.\n\nCold loads.\n\nRead the direction — and not the decimals.",
       "speechSeconds": 8.9,
       "suggestedDur": 8.4
     },
@@ -315,8 +282,7 @@
       "n": 34,
       "id": "oneline",
       "budget": 6.9,
-      "text": "One filter system. <break time=\"400ms\"/> Not fifteen. <break time=\"600ms\"/> If you remember a single line, we would prefer it were that one.",
-      "textV3": "One filter system. — Not fifteen. … If you remember a single line, we would prefer it were that one.",
+      "text": "One filter system.\n\nNot fifteen.\n\nIf you remember a single line, we would prefer it were that one.",
       "speechSeconds": 9.2,
       "suggestedDur": 8.7
     },
@@ -324,8 +290,7 @@
       "n": 35,
       "id": "customer",
       "budget": 6.9,
-      "text": "It loads two and a half times faster. <break time=\"400ms\"/> The feeds no longer freeze. <break time=\"400ms\"/> Customers did not need to be told any of this.",
-      "textV3": "It loads two and a half times faster. — The feeds no longer freeze. — Customers did not need to be told any of this.",
+      "text": "It loads two and a half times faster.\n\nThe feeds no longer freeze.\n\nCustomers did not need to be told any of this.",
       "speechSeconds": 11.3,
       "suggestedDur": 10.8
     },
@@ -333,8 +298,7 @@
       "n": 36,
       "id": "developer",
       "budget": 6.9,
-      "text": "One toolkit. Less code to own. <break time=\"500ms\"/> The team now spends its time on things that did not exist last year.",
-      "textV3": "One toolkit. Less code to own. — The team now spends its time on things that did not exist last year.",
+      "text": "One toolkit.\n\nLess code to own.\n\nThe team now spends its time on things that did not exist last year.",
       "speechSeconds": 9.6,
       "suggestedDur": 9.1
     },
@@ -342,8 +306,7 @@
       "n": 37,
       "id": "chapter-agents",
       "budget": 5.9,
-      "text": "Act Four. The Agents. <break time=\"600ms\"/> A fast build introduced a new kind of mistake.",
-      "textV3": "Act Four. The Agents. … A fast build introduced a new kind of mistake.",
+      "text": "Act Four.\n\nThe Agents.\n\nA fast build introduced a new kind of mistake.",
       "speechSeconds": 6.5,
       "suggestedDur": 6
     },
@@ -351,8 +314,7 @@
       "n": 38,
       "id": "agents",
       "budget": 10.4,
-      "text": "The component library now ships its own expertise. <break time=\"500ms\"/> Alfred keeps the house. He does not write code. <break time=\"400ms\"/> He determines who should. <break time=\"600ms\"/> A quick question, you look up yourself. <break time=\"400ms\"/> A real job is sent away — and reports back.",
-      "textV3": "The component library now ships its own expertise. — Alfred keeps the house. He does not write code. — He determines who should. … A quick question, you look up yourself. — A real job is sent away — and reports back.",
+      "text": "The component library now ships its own expertise.\n\nAlfred keeps the house.\n\nHe does not write code.\n\nHe determines who should.\n\nA quick question, you look up yourself.\n\nA real job is sent away — and reports back.",
       "speechSeconds": 19.2,
       "suggestedDur": 18.7
     },
@@ -360,8 +322,7 @@
       "n": 39,
       "id": "neo",
       "budget": 10.4,
-      "text": "Neo reads every pull request before anyone else does. <break time=\"600ms\"/> On this one, it found a command-injection hole — <break time=\"400ms\"/> in the workflow written to harden the pipeline. <break time=\"600ms\"/> One dollar and seventy-six cents. <break time=\"400ms\"/> Seven and a half minutes. <break time=\"300ms\"/> No human had opened the file.",
-      "textV3": "Neo reads every pull request before anyone else does. … On this one, it found a command-injection hole — in the workflow written to harden the pipeline. … One dollar and seventy-six cents. — Seven and a half minutes. — No human had opened the file.",
+      "text": "Neo reads every pull request before anyone else does.\n\nOn this one, it found a command-injection hole — in the workflow written to harden the pipeline.\n\nOne dollar and seventy-six cents.\n\nSeven and a half minutes.\n\nNo human had opened the file.",
       "speechSeconds": 21.4,
       "suggestedDur": 20.9
     },
@@ -369,8 +330,7 @@
       "n": 40,
       "id": "closing",
       "budget": 7.4,
-      "text": "The platform, re-engineered. <break time=\"700ms\"/> Faster, lighter, and considerably harder to break. <break time=\"500ms\"/> Thank you for your attention.",
-      "textV3": "The platform, re-engineered. … Faster, lighter, and considerably harder to break. — Thank you for your attention.",
+      "text": "The platform, re-engineered.\n\nFaster, lighter, and considerably harder to break.\n\nThank you for your attention.",
       "speechSeconds": 8,
       "suggestedDur": 7.5
     }

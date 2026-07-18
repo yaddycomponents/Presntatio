@@ -8,8 +8,11 @@
 // read across all 40 scenes instead of resetting its tone on every clip. Without
 // this, a deadpan register drifts audibly over eight minutes.
 //
+// Pauses come from line breaks, not SSML — each sentence sits on its own line.
+// Send the text with its blank lines intact; collapsing them removes the pauses.
+//
 // Flags:
-//   --v3        use eleven_v3 and the textV3 field (breaks -> dashes/ellipses)
+//   --model=id  override the model (default: meta.recommendedModel)
 //   --only=id   regenerate a single scene (stitching context is rebuilt first)
 //   --dry       print what would be sent, call nothing
 
@@ -22,7 +25,7 @@ const VOICE = process.env.VOICE_ID
 const OUT = 'out/vo'
 
 const args = process.argv.slice(2)
-const useV3 = args.includes('--v3')
+const modelArg = args.find((a) => a.startsWith('--model='))?.split('=')[1]
 const dry = args.includes('--dry')
 const only = args.find((a) => a.startsWith('--only='))?.split('=')[1]
 
@@ -32,8 +35,8 @@ if (!dry && (!KEY || !VOICE)) {
 }
 
 const { meta, scenes } = JSON.parse(fs.readFileSync('src/narration.json', 'utf8'))
-const model = useV3 ? 'eleven_v3' : meta.recommendedModel
-const field = useV3 ? 'textV3' : 'text'
+const model = modelArg ?? meta.recommendedModel
+
 
 fs.mkdirSync(OUT, { recursive: true })
 
@@ -41,18 +44,18 @@ const ids = []
 let generated = 0
 
 for (const [i, s] of scenes.entries()) {
-  const text = s[field]
+  const text = s.text
   const body = {
     text,
     model_id: model,
     voice_settings: meta.voiceSettings,
     previous_request_ids: ids.slice(-3),
-    previous_text: i > 0 ? scenes[i - 1][field] : undefined,
-    next_text: i < scenes.length - 1 ? scenes[i + 1][field] : undefined,
+    previous_text: i > 0 ? scenes[i - 1].text : undefined,
+    next_text: i < scenes.length - 1 ? scenes[i + 1].text : undefined,
   }
 
   const file = path.join(OUT, `${String(s.n).padStart(2, '0')}-${s.id}.mp3`)
-  const words = text.replace(/<[^>]+>/g, '').split(/\s+/).filter(Boolean).length
+  const words = text.split(/\s+/).filter(Boolean).length
   const est = (words / meta.wordsPerSecond).toFixed(1)
   const over = est > s.budget ? `  ⚠ over budget (${s.budget}s)` : ''
 
