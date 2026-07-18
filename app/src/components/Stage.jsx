@@ -5,7 +5,15 @@ import { sceneSwap } from '../motion'
 
 export default function Stage({ scenes }) {
   const params = new URLSearchParams(window.location.search)
-  const [i, setI] = useState(0)
+  // jump straight to a slide by index or id: ?scene=12 or ?scene=prefetch
+  const [i, setI] = useState(() => {
+    const s = params.get('scene')
+    if (!s) return 0
+    const byId = scenes.findIndex((x) => x.id === s)
+    if (byId >= 0) return byId
+    const n = Number(s)
+    return Number.isInteger(n) ? Math.min(scenes.length - 1, Math.max(0, n)) : 0
+  })
   const [playing, setPlaying] = useState(() => params.has('play'))
   const count = scenes.length
   // extra seconds each scene lingers after its animation, for reading. Tune with ?hold=2

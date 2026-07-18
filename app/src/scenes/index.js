@@ -16,6 +16,7 @@ import EagerBootScene from './EagerBootScene'
 import BytesWentScene from './BytesWentScene'
 import CaveatsScene from './CaveatsScene'
 import PreloadScene from './PreloadScene'
+import PrefetchScene from './PrefetchScene'
 import ImportChainScene from './ImportChainScene'
 import ImportFixScene from './ImportFixScene'
 import RulesScene from './RulesScene'
@@ -48,6 +49,7 @@ export const scenes = [
   { id: 'chunk-bars', bg: tokens.bg.primary, dur: 6.5, Component: ChunkBarsScene },
   { id: 'eager-boot', bg: tokens.bg.primary, dur: 6.5, Component: EagerBootScene },
   { id: 'preload', bg: tokens.bg.primary, dur: 6.5, Component: PreloadScene },
+  { id: 'prefetch', bg: tokens.bg.primary, dur: 9.5, Component: PrefetchScene },
   { id: 'import-chain', bg: tokens.bg.primary, dur: 6, Component: ImportChainScene },
   { id: 'import-fix', bg: tokens.bg.primary, dur: 6, Component: ImportFixScene },
   { id: 'bundle', bg: tokens.bg.primary, dur: 5.5, Component: BundleScene },
