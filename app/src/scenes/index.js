@@ -32,6 +32,7 @@ import UrlStateScene from './UrlStateScene'
 import UpgradesScene from './UpgradesScene'
 import HardeningScene from './HardeningScene'
 import ClosingScene from './ClosingScene'
+import BuildTimeScene from './BuildTimeScene'
 
 export const scenes = [
   // — Open —
@@ -49,7 +50,6 @@ export const scenes = [
   { id: 'chunk-bars', bg: tokens.bg.primary, dur: 6.5, Component: ChunkBarsScene },
   { id: 'eager-boot', bg: tokens.bg.primary, dur: 6.5, Component: EagerBootScene },
   { id: 'preload', bg: tokens.bg.primary, dur: 6.5, Component: PreloadScene },
-  { id: 'prefetch', bg: tokens.bg.primary, dur: 9.5, Component: PrefetchScene },
   { id: 'import-chain', bg: tokens.bg.primary, dur: 6, Component: ImportChainScene },
   { id: 'import-fix', bg: tokens.bg.primary, dur: 6, Component: ImportFixScene },
   { id: 'bundle', bg: tokens.bg.primary, dur: 5.5, Component: BundleScene },
@@ -62,6 +62,7 @@ export const scenes = [
   { id: 'filter-wins', bg: tokens.bg.primary, dur: 5.5, Component: FilterWinsScene },
   { id: 'windowed', bg: tokens.bg.primary, dur: 6.5, Component: WindowedScene },
   { id: 'virtual-list', bg: tokens.bg.primary, dur: 6, Component: VirtualListScene },
+  { id: 'prefetch', bg: tokens.bg.primary, dur: 9.5, Component: PrefetchScene },
   { id: 'url-state', bg: tokens.bg.primary, dur: 9, Component: UrlStateScene },
   { id: 'upgrades', bg: tokens.bg.primary, dur: 6, Component: UpgradesScene },
   { id: 'hardening', bg: tokens.bg.primary, dur: 6, Component: HardeningScene },
@@ -71,6 +72,7 @@ export const scenes = [
   { id: 'headline', bg: tokens.bg.primary, dur: 6.5, Component: HeadlineScene },
   { id: 'bytes-went', bg: tokens.bg.primary, dur: 6, Component: BytesWentScene },
   { id: 'compression', bg: tokens.bg.primary, dur: 7, Component: CompressionScene },
+  { id: 'build-time', bg: tokens.bg.primary, dur: 8, Component: BuildTimeScene },
   { id: 'caveats', bg: tokens.bg.primary, dur: 6.5, Component: CaveatsScene },
   { id: 'oneline', bg: tokens.bg.alt, dur: 5.5, Component: OneLineScene },
   { id: 'customer', bg: tokens.bg.primary, dur: 5.5, Component: CustomerImpactScene },

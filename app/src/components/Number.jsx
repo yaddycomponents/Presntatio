@@ -10,6 +10,7 @@ export default function CountUp({
   decimals = 0,
   prefix = '',
   suffix = '',
+  formatter,
 }) {
   const [val, setVal] = useState(from)
 
@@ -26,7 +27,9 @@ export default function CountUp({
   return (
     <span style={{ fontFamily: tokens.font.mono, fontVariantNumeric: 'tabular-nums' }}>
       {prefix}
-      {val.toLocaleString('en-US', { minimumFractionDigits: decimals, maximumFractionDigits: decimals })}
+      {formatter
+        ? formatter(val)
+        : val.toLocaleString('en-US', { minimumFractionDigits: decimals, maximumFractionDigits: decimals })}
       {suffix}
     </span>
   )
