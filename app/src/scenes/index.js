@@ -36,6 +36,7 @@ import HardeningScene from './HardeningScene'
 import ClosingScene from './ClosingScene'
 import SafetyNetsScene from './SafetyNetsScene'
 import BuildTimeScene from './BuildTimeScene'
+import FinScene from './FinScene'
 
 export const scenes = [
   // — Open —
@@ -88,4 +89,5 @@ export const scenes = [
   { id: 'neo', bg: tokens.bg.primary, dur: 19.6, Component: NeoScene },
 
   { id: 'closing', bg: tokens.bg.title, dur: 8.3, Component: ClosingScene },
+  { id: 'fin', bg: tokens.bg.primary, dur: 6.5, Component: FinScene },
 ]
