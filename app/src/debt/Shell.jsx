@@ -48,21 +48,22 @@ function Row({ depth = 0, icon, color = T.muted, children, active, badge, dim })
 function Explorer({ activeFile }) {
   return (
     <div style={{ width: SIDEBAR, background: T.sunken, borderRight: `1px solid ${T.border}`, flexShrink: 0, overflow: 'hidden' }}>
-      <div style={{ padding: '16px 18px', fontFamily: sans, fontSize: 16, letterSpacing: '0.14em', color: T.faint, textTransform: 'uppercase' }}>Explorer</div>
+      <div style={{ padding: '16px 18px', fontFamily: sans, fontSize: 16, letterSpacing: '0.14em', color: T.faint, textTransform: 'uppercase' }}>Growfin · 3 repos</div>
       <div style={{ padding: '0 8px', fontFamily: mono }}>
-        <Row icon="▾" color={T.mauve}><b style={{ color: T.text }}>HEISENBERG</b></Row>
+        <Row icon="▾" color={T.mauve} active={activeFile === 'react18' || activeFile === 'antd' || activeFile === 'filter' || activeFile === 'tiptap' || activeFile === 'bundle'}><b style={{ color: T.text }}>heisenberg</b> · crm</Row>
         <Row depth={1} icon="▾" color={T.teal}>docs</Row>
-        <Row depth={2} icon="▾" color={T.teal}>react-18-upgrade</Row>
-        <Row depth={3} icon="≡" color={T.blue} active={activeFile === 'redux'}>REDUX_MIGRATION_PLAN.md</Row>
-        <Row depth={3} icon="≡" color={T.blue}>BASECOMPONENTS_MIGRATION.md</Row>
-        <Row depth={3} icon="≡" color={T.blue}>NEW_BUNDLE_PRESENTATION.md</Row>
-        <Row depth={2} icon="≡" color={T.blue} active={activeFile === 'analysis'}>UPGRADE_ANALYSIS.md</Row>
-        <Row depth={1} icon="▾" color={T.teal}>scripts / codemods</Row>
-        <Row depth={2} icon="⚙" color={T.peach} active={activeFile === 'cm1'}>transform-fontawesome…cjs</Row>
-        <Row depth={2} icon="⚙" color={T.peach} active={activeFile === 'cm2'}>tw-flex-to-growflex…cjs</Row>
-        <Row depth={2} icon="⚙" color={T.peach}>redux-to-hooks…cjs</Row>
-        <Row depth={1} icon="▸" color={T.faint}>src</Row>
-        <Row depth={1} icon="≡" color={T.yellow}>package.json</Row>
+        <Row depth={2} icon="≡" color={T.blue} active={activeFile === 'react18'}>REACT18_UPGRADE_PLAN.md</Row>
+        <Row depth={2} icon="≡" color={T.blue} active={activeFile === 'antd'}>ANTD_V6_DEPRECATED_PROPS.md</Row>
+        <Row depth={2} icon="≡" color={T.blue} active={activeFile === 'filter'}>GROWFILTER_SYNC_ARCH.md</Row>
+        <Row depth={2} icon="≡" color={T.blue} active={activeFile === 'tiptap'}>tiptap-chain-learnings.md</Row>
+        <Row depth={2} icon="≡" color={T.blue} active={activeFile === 'bundle'}>BUNDLE_OPTIMIZATION.md</Row>
+        <Row depth={1} icon="▸" color={T.peach}>scripts / codemods</Row>
+        <Row icon="▾" color={T.mauve} active={activeFile === 'asgard'}><b style={{ color: T.text }}>asgard</b> · cashapps</Row>
+        <Row depth={1} icon="≡" color={T.yellow} active={activeFile === 'asgard'}>package.json</Row>
+        <Row icon="▾" color={T.mauve} active={activeFile === 'rte'}><b style={{ color: T.text }}>grow-components</b></Row>
+        <Row depth={1} icon="▾" color={T.teal}>packages</Row>
+        <Row depth={2} icon="⬡" color={T.green} active={activeFile === 'rte'}>grow-rte</Row>
+        <Row depth={2} icon="⬡" color={T.faint}>grow-icons</Row>
       </div>
     </div>
   )
@@ -80,7 +81,7 @@ function Tab({ children, active, dirty, icon, color = T.blue }) {
 
 function ClaudePanel({ children, focus }) {
   return (
-    <div style={{ width: 780, background: T.bg, borderLeft: `1px solid ${T.border}`, display: 'flex', flexDirection: 'column', flexShrink: 0, opacity: focus === 'chat' || !focus ? 1 : 0.5, transition: 'opacity .4s' }}>
+    <div style={{ width: 820, background: T.bg, borderLeft: `1px solid ${T.border}`, display: 'flex', flexDirection: 'column', flexShrink: 0, opacity: focus === 'chat' || !focus ? 1 : 0.42, transition: 'opacity .4s' }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '0 24px', height: 56, borderBottom: `1px solid ${T.border}`, flexShrink: 0 }}>
         <span style={{ color: T.peach, fontSize: 24 }}>✳</span>
         <span style={{ fontFamily: mono, fontSize: 21, color: T.text }}>Claude Code</span>
@@ -97,7 +98,7 @@ function ClaudePanel({ children, focus }) {
 }
 
 export function Shell({ activeFile, tabs, editor, terminal, chat, focus }) {
-  const dim = (region) => (focus && focus !== region ? 0.45 : 1)
+  const dim = (region) => (focus && focus !== region ? 0.3 : 1)
   return (
     <div className="stage" style={{ display: 'flex', flexDirection: 'column', background: T.bg, fontFamily: sans, color: T.text }}>
       {/* top bar */}
