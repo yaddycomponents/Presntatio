@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Shell, T, mono, code } from './Shell'
+import { Shell, T, mono, code, sans } from './Shell'
 
 // ONE continuous Claude Code session per context window. Every tech debt follows
 // the SAME loop: Claude asks "all good — what next?", the user types the next
@@ -20,7 +20,7 @@ function Turn({ block, fresh }) {
   const cls = fresh ? 'rise' : ''
   // committed prompts carry NO caret — the blinking cursor lives only in the input box
   if (block.u) return <div className={cls} style={{ ...cbase, color: T.green, display: 'flex', gap: 12 }}><span>❯</span><span>{block.u}</span></div>
-  if (block.compact) return <Compact cls={cls} />
+  if (block.compact) return fresh ? <CompactAnim cls={cls} /> : <CompactDone cls={cls} />
   if (block.model) return (
     <div className={cls} style={{ ...cbase, color: T.mauve, display: 'flex', gap: 10 }}>
       <span>◐</span><span>model → <b style={{ color: T.text }}>{block.model.name}</b> <span style={{ color: T.faint }}>· {block.model.note}</span></span>
@@ -43,8 +43,8 @@ function Turn({ block, fresh }) {
     </div>
   )
 }
-function Compact({ cls }) {
-  // real /compact — a block progress bar filling up with the percentage
+// the /compact bar animates ONCE, only while it's the newest turn
+function CompactAnim({ cls }) {
   const N = 30
   const [pct, setPct] = useState(0)
   useEffect(() => {
@@ -52,7 +52,7 @@ function Compact({ cls }) {
     let t0 = null
     const tick = (ts) => {
       if (t0 === null) t0 = ts
-      const p = Math.min(100, Math.round(((ts - t0) / 3200) * 100))
+      const p = Math.min(100, Math.round(((ts - t0) / 2600) * 100))
       setPct(p)
       if (p < 100) raf = requestAnimationFrame(tick)
     }
@@ -71,6 +71,10 @@ function Compact({ cls }) {
       {pct >= 100 && <div style={{ color: T.green, marginTop: 6 }}>✓ summary saved · context reclaimed</div>}
     </div>
   )
+}
+// once it's history, collapse to a one-line done note (no re-animation)
+function CompactDone({ cls }) {
+  return <div className={cls} style={{ ...cbase, color: T.green, display: 'flex', gap: 10 }}><span>✳</span> Compacted conversation · summary saved</div>
 }
 function Diff({ rows }) {
   return (
@@ -186,11 +190,11 @@ const S1 = [
   { u: "let's clear the frontend debt. React 18 first — what breaks?", f: { file: 'backlog', focus: 'chat', dur: 2.0 } },
   { say: ["I'll scan all three apps for React 18 blockers."] },
   { tool: 'Read', target: 'docs/react-18-upgrade/REACT18_USEEFFECT_AUDIT.md', meta: 'Read 240 lines' },
-  { say: ['React 17.0.2 across crm, cashapps, grow-components', 'legacy ReactDOM.render — removed in 18', 'StrictMode double-invokes effects · 83 files'], ask: 'Write the migration plan?', f: { file: 'backlog', focus: 'chat', dur: 2.5, work: 'Forging… (1m 13s · ↓ 3.1k tokens · thought for 46s)' } },
+  { say: ['React 17.0.2 across crm, cashapps, grow-components', 'legacy ReactDOM.render — removed in 18', 'StrictMode double-invokes effects · 83 files'], ask: 'Write the migration plan?', f: { file: 'backlog', focus: 'chat', dur: 2.5, work: 'Fissioning… (1m 13s · ↓ 3.1k tokens · achieving criticality)' } },
   { u: 'yes' },
   { tool: 'Update', target: 'docs/REACT18_UPGRADE_PLAN.md', meta: 'Added 34 lines', diff: [['## Phase 1 — createRoot', 'add', 1], ['## Phase 2 — effect cleanup audit', 'add', 2]], f: { file: 'plan', focus: 'editor', dur: 2.6 } },
   { tool: 'Update', target: 'server/main.tsx', meta: 'Added 2, removed 2', diff: [["import ReactDOM from 'react-dom'", 'del', 1], ["import { createRoot } from 'react-dom/client'", 'add', 1], ['ReactDOM.render(<App/>, root)', 'del', 8], ['createRoot(root).render(<App/>)', 'add', 8]], f: { file: 'main', focus: 'editor', dur: 2.0 } },
-  { tool: 'Bash', target: 'pnpm tsc --noEmit && pnpm vitest run', out: [['✓ 0 errors', ''], ['✓ 214 passed', '']], f: { file: 'main', focus: 'terminal', dur: 2.0, work: 'Pondering… (58s · ↓ 8.4k tokens · thinking some more)' } },
+  { tool: 'Bash', target: 'pnpm tsc --noEmit && pnpm vitest run', out: [['✓ 0 errors', ''], ['✓ 214 passed', '']], f: { file: 'main', focus: 'terminal', dur: 2.0, work: 'Enriching… (58s · ↓ 8.4k tokens · to 90%)' } },
   { say: ['React 18 done — crm on 18.3.1.'] },
   { say: ['cashapps (asgard) is still on 17.0.2.', 'Same createRoot change applies there.'], ask: 'Migrate asgard too — paste its path?', f: { file: 'main', focus: 'chat', dur: 2.0 } },
   { u: '/Users/yathavan/Documents/GitHub/asgard/package.json', f: { file: 'asgard', focus: 'chat', dur: 2.2 } },
@@ -201,7 +205,7 @@ const S1 = [
   { u: 'the AR-aging table freezes on the second render', f: { file: 'aging', focus: 'chat', dur: 2.0 } },
   { say: ['StrictMode double-invoke — an effect', 'without cleanup. Let me trace it.'] },
   { tool: 'Update', target: 'node_modules/rc-virtual-list/es/List.js', meta: 'added a debug log', diff: [["+ console.log('[vlist]', { observers })", 'add', 118]], f: { file: 'aging', focus: 'chat', dur: 2.0 } },
-  { tool: 'Bash', target: 'pnpm dev', out: [['[vlist] { observers: 1 }', T.muted], ['[vlist] { observers: 2 }  ← stacked', T.yellow]], f: { file: 'aging', focus: 'terminal', dur: 2.0, work: 'Simmering… (44s · ↓ 5.0k tokens)' } },
+  { tool: 'Bash', target: 'pnpm dev', out: [['[vlist] { observers: 1 }', T.muted], ['[vlist] { observers: 2 }  ← stacked', T.yellow]], f: { file: 'aging', focus: 'terminal', dur: 2.0, work: 'Colliding… (44s · ↓ 5.0k tokens · neutrons flowing)' } },
   { say: ['The ResizeObserver is never disconnected —', 'it was quietly cloning itself. Classic.'] },
   { tool: 'Update', target: 'src/aging/AgingTable.tsx', meta: 'Added 1 line', diff: [['+  return () => ro.disconnect()', 'add', 45]] },
   { tool: 'Update', target: 'node_modules/rc-virtual-list/es/List.js', meta: 'reverted debug log' },
@@ -218,13 +222,13 @@ const S2 = [
   { divider: true, f: { file: 'handoff', focus: 'chat', dur: 2.0 } },
   { u: 'continue from the handoff' },
   { tool: 'Read', target: 'docs/CONTEXT_HANDOFF.md', meta: 'Read 12 lines' },
-  { say: ['Picking up — AntD v5 → v6, all three repos.'], ask: 'Plan + codemod it everywhere?', f: { file: 'handoff', focus: 'chat', dur: 2.0, work: 'Percolating… (1m 31s · ↓ 2.7k tokens · thought for 41s)' } },
+  { say: ['Picking up — AntD v5 → v6, all three repos.'], ask: 'Plan + codemod it everywhere?', f: { file: 'handoff', focus: 'chat', dur: 2.0, work: 'Resonating… (1m 31s · ↓ 2.7k tokens · thought for 41s)' } },
   { u: 'do it' },
   { tool: 'Update', target: 'docs/ANTD_V6_MIGRATION.md', meta: 'Added 20 lines', diff: [['bordered → variant', 'add', 1], ['dropdownClassName → classNames.popup', 'add', 2]], f: { file: 'antdplan', focus: 'editor', dur: 2.2 } },
   // built on Opus 4.8 — drop to a smaller model for the mechanical codemod
   { u: '/model sonnet', f: { file: 'antdplan', focus: 'chat', dur: 2.1 } },
   { model: { name: 'Claude Sonnet 4.5', note: 'cheaper for a find-and-replace codemod' }, f: { file: 'antdplan', focus: 'chat', dur: 2.0 } },
-  { tool: 'Bash', target: 'pnpm -r exec antd-deprecated-props-transform.cjs', out: [['✓ heisenberg · crm', T.green], ['✓ asgard · cashapps', T.green], ['✓ grow-components', T.green]], f: { file: 'antd', focus: 'terminal', dur: 2.0, work: 'Conjuring… (1m 9s · ↓ 9.9k tokens · thinking harder)' } },
+  { tool: 'Bash', target: 'pnpm -r exec antd-deprecated-props-transform.cjs', out: [['✓ heisenberg · crm', T.green], ['✓ asgard · cashapps', T.green], ['✓ grow-components', T.green]], f: { file: 'antd', focus: 'terminal', dur: 2.0, work: 'Bombarding… (1m 9s · ↓ 9.9k tokens · thinking harder)' } },
   { tool: 'Update', target: 'src/inbox/Toolbar.tsx', meta: 'Added 2, removed 2', diff: [['<Select bordered={false}', 'del', 8], ['<Select variant="borderless"', 'add', 8]], f: { file: 'antd', focus: 'editor', dur: 2.0 } },
   { say: ['AntD v6 across three codebases.'], done: 'AntD v6 ✓', ask: 'All good — what next?', f: { file: 'antd', focus: 'chat', dur: 2.0 } },
   // back to Opus for the reasoning work
@@ -244,7 +248,7 @@ const S2 = [
   // tiptap-chain bundle regression
   { u: 'bundle jumped ~195KB after that', f: { file: 'vite', focus: 'chat', dur: 2.0 } },
   { say: ['The tiptap chain slipped into the entry chunk.'] },
-  { tool: 'Bash', target: 'pnpm build', out: [['entry chunk +195 KB', T.yellow], ['@tiptap in modulepreload ← eager', T.yellow]], f: { file: 'vite', focus: 'terminal', dur: 2.0, work: 'Marinating… (1m 22s · ↓ 7.3k tokens · high effort)' } },
+  { tool: 'Bash', target: 'pnpm build', out: [['entry chunk +195 KB', T.yellow], ['@tiptap in modulepreload ← eager', T.yellow]], f: { file: 'vite', focus: 'terminal', dur: 2.0, work: 'Irradiating… (1m 22s · ↓ 7.3k tokens · high effort)' } },
   { tool: 'Update', target: 'vite.config.mts', meta: 'Added 2 lines', diff: [["+ if (id.includes('@tiptap')) return 'rte'", 'add', 41]], f: { file: 'vite', focus: 'editor', dur: 2.0 } },
   { tool: 'Update', target: 'docs/tiptap-chain-learnings.md', meta: 'Added 24 lines', diff: [['## The problem', 'add', 1], ['## The fix — lazy-load', 'add', 2]], f: { file: 'tiptap', focus: 'editor', dur: 2.5 } },
   { say: ['Entry chunk back down 195 KB. Documented.'], done: 'bundle chunk ✓', ask: 'All good — what next?', f: { file: 'tiptap', focus: 'chat', dur: 2.0 } },
@@ -254,17 +258,17 @@ const S2 = [
   { tool: 'Grep', target: '**/Filters/**/*.tsx', meta: '12 legacy filter bars found' },
   { tool: 'Update', target: 'docs/GROWFILTER_LEGACY_CLEANUP.md', meta: 'Added 40 lines — the migration map', diff: [['| Escalations   | grow bar | migrate |', 'add', 1], ['| Tasks · PTP · Disputes | grow bar | migrate |', 'add', 2], ['| AR Aging · Invoice List | grow bar | migrate |', 'add', 3]], f: { file: 'filtermap', focus: 'editor', dur: 2.9 } },
   { say: ['12 pages on forked bars.', 'Migrating module by module onto GrowFilter.'] },
-  { tool: 'Bash', target: 'node scripts/remap-filtercomponents-imports.cjs', out: [['✓ Escalations', T.green], ['✓ Tasks', T.green], ['✓ PTP', T.green], ['✓ Disputes', T.green]], f: { file: 'filtermap', focus: 'terminal', dur: 2.2, work: 'Wrangling… (1m 3s · ↓ 9.1k tokens · thought for 38s)' } },
+  { tool: 'Bash', target: 'node scripts/remap-filtercomponents-imports.cjs', out: [['✓ Escalations', T.green], ['✓ Tasks', T.green], ['✓ PTP', T.green], ['✓ Disputes', T.green]], f: { file: 'filtermap', focus: 'terminal', dur: 2.2, work: 'Chain-reacting… (1m 3s · ↓ 9.1k tokens · thought for 38s)' } },
   { say: ['4 modules migrated. AR Aging, All Customers', 'and Invoice List are next.'], ask: 'Verify these before I delete the legacy?', f: { file: 'filtermap', focus: 'chat', dur: 2.5 } },
   { u: 'verified — continue', f: { file: 'filter', focus: 'chat', dur: 2.0 } },
   { say: ['Deleting legacy bars in phase order.'] },
-  { tool: 'Bash', target: 'git rm CollectionActivites/**/Filters/*', out: [['✓ EscalationFilters · TaskFilters · …', T.green], ['✓ all 12 phases deleted', T.green]], f: { file: 'filter', focus: 'terminal', dur: 2.2, work: 'Brewing… (47s · ↓ 6.2k tokens)' } },
+  { tool: 'Bash', target: 'git rm CollectionActivites/**/Filters/*', out: [['✓ EscalationFilters · TaskFilters · …', T.green], ['✓ all 12 phases deleted', T.green]], f: { file: 'filter', focus: 'terminal', dur: 2.2, work: 'Cascading… (47s · ↓ 6.2k tokens · half-life 12s)' } },
   { tool: 'Update', target: 'packages/grow-components/GrowFilter.tsx', meta: 'onApply → event-driven, fires once', diff: [['- useEffect(() => onApply(contract))', 'del', 61], ['+ emitter.on("apply", onApply)', 'add', 61]], f: { file: 'filter', focus: 'editor', dur: 2.0 } },
   { say: ['One GrowFilter, event-driven.', '12 legacy bars removed across the repo.'], done: '15 filter systems → 1', ask: 'All good — what next?', f: { file: 'filter', focus: 'chat', dur: 2.0 } },
   // styled-components + bundle retro
   { u: 'last one — grow-components still ships styled-components', f: { file: 'styled', focus: 'chat', dur: 2.0 } },
   { say: ['38 styled-components files in lib/.', 'Moving them to CSS Modules.'] },
-  { tool: 'Bash', target: 'node scripts/styled-call-transform.cjs', out: [['✓ 38 files → CSS Modules', T.green], ['✓ tsc 0 errors (was: implicit-any)', T.green]], f: { file: 'styled', focus: 'terminal', dur: 2.0, work: 'MacGyvering… (49s · ↓ 4.8k tokens · improvising)' } },
+  { tool: 'Bash', target: 'node scripts/styled-call-transform.cjs', out: [['✓ 38 files → CSS Modules', T.green], ['✓ tsc 0 errors (was: implicit-any)', T.green]], f: { file: 'styled', focus: 'terminal', dur: 2.0, work: 'Detonating… (49s · ↓ 4.8k tokens · high yield)' } },
   { tool: 'Read', target: 'BUNDLE_OPTIMIZATION.md', meta: 'Read 96 lines', f: { file: 'bundle', focus: 'editor', dur: 2.2 } },
   { say: ['247.9 kB raw · 114.1 kB gzip', '243 tree-shakeable files · 2 → 51 subpaths'], done: 'bundle ✓' },
   { say: ['That’s the batch — React 18, AntD v6, Grow', 'RTE, filters, and the bundle work.'], done: '16 debts · 3 repos · 159 docs · 29 codemods', f: { file: 'bundle', focus: 'chat', dur: 2.9 } },
@@ -313,11 +317,13 @@ function createdUpTo(s, to) {
   return set
 }
 
-// context window drains as the session grows — down to ~2% at the compact,
-// back up in session 2 after the handoff
+// context drains as the session grows, then JUMPS back up at /compact (reclaimed)
+const S1_COMPACT = S1.findIndex((b) => b.compact)
 function ctxLeft(s, to) {
-  if (s === S1) return Math.max(2, Math.round(97 - (to / (S1.length - 1)) * 95))
-  return Math.max(44, Math.round(96 - (to / (S2.length - 1)) * 52))
+  if (s === S2) return Math.max(46, Math.round(96 - (to / (S2.length - 1)) * 50))
+  if (to <= S1_COMPACT) return Math.max(3, Math.round(97 - (to / S1_COMPACT) * 94)) // drain to ~3% at /compact
+  // after the compact — context reclaimed, drains slowly again
+  return Math.max(78, Math.round(90 - ((to - S1_COMPACT) / (S1.length - 1 - S1_COMPACT)) * 12))
 }
 
 function Frame({ s, to, file: fileKey, focus, work }) {
@@ -331,15 +337,88 @@ function Frame({ s, to, file: fileKey, focus, work }) {
       tabs={[{ name: nm, active: true, dirty: true, icon, color: T.blue }]}
       editor={<Editor fileKey={fileKey} />}
       terminal={focus === 'terminal' ? lastTerminal(s, to) : null}
-      chat={s.slice(0, upto).map((b, i) => <Turn key={`${b.u ?? b.say?.[0] ?? b.tool ?? b.target ?? b.compact ?? b.divider ?? 'x'}-${i}`} block={b} fresh={i === upto - 1} />)} />
+      chat={s.slice(0, upto).map((b, i) => <Turn key={`${b.u ?? b.say?.[0] ?? b.tool ?? b.target ?? b.compact ?? b.divider ?? 'x'}-${i}`} block={b} fresh={!userTyping && i === upto - 1} />)} />
   )
 }
 
-// session-start splash — the real Claude Code banner
+// a pointer arrow used by the intro/outro cursor animations
+const Cursor = ({ cls }) => (
+  <svg className={cls} width="26" height="30" viewBox="0 0 26 30" role="img" aria-label="cursor" style={{ position: 'absolute', top: 0, left: 0, zIndex: 30, filter: 'drop-shadow(0 2px 3px rgba(0,0,0,.5))' }}>
+    <title>cursor</title>
+    <path d="M3 2 L3 22 L8.5 17 L12 25 L15.5 23.4 L12 15.4 L19 15 Z" fill="#fff" stroke="#000" strokeWidth="1.4" strokeLinejoin="round" />
+  </svg>
+)
+
+// ── intro: open the app from the macOS dock ─────────────────────────────────
+const DOCK = ['#4C8BF5', '#F0603A', '#8A63D2', '#2AB673', '#E5533C', '#F7B500', '#5B93F3', '#E24AA0', '#25C2A0']
+function DockScene() {
+  return (
+    <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(120% 120% at 50% 0%, #3a3550 0%, #232634 55%, #16151f 100%)', fontFamily: sans }}>
+      {/* menu bar */}
+      <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 34, background: 'rgba(0,0,0,.28)', display: 'flex', alignItems: 'center', gap: 26, padding: '0 22px', fontSize: 18, color: '#fff' }}>
+        <span></span><b>Devin</b><span style={{ opacity: 0.85 }}>File</span><span style={{ opacity: 0.85 }}>Edit</span><span style={{ opacity: 0.85 }}>View</span>
+        <div style={{ flex: 1 }} /><span style={{ opacity: 0.85 }}>Sat 14:21</span>
+      </div>
+      {/* dock */}
+      <div style={{ position: 'absolute', bottom: 26, left: '50%', transform: 'translateX(-50%)', display: 'flex', alignItems: 'flex-end', gap: 16, padding: '12px 18px', background: 'rgba(255,255,255,.12)', border: '1px solid rgba(255,255,255,.14)', borderRadius: 26, backdropFilter: 'blur(24px)' }}>
+        {DOCK.map((c) => (
+          <div key={c} style={{ width: 60, height: 60, borderRadius: 15, background: `linear-gradient(145deg, ${c}, ${c}bb)`, boxShadow: `0 6px 14px ${c}44` }} />
+        ))}
+        {/* VS Code (Devin) — the one being clicked */}
+        <div style={{ position: 'relative' }}>
+          <div className="iconbounce" style={{ width: 60, height: 60, display: 'flex', alignItems: 'center', justifyContent: 'center', filter: 'drop-shadow(0 6px 14px rgba(0,120,200,.45))' }}>
+            <svg width="56" height="56" viewBox="0 0 128 128" role="img" aria-label="VS Code">
+              <title>VS Code</title>
+              <path fillRule="evenodd" fill="#0098FF" d="M96 8 L118 19 L118 109 L96 120 L40 74 L18 92 L10 86 L34 64 L10 42 L18 36 L40 54 L96 8 Z M96 36 L58 64 L96 92 Z" />
+            </svg>
+          </div>
+          <div style={{ position: 'absolute', bottom: 82, left: '50%', transform: 'translateX(-50%)', background: 'rgba(20,20,28,.95)', color: '#fff', fontSize: 16, padding: '5px 12px', borderRadius: 8, whiteSpace: 'nowrap' }}>Visual Studio Code</div>
+          <div style={{ position: 'absolute', bottom: -12, left: '50%', transform: 'translateX(-50%)', width: 4, height: 4, borderRadius: '50%', background: '#fff' }} />
+        </div>
+      </div>
+      <Cursor cls="dockcursor" />
+    </div>
+  )
+}
+
+// pre-session — the real editor, no Claude panel yet; cursor clicks the ✳ star
+const BOOT = { md: { title: 'Why the antd v6 upgrade broke us silently', lines: [
+  { t: 'Research note — evidence-backed. Every claim below', c: T.faint },
+  { t: 'is verifiable against antd@6 in node_modules.', c: T.faint },
+  { t: '## The short version', c: T.text },
+  { t: 'antd caused ONE of the bugs this cycle.', pad: true },
+  { t: 'our own legacy overrides — 59 files reaching into', pad: true },
+  { t: "antd's private DOM, 20 hardcoding heights — the rest.", pad: true },
+  { t: 'v6 did not break that code. v6 stopped hiding it.', c: T.faint, pad: true },
+] } }
+const BootTerm = () => (
+  <div style={{ fontFamily: mono, fontSize: 20, lineHeight: 1.55 }}>
+    <div style={{ color: T.green }}>Found '/Users/yathavan/Growfin/heisenberg/.nvmrc' with version &lt;v24&gt;</div>
+    <div style={{ color: T.green }}>Now using node v24.12.0 (npm v11.6.2)</div>
+    <div style={{ color: T.muted }}>(base)</div>
+    <div><span style={{ color: T.teal }}>heisenberg</span> on <span style={{ color: T.mauve }}>⑂ feat/i18n-wire-heisenberg</span> <span style={{ color: T.yellow }}>[$!]</span> is <span style={{ color: T.peach }}>v0.1.10-beta</span> via <span style={{ color: T.green }}>v24.12.0</span></div>
+    <div style={{ color: T.termGreen, marginTop: 4 }}>❯ <span className="caret" style={{ verticalAlign: 'middle' }} /></div>
+  </div>
+)
+const BootScene = () => (
+  <div className="winopen" style={{ position: 'absolute', inset: 0 }}>
+    <Shell noPanel focus="editor" activeFile="silent" created={new Set()}
+      tabs={[{ name: 'antd-v6-silent-breakages.md', active: true, icon: '≡', color: T.blue }]}
+      editor={<FileMd {...BOOT.md} />} terminal={<BootTerm />} />
+    <Cursor cls="starcursor" />
+  </div>
+)
+
+// session-start splash — the Claude panel opens with the banner
 const Splash = () => (
   <Shell splash focus="chat" activeFile="backlog" created={new Set()} context={100}
     tabs={[{ name: 'TECH_DEBT.md', active: true, icon: '≡', color: T.blue }]}
     editor={<Editor fileKey="backlog" />} />
+)
+const SplashScene = () => (
+  <div style={{ position: 'absolute', inset: 0, background: '#000' }}>
+    <div className="winopen" style={{ position: 'absolute', inset: 0 }}><Splash /></div>
+  </div>
 )
 
 // closing: the cursor travels to the red traffic light, clicks, the window
@@ -366,7 +445,9 @@ const build = (sess) => sess.map((t, i) => (t.f ? { s: sess, to: i, ...t.f } : n
 const FRAMES = [...build(S1), ...build(S2)]
 
 export const scenes = [
-  { id: 'splash', dur: 3.8, Component: Splash },
+  { id: 'dock', dur: 3.8, Component: DockScene },
+  { id: 'boot', dur: 4.5, Component: BootScene },
+  { id: 'splash', dur: 4.2, Component: SplashScene },
   ...FRAMES.map((f, i) => ({ id: `f${i}`, dur: f.dur, Component: () => <Frame {...f} /> })),
   { id: 'close', dur: 4.2, Component: CloseScene },
   { id: 'fin', dur: 3.5, Component: FinScene },

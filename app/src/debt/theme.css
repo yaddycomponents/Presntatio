@@ -128,3 +128,30 @@ a:hover { color: #BABBF1; }
   100% { transform: translate(28px, 23px); opacity: 0 }
 }
 .curmove { animation: curmove 4.2s cubic-bezier(.4,0,.3,1) forwards; }
+
+/* intro — open the app from the dock, then click the ✳ to start the session */
+@keyframes dockcursor {
+  0% { transform: translate(880px, 640px); opacity: 0 }
+  12% { opacity: 1 }
+  58% { transform: translate(1286px, 1004px) }
+  66% { transform: translate(1286px, 1004px) scale(.78) }
+  73% { transform: translate(1286px, 1004px) scale(1) }
+  100% { transform: translate(1286px, 1004px) }
+}
+.dockcursor { animation: dockcursor 3.6s cubic-bezier(.4,0,.3,1) forwards; }
+@keyframes iconbounce {
+  0%, 62% { transform: translateY(0) } 70% { transform: translateY(-30px) }
+  82% { transform: translateY(0) } 90% { transform: translateY(-12px) } 100% { transform: translateY(0) }
+}
+.iconbounce { animation: iconbounce 3.6s ease forwards; }
+@keyframes winopen { 0% { opacity: 0; transform: scale(.35) translate(360px, 300px) } 34% { opacity: 1 } 100% { opacity: 1; transform: none } }
+.winopen { animation: winopen 1s cubic-bezier(.22,1,.36,1) both; transform-origin: 68% 92%; }
+@keyframes starcursor {
+  0% { transform: translate(760px, 620px); opacity: 0 }
+  16% { opacity: 1 }
+  56% { transform: translate(1700px, 16px) }
+  64% { transform: translate(1700px, 16px) scale(.78) }
+  71% { transform: translate(1700px, 16px) scale(1) }
+  100% { transform: translate(1700px, 16px); opacity: 0 }
+}
+.starcursor { animation: starcursor 3.8s cubic-bezier(.4,0,.3,1) forwards; }

@@ -199,7 +199,7 @@ function ClaudePanel({ children, input, working, splash, accent, context }) {
   )
 }
 
-export function Shell({ activeFile, created, tabs, editor, terminal, chat, focus, input, working, splash, context }) {
+export function Shell({ activeFile, created, tabs, editor, terminal, chat, focus, input, working, splash, context, noPanel }) {
   // Claude pane is the spine — it never dims below readable. Only the two context
   // regions (editor / terminal) dim when they're not the primary, and the primary
   // gets a mauve top accent so it's unambiguous which one to watch.
@@ -221,6 +221,13 @@ export function Shell({ activeFile, created, tabs, editor, terminal, chat, focus
           <span style={{ padding: '5px 16px', background: T.border, color: T.text }}>Editor</span>
         </div>
         <div style={{ flex: 1, maxWidth: 620, margin: '0 auto', background: T.panel, borderRadius: 8, padding: '6px 16px', fontFamily: sans, fontSize: 17, color: T.faint, textAlign: 'center' }}>heisenberg — Claude Code</div>
+        {/* editor toolbar — the ✳ opens the Claude Code panel (the intro clicks it) */}
+        <div style={{ display: 'flex', gap: 18, alignItems: 'center', marginRight: 10 }}>
+          <span id="tb-star" style={{ color: T.peach, fontSize: 22 }}>✳</span>
+          <span style={{ color: T.faint, fontSize: 19 }}>◫</span>
+          <span style={{ color: T.faint, fontSize: 19 }}>⑂</span>
+          <span style={{ color: T.faint, fontSize: 19 }}>⊟</span>
+        </div>
         <div style={{ width: 34, height: 34, borderRadius: '50%', background: T.mauve, color: T.bg, display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: sans, fontWeight: 700, fontSize: 16 }}>YP</div>
       </div>
 
@@ -246,7 +253,7 @@ export function Shell({ activeFile, created, tabs, editor, terminal, chat, focus
           )}
         </div>
 
-        <ClaudePanel focus={focus} input={input} working={working} splash={splash} accent={chatPrimary} context={context}>{chat}</ClaudePanel>
+        {!noPanel && <ClaudePanel focus={focus} input={input} working={working} splash={splash} accent={chatPrimary} context={context}>{chat}</ClaudePanel>}
       </div>
 
       {/* status bar — surface, not a glowing mauve band; accent only active items */}
