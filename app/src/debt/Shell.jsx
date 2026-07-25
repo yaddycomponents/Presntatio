@@ -42,18 +42,16 @@ export const sans = "'IBM Plex Sans', system-ui, sans-serif"
 
 const RAIL = 60
 const SIDEBAR = 380
-const STATUS = 34
 const TOP = 46
 
 function ActivityRail() {
-  const icons = ['', '', '', '', '']
   return (
     <div style={{ width: RAIL, background: T.sunken, borderRight: `1px solid ${T.border}`, display: 'flex', flexDirection: 'column', alignItems: 'center', paddingTop: 16, gap: 26, flexShrink: 0 }}>
       <div style={{ width: 4, height: 30, background: T.mauve, borderRadius: 3, position: 'absolute', left: 0, marginTop: 2 }} />
       <span style={{ fontFamily: mono, color: T.text, fontSize: 26 }}>▤</span>
       <span style={{ fontFamily: mono, color: T.faint, fontSize: 24 }}>⌕</span>
       <span style={{ fontFamily: mono, color: T.faint, fontSize: 24, position: 'relative' }}>⑂
-        <span style={{ position: 'absolute', top: -8, right: -12, background: T.mauve, color: T.bg, fontFamily: mono, fontSize: 13, borderRadius: 9, padding: '1px 6px', fontWeight: 700 }}>10</span>
+        <span style={{ position: 'absolute', top: -8, right: -14, background: T.mauve, color: T.bg, fontFamily: mono, fontSize: 12, borderRadius: 9, padding: '1px 6px', fontWeight: 700 }}>1.7k</span>
       </span>
       <span style={{ color: T.peach, fontSize: 24 }}>✳</span>
       <div style={{ flex: 1 }} />
@@ -123,7 +121,7 @@ function ScrollTranscript({ children }) {
   })
   return (
     <div ref={outer} style={{ flex: 1, minHeight: 0, overflow: 'hidden', position: 'relative', fontFamily: mono }}>
-      <div ref={inner} style={{ position: 'absolute', left: 0, right: 0, top: 0, padding: '28px 32px', display: 'flex', flexDirection: 'column', gap: 22, transform: `translateY(${-y}px)` }}>
+      <div ref={inner} style={{ position: 'absolute', left: 0, right: 0, top: 0, padding: '28px 32px', display: 'flex', flexDirection: 'column', gap: 14, transform: `translateY(${-y}px)` }}>
         {children}
       </div>
     </div>
@@ -135,7 +133,7 @@ function ClaudePanel({ children, focus, input, working }) {
     <div style={{ width: CHAT_W, background: T.bg, borderLeft: `1px solid ${T.border}`, display: 'flex', flexDirection: 'column', flexShrink: 0, opacity: focus === 'chat' || !focus ? 1 : 0.42, transition: 'opacity .4s' }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '0 32px', height: 56, borderBottom: `1px solid ${T.border}`, flexShrink: 0 }}>
         <span style={{ color: T.peach, fontSize: 24 }}>✳</span>
-        <span style={{ fontFamily: mono, fontSize: 21, color: T.text }}>Claude Code</span>
+        <span style={{ fontFamily: mono, fontSize: 19, color: T.text }}>Claude Code</span>
         <div style={{ flex: 1 }} />
         <span style={{ fontFamily: mono, fontSize: 18, color: T.faint }}>◻ ⤢ ×</span>
       </div>
@@ -143,20 +141,20 @@ function ClaudePanel({ children, focus, input, working }) {
           bottom once it overflows — like a real Claude Code session */}
       <ScrollTranscript>{children}</ScrollTranscript>
       {working && (
-        <div style={{ padding: '0 32px 4px', flexShrink: 0, fontFamily: mono, fontSize: 22 }}>
+        <div style={{ padding: '0 32px 4px', flexShrink: 0, fontFamily: mono, fontSize: 15 }}>
           <span style={{ color: T.peach }}>✳ Working…</span> <span style={{ color: T.faint }}>(esc to interrupt · ↓ {working} tokens)</span>
         </div>
       )}
       {/* the real input box */}
       <div style={{ padding: '12px 24px 0', flexShrink: 0 }}>
-        <div style={{ border: `1px solid ${T.borderHi}`, borderRadius: 12, padding: '14px 18px', minHeight: 30, display: 'flex', gap: 12, fontFamily: mono, fontSize: 24, color: T.green }}>
+        <div style={{ border: `1px solid ${T.borderHi}`, borderRadius: 12, padding: '14px 18px', minHeight: 26, display: 'flex', gap: 10, fontFamily: mono, fontSize: 18, color: T.green }}>
           <span>❯</span>
-          {input != null ? <Type text={input} cps={38} /> : <span className="caret" style={{ verticalAlign: 'middle' }} />}
+          {input != null ? <Type text={input} cps={38} /> : (working ? <span style={{ color: T.faint }} /> : <span className="caret" style={{ verticalAlign: 'middle' }} />)}
         </div>
       </div>
       <div style={{ padding: '10px 32px 14px', flexShrink: 0 }}>
-        <div style={{ fontFamily: mono, fontSize: 20, color: T.green }}>heisenberg <span style={{ color: T.faint }}>(git:main)</span></div>
-        <div style={{ fontFamily: mono, fontSize: 20, color: T.peach, marginTop: 6 }}>▸▸ auto-accept edits on <span style={{ color: T.faint }}>(shift+tab to cycle)</span></div>
+        <div style={{ fontFamily: mono, fontSize: 16, color: T.green }}>heisenberg <span style={{ color: T.faint }}>(git:new-bundle)</span></div>
+        <div style={{ fontFamily: mono, fontSize: 16, color: T.peach, marginTop: 6 }}>▸▸ auto-accept edits on <span style={{ color: T.faint }}>(shift+tab to cycle)</span></div>
       </div>
     </div>
   )
@@ -203,7 +201,7 @@ export function Shell({ activeFile, tabs, editor, terminal, chat, focus, input, 
 
       {/* status bar — surface, not a glowing mauve band; accent only active items */}
       <div style={{ height: 44, background: T.surface, borderTop: `1px solid ${T.border}`, color: T.muted, display: 'flex', alignItems: 'center', padding: '0 18px', gap: 22, fontFamily: mono, fontSize: 20, flexShrink: 0 }}>
-        <span style={{ color: T.mauve }}>⑂ main*</span>
+        <span style={{ color: T.mauve }}>⑂ new-bundle</span>
         <span>Jira: yathavan prabhakar</span>
         <div style={{ flex: 1 }} />
         <span>◐ 0 ⚠ 0</span>
