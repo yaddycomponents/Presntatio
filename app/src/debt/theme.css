@@ -111,3 +111,20 @@ a:hover { color: #BABBF1; }
 /* loading spinner pulse — the "Pondering…" line breathes like the real one */
 @keyframes pulse { 0%, 100% { opacity: 1 } 50% { opacity: .45 } }
 .pulse { animation: pulse 1.3s ease-in-out infinite; }
+
+/* closing — cursor travels to the red traffic light, clicks, window closes */
+@keyframes winclose {
+  0%, 60% { opacity: 1; transform: scale(1) }
+  70% { transform: scale(.992) }
+  100% { opacity: 0; transform: scale(.9) }
+}
+.winclose { animation: winclose 4.2s cubic-bezier(.5,0,.75,0) forwards; }
+@keyframes curmove {
+  0% { transform: translate(780px, 560px); opacity: 0 }
+  12% { opacity: 1 }
+  48% { transform: translate(28px, 23px) scale(1) }
+  56% { transform: translate(28px, 23px) scale(.78) }
+  62% { transform: translate(28px, 23px) scale(1) }
+  100% { transform: translate(28px, 23px); opacity: 0 }
+}
+.curmove { animation: curmove 4.2s cubic-bezier(.4,0,.3,1) forwards; }

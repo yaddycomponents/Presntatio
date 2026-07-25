@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react'
 import { Shell, T, mono, code } from './Shell'
 
 // ONE continuous Claude Code session per context window. Every tech debt follows
@@ -43,11 +44,31 @@ function Turn({ block, fresh }) {
   )
 }
 function Compact({ cls }) {
+  // real /compact — a block progress bar filling up with the percentage
+  const N = 30
+  const [pct, setPct] = useState(0)
+  useEffect(() => {
+    let raf
+    let t0 = null
+    const tick = (ts) => {
+      if (t0 === null) t0 = ts
+      const p = Math.min(100, Math.round(((ts - t0) / 3200) * 100))
+      setPct(p)
+      if (p < 100) raf = requestAnimationFrame(tick)
+    }
+    raf = requestAnimationFrame(tick)
+    return () => cancelAnimationFrame(raf)
+  }, [])
+  const fill = Math.round((pct / 100) * N)
   return (
-    <div className={cls} style={{ ...cbase, background: 'rgba(249,226,175,0.06)', border: `1px solid ${T.border}`, borderRadius: 10, padding: '16px 20px' }}>
-      <div style={{ color: T.yellow, fontSize: SS, marginBottom: 8 }}>⚠ context left: 2% — /compact</div>
-      <div style={{ height: 7, background: T.border, borderRadius: 4, overflow: 'hidden' }}><div style={{ width: '98%', height: '100%', background: `linear-gradient(90deg, ${T.peach}, ${T.red})` }} /></div>
-      <div style={{ color: T.faint, fontSize: SS, marginTop: 8 }}>Compacting conversation… ✓ summary saved</div>
+    <div className={cls} style={{ ...cbase }}>
+      <div style={{ color: T.faint }}>❯ /compact</div>
+      <div style={{ color: T.mauve, marginTop: 8, display: 'flex', gap: 10 }}><span className="pulse">·</span> Compacting conversation…</div>
+      <div style={{ marginTop: 6, letterSpacing: '-1px' }}>
+        <span style={{ color: T.peach }}>{'▰'.repeat(fill)}</span><span style={{ color: T.border }}>{'▱'.repeat(N - fill)}</span>
+        <span style={{ color: T.faint, letterSpacing: 0, marginLeft: 10 }}>{pct}%</span>
+      </div>
+      {pct >= 100 && <div style={{ color: T.green, marginTop: 6 }}>✓ summary saved · context reclaimed</div>}
     </div>
   )
 }
@@ -246,7 +267,10 @@ const S2 = [
   { tool: 'Bash', target: 'node scripts/styled-call-transform.cjs', out: [['✓ 38 files → CSS Modules', T.green], ['✓ tsc 0 errors (was: implicit-any)', T.green]], f: { file: 'styled', focus: 'terminal', dur: 2.0, work: 'MacGyvering… (49s · ↓ 4.8k tokens · improvising)' } },
   { tool: 'Read', target: 'BUNDLE_OPTIMIZATION.md', meta: 'Read 96 lines', f: { file: 'bundle', focus: 'editor', dur: 2.2 } },
   { say: ['247.9 kB raw · 114.1 kB gzip', '243 tree-shakeable files · 2 → 51 subpaths'], done: 'bundle ✓' },
-  { say: ['That’s the batch — React 18, AntD v6, Grow', 'RTE, filters, and the bundle work.'], done: '16 debts · 3 repos · 159 docs · 29 codemods' , f: { file: 'bundle', focus: 'chat', dur: 2.9 } },
+  { say: ['That’s the batch — React 18, AntD v6, Grow', 'RTE, filters, and the bundle work.'], done: '16 debts · 3 repos · 159 docs · 29 codemods', f: { file: 'bundle', focus: 'chat', dur: 2.9 } },
+  // the sign-off
+  { u: 'thank you, claude — that was a big one 🙏', f: { file: 'backlog', focus: 'chat', dur: 3 } },
+  { say: ['Anytime. Two years of debt, one branch,', 'sixteen ticks. Go hit merge. ✳'], done: 'session complete', f: { file: 'backlog', focus: 'chat', dur: 4 } },
 ]
 
 // ── frames are the turns marked with `f` (cumulative reveal) ──────────────────
@@ -289,6 +313,13 @@ function createdUpTo(s, to) {
   return set
 }
 
+// context window drains as the session grows — down to ~2% at the compact,
+// back up in session 2 after the handoff
+function ctxLeft(s, to) {
+  if (s === S1) return Math.max(2, Math.round(97 - (to / (S1.length - 1)) * 95))
+  return Math.max(44, Math.round(96 - (to / (S2.length - 1)) * 52))
+}
+
 function Frame({ s, to, file: fileKey, focus, work }) {
   const cur = s[to]
   const userTyping = !!cur.u
@@ -296,7 +327,7 @@ function Frame({ s, to, file: fileKey, focus, work }) {
   const nm = TAB_NAMES[fileKey]
   const icon = nm.endsWith('.cjs') ? '⚙' : '≡'
   return (
-    <Shell focus={focus} activeFile={fileKey} created={createdUpTo(s, to)} input={userTyping ? cur.u : null} working={work}
+    <Shell focus={focus} activeFile={fileKey} created={createdUpTo(s, to)} input={userTyping ? cur.u : null} working={work} context={ctxLeft(s, to)}
       tabs={[{ name: nm, active: true, dirty: true, icon, color: T.blue }]}
       editor={<Editor fileKey={fileKey} />}
       terminal={focus === 'terminal' ? lastTerminal(s, to) : null}
@@ -306,9 +337,29 @@ function Frame({ s, to, file: fileKey, focus, work }) {
 
 // session-start splash — the real Claude Code banner
 const Splash = () => (
-  <Shell splash focus="chat" activeFile="backlog" created={new Set()}
+  <Shell splash focus="chat" activeFile="backlog" created={new Set()} context={100}
     tabs={[{ name: 'TECH_DEBT.md', active: true, icon: '≡', color: T.blue }]}
     editor={<Editor fileKey="backlog" />} />
+)
+
+// closing: the cursor travels to the red traffic light, clicks, the window
+// closes to black — then FIN
+const CloseScene = () => (
+  <div style={{ position: 'absolute', inset: 0, background: '#000' }}>
+    <div className="winclose" style={{ position: 'absolute', inset: 0, transformOrigin: '50% 45%' }}>
+      <Frame s={S2} to={S2.length - 1} file="backlog" focus="chat" />
+    </div>
+    <svg className="curmove" width="26" height="30" viewBox="0 0 26 30" role="img" aria-label="cursor" style={{ position: 'absolute', top: 0, left: 0, zIndex: 20, filter: 'drop-shadow(0 2px 3px rgba(0,0,0,.45))' }}>
+      <title>cursor</title>
+      <path d="M3 2 L3 22 L8.5 17 L12 25 L15.5 23.4 L12 15.4 L19 15 Z" fill="#fff" stroke="#000" strokeWidth="1.4" strokeLinejoin="round" />
+    </svg>
+  </div>
+)
+
+const FinScene = () => (
+  <div style={{ position: 'absolute', inset: 0, background: '#000', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+    <div className="rise" style={{ fontFamily: code, fontSize: 'clamp(64px, 10vw, 150px)', fontWeight: 700, color: T.peach, letterSpacing: '0.14em', textIndent: '0.14em' }}>fin</div>
+  </div>
 )
 
 const build = (sess) => sess.map((t, i) => (t.f ? { s: sess, to: i, ...t.f } : null)).filter(Boolean)
@@ -317,4 +368,6 @@ const FRAMES = [...build(S1), ...build(S2)]
 export const scenes = [
   { id: 'splash', dur: 3.8, Component: Splash },
   ...FRAMES.map((f, i) => ({ id: `f${i}`, dur: f.dur, Component: () => <Frame {...f} /> })),
+  { id: 'close', dur: 4.2, Component: CloseScene },
+  { id: 'fin', dur: 3.5, Component: FinScene },
 ]

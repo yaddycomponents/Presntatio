@@ -161,7 +161,7 @@ function Banner() {
   )
 }
 
-function ClaudePanel({ children, input, working, splash, accent }) {
+function ClaudePanel({ children, input, working, splash, accent, context }) {
   return (
     <div style={{ width: CHAT_W, background: T.bg, borderLeft: `1px solid ${T.border}`, display: 'flex', flexDirection: 'column', flexShrink: 0, opacity: accent ? 1 : 0.82, transition: 'opacity .35s' }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '0 32px', height: 56, borderBottom: `1px solid ${T.border}`, borderTop: `2px solid ${accent ? T.mauve : 'transparent'}`, flexShrink: 0, transition: 'border-color .35s' }}>
@@ -179,12 +179,17 @@ function ClaudePanel({ children, input, working, splash, accent }) {
           <span style={{ color: T.faint }}>{working.includes('(') ? `(${working.split('(').slice(1).join('(')}` : ''}</span>
         </div>
       )}
-      {/* the real input box */}
+      {/* the real input box + context-left indicator bottom-right */}
       <div style={{ padding: '12px 24px 0', flexShrink: 0 }}>
         <div style={{ border: `1px solid ${T.borderHi}`, borderRadius: 12, padding: '14px 18px', minHeight: 26, display: 'flex', gap: 10, fontFamily: mono, fontSize: 18, color: T.green }}>
           <span>❯</span>
           {input != null ? <Type text={input} cps={38} /> : (working ? <span style={{ color: T.faint }} /> : <span className="caret" style={{ verticalAlign: 'middle' }} />)}
         </div>
+        {context != null && (
+          <div style={{ textAlign: 'right', fontFamily: mono, fontSize: 13, color: context <= 10 ? T.yellow : T.faint, paddingTop: 5, paddingRight: 2 }}>
+            {context}% context left
+          </div>
+        )}
       </div>
       <div style={{ padding: '10px 32px 14px', flexShrink: 0 }}>
         <div style={{ fontFamily: mono, fontSize: 16, color: T.green }}>heisenberg <span style={{ color: T.faint }}>(git:new-bundle)</span></div>
@@ -194,7 +199,7 @@ function ClaudePanel({ children, input, working, splash, accent }) {
   )
 }
 
-export function Shell({ activeFile, created, tabs, editor, terminal, chat, focus, input, working, splash }) {
+export function Shell({ activeFile, created, tabs, editor, terminal, chat, focus, input, working, splash, context }) {
   // Claude pane is the spine — it never dims below readable. Only the two context
   // regions (editor / terminal) dim when they're not the primary, and the primary
   // gets a mauve top accent so it's unambiguous which one to watch.
@@ -205,6 +210,12 @@ export function Shell({ activeFile, created, tabs, editor, terminal, chat, focus
     <div className="stage" style={{ display: 'flex', flexDirection: 'column', background: T.bg, fontFamily: sans, color: T.text }}>
       {/* top bar */}
       <div style={{ height: TOP, background: T.sunken, borderBottom: `1px solid ${T.border}`, display: 'flex', alignItems: 'center', padding: '0 18px', gap: 16, flexShrink: 0 }}>
+        {/* macOS traffic lights — the red one is the close target at ~(28,23) */}
+        <div style={{ display: 'flex', gap: 9, marginRight: 6 }}>
+          <span id="tl-close" style={{ width: 14, height: 14, borderRadius: '50%', background: '#ED6A5E' }} />
+          <span style={{ width: 14, height: 14, borderRadius: '50%', background: '#F4BF4F' }} />
+          <span style={{ width: 14, height: 14, borderRadius: '50%', background: '#61C554' }} />
+        </div>
         <div style={{ display: 'flex', background: T.panel, borderRadius: 8, overflow: 'hidden', fontFamily: sans, fontSize: 17 }}>
           <span style={{ padding: '5px 16px', color: T.faint }}>Agent</span>
           <span style={{ padding: '5px 16px', background: T.border, color: T.text }}>Editor</span>
@@ -235,7 +246,7 @@ export function Shell({ activeFile, created, tabs, editor, terminal, chat, focus
           )}
         </div>
 
-        <ClaudePanel focus={focus} input={input} working={working} splash={splash} accent={chatPrimary}>{chat}</ClaudePanel>
+        <ClaudePanel focus={focus} input={input} working={working} splash={splash} accent={chatPrimary} context={context}>{chat}</ClaudePanel>
       </div>
 
       {/* status bar — surface, not a glowing mauve band; accent only active items */}
