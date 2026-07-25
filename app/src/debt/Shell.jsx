@@ -1,4 +1,24 @@
-import { useLayoutEffect, useRef, useState } from 'react'
+import { useEffect, useLayoutEffect, useRef, useState } from 'react'
+
+// Typewriter — reveals `text` char by char on mount (real rAF clock). Used for
+// the input prompt and for md files as Claude writes them.
+export function Type({ text, cps = 42, start = 0, caret = true, style }) {
+  const [n, setN] = useState(0)
+  useEffect(() => {
+    let raf
+    let t0 = null
+    const tick = (ts) => {
+      if (t0 === null) t0 = ts
+      const el = (ts - t0) / 1000 - start
+      const c = el <= 0 ? 0 : Math.floor(el * cps)
+      setN(Math.min(text.length, c))
+      if (c < text.length) raf = requestAnimationFrame(tick)
+    }
+    raf = requestAnimationFrame(tick)
+    return () => cancelAnimationFrame(raf)
+  }, [text, cps, start])
+  return <span style={style}>{text.slice(0, n)}{caret && n > 0 && n < text.length && <span className="caret" style={{ verticalAlign: 'middle', marginLeft: 1 }} />}</span>
+}
 
 // Persistent VS Code frame. Every beat of the film happens inside this — the
 // story is a live Claude Code session: explorer + editor + CC chat panel +
@@ -57,20 +77,24 @@ function Explorer({ activeFile }) {
     <div style={{ width: SIDEBAR, background: T.sunken, borderRight: `1px solid ${T.border}`, flexShrink: 0, overflow: 'hidden' }}>
       <div style={{ padding: '16px 18px', fontFamily: sans, fontSize: 16, letterSpacing: '0.14em', color: T.faint, textTransform: 'uppercase' }}>Growfin · 3 repos</div>
       <div style={{ padding: '0 8px', fontFamily: mono }}>
-        <Row icon="▾" color={T.mauve} active={activeFile === 'react18' || activeFile === 'antd' || activeFile === 'filter' || activeFile === 'tiptap' || activeFile === 'bundle'}><b style={{ color: T.text }}>heisenberg</b> · crm</Row>
-        <Row depth={1} icon="▾" color={T.teal}>docs</Row>
+        <Row icon="▾" color={T.mauve}><b style={{ color: T.text }}>heisenberg</b> · crm</Row>
+        <Row depth={1} icon="▾" color={T.teal}>docs / react-18-upgrade</Row>
         <Row depth={2} icon="≡" color={T.blue} active={activeFile === 'react18'}>REACT18_UPGRADE_PLAN.md</Row>
+        <Row depth={2} icon="≡" color={T.blue}>REACT18_USEEFFECT_AUDIT.md</Row>
         <Row depth={2} icon="≡" color={T.blue} active={activeFile === 'antd'}>ANTD_V6_DEPRECATED_PROPS.md</Row>
-        <Row depth={2} icon="≡" color={T.blue} active={activeFile === 'filter'}>GROWFILTER_SYNC_ARCH.md</Row>
         <Row depth={2} icon="≡" color={T.blue} active={activeFile === 'tiptap'}>tiptap-chain-learnings.md</Row>
-        <Row depth={2} icon="≡" color={T.blue} active={activeFile === 'bundle'}>BUNDLE_OPTIMIZATION.md</Row>
-        <Row depth={1} icon="▸" color={T.peach}>scripts / codemods</Row>
+        <Row depth={2} icon="≡" color={T.faint}>+ 50 more</Row>
+        <Row depth={1} icon="≡" color={T.blue} active={activeFile === 'filter'}>docs/GROWFILTER_SYNC_ARCH.md</Row>
+        <Row depth={1} icon="≡" color={T.blue} active={activeFile === 'handoff'}>docs/CONTEXT_HANDOFF.md</Row>
+        <Row depth={1} icon="▾" color={T.peach}>scripts / codemods</Row>
+        <Row depth={2} icon="⚙" color={T.peach} active={activeFile === 'antd'}>antd-deprecated-props.cjs</Row>
+        <Row depth={2} icon="⚙" color={T.peach} active={activeFile === 'styled'}>styled-call-transform.cjs</Row>
+        <Row depth={2} icon="⚙" color={T.faint}>+ 27 more</Row>
         <Row icon="▾" color={T.mauve} active={activeFile === 'asgard'}><b style={{ color: T.text }}>asgard</b> · cashapps</Row>
-        <Row depth={1} icon="≡" color={T.yellow} active={activeFile === 'asgard'}>package.json</Row>
-        <Row icon="▾" color={T.mauve} active={activeFile === 'rte'}><b style={{ color: T.text }}>grow-components</b></Row>
-        <Row depth={1} icon="▾" color={T.teal}>packages</Row>
-        <Row depth={2} icon="⬡" color={T.green} active={activeFile === 'rte'}>grow-rte</Row>
-        <Row depth={2} icon="⬡" color={T.faint}>grow-icons</Row>
+        <Row depth={1} icon="≡" color={T.yellow}>package.json</Row>
+        <Row icon="▾" color={T.mauve}><b style={{ color: T.text }}>grow-components</b></Row>
+        <Row depth={1} icon="⬡" color={T.green} active={activeFile === 'rte' || activeFile === 'bundle'}>packages / grow-rte</Row>
+        <Row depth={1} icon="⬡" color={T.faint}>packages / grow-icons</Row>
       </div>
     </div>
   )
@@ -106,7 +130,7 @@ function ScrollTranscript({ children }) {
   )
 }
 
-function ClaudePanel({ children, focus }) {
+function ClaudePanel({ children, focus, input, working }) {
   return (
     <div style={{ width: CHAT_W, background: T.bg, borderLeft: `1px solid ${T.border}`, display: 'flex', flexDirection: 'column', flexShrink: 0, opacity: focus === 'chat' || !focus ? 1 : 0.42, transition: 'opacity .4s' }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '0 32px', height: 56, borderBottom: `1px solid ${T.border}`, flexShrink: 0 }}>
@@ -118,15 +142,27 @@ function ClaudePanel({ children, focus }) {
       {/* one continuous transcript: top-anchored when short, auto-scrolled to the
           bottom once it overflows — like a real Claude Code session */}
       <ScrollTranscript>{children}</ScrollTranscript>
-      <div style={{ borderTop: `1px solid ${T.border}`, padding: '14px 32px', flexShrink: 0 }}>
-        <div style={{ fontFamily: mono, fontSize: 20, color: T.green }}>app <span style={{ color: T.faint }}>(git:main)</span></div>
+      {working && (
+        <div style={{ padding: '0 32px 4px', flexShrink: 0, fontFamily: mono, fontSize: 22 }}>
+          <span style={{ color: T.peach }}>✳ Working…</span> <span style={{ color: T.faint }}>(esc to interrupt · ↓ {working} tokens)</span>
+        </div>
+      )}
+      {/* the real input box */}
+      <div style={{ padding: '12px 24px 0', flexShrink: 0 }}>
+        <div style={{ border: `1px solid ${T.borderHi}`, borderRadius: 12, padding: '14px 18px', minHeight: 30, display: 'flex', gap: 12, fontFamily: mono, fontSize: 24, color: T.green }}>
+          <span>❯</span>
+          {input != null ? <Type text={input} cps={38} /> : <span className="caret" style={{ verticalAlign: 'middle' }} />}
+        </div>
+      </div>
+      <div style={{ padding: '10px 32px 14px', flexShrink: 0 }}>
+        <div style={{ fontFamily: mono, fontSize: 20, color: T.green }}>heisenberg <span style={{ color: T.faint }}>(git:main)</span></div>
         <div style={{ fontFamily: mono, fontSize: 20, color: T.peach, marginTop: 6 }}>▸▸ auto-accept edits on <span style={{ color: T.faint }}>(shift+tab to cycle)</span></div>
       </div>
     </div>
   )
 }
 
-export function Shell({ activeFile, tabs, editor, terminal, chat, focus }) {
+export function Shell({ activeFile, tabs, editor, terminal, chat, focus, input, working }) {
   const dim = (region) => (focus && focus !== region ? 0.3 : 1)
   return (
     <div className="stage" style={{ display: 'flex', flexDirection: 'column', background: T.bg, fontFamily: sans, color: T.text }}>
@@ -162,7 +198,7 @@ export function Shell({ activeFile, tabs, editor, terminal, chat, focus }) {
           )}
         </div>
 
-        <ClaudePanel focus={focus}>{chat}</ClaudePanel>
+        <ClaudePanel focus={focus} input={input} working={working}>{chat}</ClaudePanel>
       </div>
 
       {/* status bar — surface, not a glowing mauve band; accent only active items */}

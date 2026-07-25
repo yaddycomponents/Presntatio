@@ -1,4 +1,4 @@
-import { Shell, T, mono, code, sans } from './Shell'
+import { Shell, T, Type, mono, code, sans } from './Shell'
 
 // ONE continuous Claude Code session per context window — the transcript
 // accumulates and auto-scrolls, exactly like the real pane. Each frame reveals
@@ -62,12 +62,18 @@ function Diff({ rows }) {
 }
 
 // ── editor interiors ────────────────────────────────────────────────────────
-function FileMd({ title, sub, lines }) {
+// When `typing`, the file is written top-down as Claude creates it: each line
+// types after the previous finishes, caret following the write head.
+function FileMd({ title, sub, lines, typing }) {
+  const rows = [{ t: `# ${title}`, big: true }, ...(sub ? [{ t: sub, c: T.faint }] : []), ...lines]
+  let acc = 0.2
+  const starts = rows.map((r) => { const s = acc; acc += r.t.length / 48 + 0.12; return s })
   return (
     <div style={{ padding: '40px 54px', fontFamily: code, fontSize: 26, lineHeight: 1.5 }}>
-      <div style={{ fontSize: 34, fontWeight: 700, color: T.text, marginBottom: sub ? 6 : 22 }}># {title}</div>
-      {sub && <div style={{ fontSize: 23, color: T.faint, marginBottom: 24 }}>{sub}</div>}
-      {lines.map((l) => <div key={l.t} style={{ color: l.c ?? T.muted, marginBottom: 11, paddingLeft: l.pad ? 32 : 0 }}>{l.t}</div>)}
+      {rows.map((r, i) => {
+        const st = { color: r.big ? T.text : (r.c ?? T.muted), fontSize: r.big ? 34 : 26, fontWeight: r.big ? 700 : 400, marginBottom: r.big ? 18 : 11, paddingLeft: r.pad ? 32 : 0 }
+        return <div key={r.t} style={st}>{typing ? <Type text={r.t} start={starts[i]} cps={48} /> : r.t}</div>
+      })}
     </div>
   )
 }
@@ -85,82 +91,92 @@ function FileCode({ rows }) {
   )
 }
 
-// ── real editor files ────────────────────────────────────────────────────────
+// ── real editor files (data form; md files can render typed or static) ───────
 const F = {
-  backlog: <FileMd title="Frontend Tech Debt" sub="24 tracked · 16 shipped · 3 repos" lines={[
+  backlog: { md: { title: 'Frontend Tech Debt', sub: '24 tracked · 16 shipped · 3 repos', lines: [
     { t: '## This batch', c: T.text },
     { t: 'React 18 upgrade', pad: true }, { t: 'AntD v5 → v6', pad: true },
     { t: 'Grow RTE — extract the editor', pad: true }, { t: 'Filter revamp — 15 into 1', pad: true },
     { t: 'Bundle optimization', pad: true },
-  ]} />,
-  plan: <FileMd title="React 18 Upgrade Plan" lines={[
-    { t: '## Phase 1', c: T.text },
-    { t: 'ReactDOM.render → createRoot', pad: true },
-    { t: 'audit StrictMode double-invoke', pad: true },
-    { t: 'useEffect cleanup — 83 files', pad: true },
-  ]} />,
-  main: <FileCode rows={[
+  ] } },
+  plan: { md: { title: 'React 18 Upgrade Plan', lines: [
+    { t: '## Phase 1 — createRoot', c: T.text },
+    { t: 'server/main.tsx: ReactDOM.render → createRoot', pad: true },
+    { t: 'drop the react-dom legacy entry', pad: true },
+    { t: '## Phase 2 — StrictMode audit', c: T.text },
+    { t: '83 files use useEffect — audit cleanup', pad: true },
+    { t: 'ResizeObservers / listeners must disconnect', pad: true },
+    { t: '## Rollout', c: T.text },
+    { t: 'crm → cashapps → grow-components', pad: true },
+  ] } },
+  main: { code: [
     ["import ReactDOM from 'react-dom'", 'del', 1],
     ['ReactDOM.render(<App />, root)', 'del', 8],
     ["import { createRoot } from 'react-dom/client'", 'add', 1],
     ['createRoot(root).render(<App />)', 'add', 8],
-  ]} />,
-  aging: <FileCode rows={[
+  ] },
+  aging: { code: [
     ['useEffect(() => {', '', 42],
     ['  const ro = new ResizeObserver(measure)', '', 43],
     ['  ro.observe(el)', '', 44],
     ['+  return () => ro.disconnect()', 'add', 45],
     ['}, [])', '', 46],
-  ]} />,
-  handoff: <FileMd title="Context Handoff" lines={[
+  ] },
+  handoff: { md: { title: 'Context Handoff', lines: [
     { t: '## Done', c: T.text },
     { t: 'React 18 · 17.0.2 → 18.3.1 · createRoot', pad: true },
-    { t: 'aging table StrictMode leak fixed', pad: true },
+    { t: 'AR-aging StrictMode leak fixed (ResizeObserver)', pad: true },
     { t: '## Next', c: T.text },
     { t: 'AntD v5 → v6 across all 3 repos', pad: true },
-  ]} />,
-  antd: <FileCode rows={[
+    { t: 'bordered → variant · dropdownClassName → classNames', pad: true },
+    { t: 'branch: new-bundle', c: T.faint },
+  ] } },
+  antd: { code: [
     ['<Select bordered={false}', 'del', 8],
     ['  dropdownClassName="menu" />', 'del', 9],
     ['<Select variant="borderless"', 'add', 8],
     ['  classNames={{ popup: { root: "menu" } }} />', 'add', 9],
-  ]} />,
-  rte: <FileCode rows={[
+  ] },
+  rte: { code: [
     ["import { useEditor } from '@tiptap/react'", 'del', 1],
     ["import StarterKit from '@tiptap/starter-kit'", 'del', 2],
     ['import { useGrowEditor, commentPreset }', 'add', 1],
     ["  from '@sinecycle/growrte'", 'add', 2],
-  ]} />,
-  vite: <FileCode rows={[
-    ["manualChunks(id) {", '', 40],
+  ] },
+  vite: { code: [
+    ['manualChunks(id) {', '', 40],
     ["+  if (id.includes('@tiptap')) return 'rte'", 'add', 41],
     ["+  if (id.includes('cumul')) return 'charts'", 'add', 42],
     ['}', '', 43],
-  ]} />,
-  tiptap: <FileMd title="How the Tiptap Chain Got Into the Entry Chunk" lines={[
-    { t: 'modulepreload = every page’s critical path', c: T.muted },
-    { t: 'a static import dragged the editor in', c: T.muted },
-    { t: 'fix: keep chained commands lazy', c: T.muted },
-    { t: 'entry chunk −195 KB', c: T.faint },
-  ]} />,
-  filter: <FileMd title="GrowFilter — Event-Driven onApply" lines={[
-    { t: 'onApply fired from a React effect', c: T.muted },
-    { t: 'broke under React 18 StrictMode', c: T.muted },
-    { t: 'now event-driven — fires once', c: T.muted },
-    { t: '15 filter systems → 1', c: T.faint },
-  ]} />,
-  styled: <FileCode rows={[
+  ] },
+  tiptap: { md: { title: 'How the Tiptap Chain Got Into the Entry Chunk', lines: [
+    { t: '## The problem', c: T.text },
+    { t: 'modulepreload = eager, on every page', pad: true },
+    { t: 'a static import pulled @tiptap into the entry', pad: true },
+    { t: '## The fix', c: T.text },
+    { t: 'lazy-load the editor chunk', pad: true },
+    { t: 'entry chunk −195 KB', c: T.faint, pad: true },
+  ] } },
+  filter: { md: { title: 'GrowFilter — Event-Driven onApply', lines: [
+    { t: '## Before', c: T.text },
+    { t: 'onApply fired from a React effect', pad: true },
+    { t: 're-ran under React 18 StrictMode → double-fetch', pad: true },
+    { t: '## After', c: T.text },
+    { t: 'event-driven (growcomponents 4.0.0-beta.59)', pad: true },
+    { t: 'fires once · 15 filter systems → 1', c: T.faint, pad: true },
+  ] } },
+  styled: { code: [
     ['const Wrap = styled.div`', 'del', 1],
     ['  padding: 8px; display: flex;`', 'del', 2],
     ["import s from './Toolbar.module.css'", 'add', 1],
     ['<div className={s.wrap}>', 'add', 14],
-  ]} />,
-  bundle: <FileMd title="grow-components bundle: what new-bundle achieved" lines={[
+  ] },
+  bundle: { md: { title: 'grow-components bundle: what new-bundle achieved', lines: [
     { t: 'styled-components in lib/:  38 → 0  (CSS Modules)', c: T.muted },
     { t: 'export subpaths:  2 → 51  (per-component)', c: T.muted },
     { t: '247.9 kB raw · 114.1 kB gzip', c: T.muted },
     { t: '243 tree-shakeable files · build 0 errors', c: T.faint },
-  ]} />,
+  ] } },
 }
 
 // ── SESSION 1 — React 18 + a real debugging arc ─────────────────────────────
@@ -228,49 +244,58 @@ const S2 = [
 ]
 
 // ── frames: cumulative reveal + which file the editor shows ──────────────────
-// [session, revealToIndex, editorKey, focus, dur]
+// { s, to, key, focus, dur, work?, type? } — `work` shows the ✳ Working… line
+// with a token count; `type` types the md out as Claude writes it.
 const FRAMES = [
-  [S1, 0, 'backlog', 'chat', 4],
-  [S1, 3, 'backlog', 'chat', 5.5],
-  [S1, 5, 'plan', 'editor', 4.5],
-  [S1, 8, 'main', 'editor', 4.5],
-  [S1, 11, 'main', 'terminal', 4],
-  [S1, 12, 'main', 'chat', 3.5],
-  [S1, 13, 'aging', 'chat', 4],
-  [S1, 15, 'aging', 'chat', 4.5],   // console.log into node_modules
-  [S1, 16, 'aging', 'terminal', 4], // the log fires 2×
-  [S1, 19, 'aging', 'editor', 4.5], // cleanup + revert log
-  [S1, 20, 'aging', 'chat', 3.5],
-  [S1, 21, 'aging', 'chat', 4],     // compact
-  [S1, 23, 'handoff', 'editor', 4.5],
-  [S2, 1, 'handoff', 'chat', 4],    // new session
-  [S2, 3, 'antd', 'chat', 5],
-  [S2, 6, 'antd', 'terminal', 4.5], // 3-repo codemod
-  [S2, 7, 'antd', 'editor', 4],
-  [S2, 10, 'rte', 'editor', 5],
-  [S2, 12, 'rte', 'chat', 4],
-  [S2, 15, 'vite', 'terminal', 4.5],// bundle regressed
-  [S2, 17, 'vite', 'editor', 4.5],  // lazy chunk fix
-  [S2, 20, 'filter', 'editor', 5],
-  [S2, 22, 'filter', 'chat', 4],
-  [S2, 24, 'styled', 'chat', 4.5],   // styled-components → CSS Modules
-  [S2, 25, 'styled', 'terminal', 4], // codemod: 38 files
-  [S2, 27, 'bundle', 'editor', 5],   // real bundle retrospective
-  [S2, 28, 'bundle', 'chat', 6],     // closing meta-stat
+  { s: S1, to: 0, file: 'backlog', focus: 'chat', dur: 4.5 },   // prompt types in the input box
+  { s: S1, to: 3, file: 'backlog', focus: 'chat', dur: 5.5, work: '3.1k' },
+  { s: S1, to: 5, file: 'plan', focus: 'editor', dur: 6, type: true }, // writes the plan
+  { s: S1, to: 8, file: 'main', focus: 'editor', dur: 4.5 },
+  { s: S1, to: 11, file: 'main', focus: 'terminal', dur: 4, work: '8.4k' },
+  { s: S1, to: 12, file: 'main', focus: 'chat', dur: 4 },       // bug report types in
+  { s: S1, to: 15, file: 'aging', focus: 'chat', dur: 4.5 },    // console.log into node_modules
+  { s: S1, to: 16, file: 'aging', focus: 'terminal', dur: 4.5, work: '12k' }, // log fires 2×
+  { s: S1, to: 19, file: 'aging', focus: 'editor', dur: 4.5 }, // cleanup + revert log
+  { s: S1, to: 20, file: 'aging', focus: 'chat', dur: 3.5 },
+  { s: S1, to: 21, file: 'aging', focus: 'chat', dur: 4 },      // compact
+  { s: S1, to: 22, file: 'handoff', focus: 'editor', dur: 5.5, type: true }, // writes handoff
+  { s: S2, to: 1, file: 'handoff', focus: 'chat', dur: 4 },     // new session
+  { s: S2, to: 3, file: 'antd', focus: 'chat', dur: 5, work: '2.7k' },
+  { s: S2, to: 6, file: 'antd', focus: 'terminal', dur: 4.5, work: '9.9k' }, // 3-repo codemod
+  { s: S2, to: 7, file: 'antd', focus: 'editor', dur: 4 },
+  { s: S2, to: 10, file: 'rte', focus: 'editor', dur: 5 },
+  { s: S2, to: 12, file: 'rte', focus: 'chat', dur: 4 },
+  { s: S2, to: 15, file: 'vite', focus: 'terminal', dur: 4.5, work: '6.2k' }, // bundle regressed
+  { s: S2, to: 16, file: 'tiptap', focus: 'editor', dur: 5.5, type: true }, // writes learnings
+  { s: S2, to: 17, file: 'vite', focus: 'editor', dur: 4 },    // lazy chunk fix
+  { s: S2, to: 20, file: 'filter', focus: 'editor', dur: 5, type: true }, // writes filter doc
+  { s: S2, to: 22, file: 'filter', focus: 'chat', dur: 4 },
+  { s: S2, to: 24, file: 'styled', focus: 'chat', dur: 4.5 },   // styled → CSS Modules
+  { s: S2, to: 25, file: 'styled', focus: 'terminal', dur: 4, work: '4.8k' }, // codemod: 38 files
+  { s: S2, to: 27, file: 'bundle', focus: 'editor', dur: 5 },   // real bundle retrospective
+  { s: S2, to: 28, file: 'bundle', focus: 'chat', dur: 6.5 },   // closing meta-stat
 ]
 
-function Frame({ session, to, editorKey, focus }) {
-  const term = session[to]?.tool === 'Bash' || session.slice(0, to + 1).some((b) => b.out)
-  return (
-    <Shell focus={focus} activeFile={editorKey} tabs={[{ name: editorFile(session, to, editorKey), active: true, dirty: true, icon: '≡', color: T.blue }]}
-      editor={F[editorKey]}
-      terminal={focus === 'terminal' ? lastTerminal(session, to) : null}
-      chat={session.slice(0, to + 1).map((b, i) => <Turn key={`${b.u ?? b.say?.[0] ?? b.tool ?? b.target ?? 'x'}-${i}`} block={b} fresh={i === to} />)} />
-  )
+const TAB_NAMES = { backlog: 'TECH_DEBT.md', plan: 'REACT18_UPGRADE_PLAN.md', main: 'server/main.tsx', aging: 'AgingTable.tsx', handoff: 'CONTEXT_HANDOFF.md', antd: 'Toolbar.tsx', rte: 'CommentEditor.tsx', vite: 'vite.config.mts', tiptap: 'tiptap-chain-learnings.md', filter: 'GrowFilter.tsx', styled: 'Toolbar.tsx', bundle: 'BUNDLE_OPTIMIZATION.md' }
+
+function Editor({ fileKey, type }) {
+  const f = F[fileKey]
+  if (f.md) return <FileMd {...f.md} typing={type} />
+  return <FileCode rows={f.code} />
 }
-function editorFile(session, to, key) {
-  const names = { backlog: 'TECH_DEBT.md', plan: 'REACT18_UPGRADE_PLAN.md', main: 'server/main.tsx', aging: 'AgingTable.tsx', handoff: 'CONTEXT_HANDOFF.md', antd: 'Toolbar.tsx', rte: 'CommentEditor.tsx', vite: 'vite.config.mts', tiptap: 'tiptap-chain-learnings.md', filter: 'GrowFilter.tsx', styled: 'Toolbar.tsx', bundle: 'BUNDLE_OPTIMIZATION.md' }
-  return names[key] ?? 'file'
+
+function Frame({ s, to, file: fileKey, focus, work, type }) {
+  const cur = s[to]
+  const userTyping = !!cur.u // the newest turn is a prompt → type it in the input box
+  const upto = userTyping ? to : to + 1
+  const icon = TAB_NAMES[fileKey].endsWith('.md') ? '≡' : TAB_NAMES[fileKey].endsWith('.cjs') ? '⚙' : '≡'
+  return (
+    <Shell focus={focus} activeFile={fileKey} input={userTyping ? cur.u : null} working={work}
+      tabs={[{ name: TAB_NAMES[fileKey], active: true, dirty: true, icon, color: T.blue }]}
+      editor={<Editor fileKey={fileKey} type={type} />}
+      terminal={focus === 'terminal' ? lastTerminal(s, to) : null}
+      chat={s.slice(0, upto).map((b, i) => <Turn key={`${b.u ?? b.say?.[0] ?? b.tool ?? b.target ?? 'x'}-${i}`} block={b} fresh={i === upto - 1} />)} />
+  )
 }
 function lastTerminal(session, to) {
   // render the most recent Bash block's output in the terminal panel
@@ -289,8 +314,8 @@ function lastTerminal(session, to) {
   return null
 }
 
-export const scenes = FRAMES.map(([session, to, editorKey, focus, dur], i) => ({
+export const scenes = FRAMES.map((f, i) => ({
   id: `f${i}`,
-  dur,
-  Component: () => <Frame session={session} to={to} editorKey={editorKey} focus={focus} />,
+  dur: f.dur,
+  Component: () => <Frame {...f} />,
 }))
