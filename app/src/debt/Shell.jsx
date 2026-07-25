@@ -142,7 +142,8 @@ function ClaudePanel({ children, focus, input, working }) {
       <ScrollTranscript>{children}</ScrollTranscript>
       {working && (
         <div style={{ padding: '0 32px 4px', flexShrink: 0, fontFamily: mono, fontSize: 15 }}>
-          <span style={{ color: T.peach }}>✳ Working…</span> <span style={{ color: T.faint }}>(esc to interrupt · ↓ {working} tokens)</span>
+          <span style={{ color: T.peach }}>✳ {working.split('(')[0].trim()}</span>{' '}
+          <span style={{ color: T.faint }}>{working.includes('(') ? `(${working.split('(').slice(1).join('(')}` : ''}</span>
         </div>
       )}
       {/* the real input box */}
