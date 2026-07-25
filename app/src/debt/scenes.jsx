@@ -1,4 +1,4 @@
-import { Shell, T, Type, mono, code, sans } from './Shell'
+import { Shell, T, mono, code } from './Shell'
 
 // ONE continuous Claude Code session per context window. Every tech debt follows
 // the SAME loop: Claude asks "all good — what next?", the user types the next
@@ -61,15 +61,13 @@ function Diff({ rows }) {
 }
 
 // ── editor interiors ─────────────────────────────────────────────────────────
-function FileMd({ title, sub, lines, typing }) {
+function FileMd({ title, sub, lines }) {
   const rows = [{ t: `# ${title}`, big: true }, ...(sub ? [{ t: sub, c: T.faint }] : []), ...lines]
-  let acc = 0.2
-  const starts = rows.map((r) => { const s = acc; acc += r.t.length / 48 + 0.12; return s })
   return (
     <div style={{ padding: '40px 54px', fontFamily: code, fontSize: 26, lineHeight: 1.5 }}>
-      {rows.map((r, i) => {
+      {rows.map((r) => {
         const st = { color: r.big ? T.text : (r.c ?? T.muted), fontSize: r.big ? 34 : 26, fontWeight: r.big ? 700 : 400, marginBottom: r.big ? 18 : 11, paddingLeft: r.pad ? 32 : 0 }
-        return <div key={r.t} style={st}>{typing ? <Type text={r.t} start={starts[i]} cps={48} /> : r.t}</div>
+        return <div key={r.t} style={st}>{r.t}</div>
       })}
     </div>
   )
@@ -95,9 +93,13 @@ const F = {
     { t: 'Grow RTE — extract the editor', pad: true }, { t: 'Filter revamp — 15 into 1', pad: true }, { t: 'Bundle optimization', pad: true },
   ] } },
   plan: { md: { title: 'React 18 Upgrade Plan', lines: [
-    { t: '## Phase 1 — createRoot', c: T.text }, { t: 'server/main.tsx: ReactDOM.render → createRoot', pad: true }, { t: 'drop the react-dom legacy entry', pad: true },
-    { t: '## Phase 2 — StrictMode audit', c: T.text }, { t: '83 files use useEffect — audit cleanup', pad: true }, { t: 'ResizeObservers / listeners must disconnect', pad: true },
-    { t: '## Rollout', c: T.text }, { t: 'crm → cashapps → grow-components', pad: true },
+    { t: '## Findings — useEffect audit', c: T.text },
+    { t: '🔴 HIGH  11  memory leaks · duplicate API calls', pad: true },
+    { t: 'missing cleanup · effects that run once · races', pad: true },
+    { t: '## Plan', c: T.text },
+    { t: 'P1  server/main.tsx: ReactDOM.render → createRoot', pad: true },
+    { t: 'P2  fix the 11 HIGH effects (listeners, timers)', pad: true },
+    { t: 'P3  rollout: crm → cashapps → grow-components', pad: true },
   ] } },
   main: { code: [["import ReactDOM from 'react-dom'", 'del', 1], ['ReactDOM.render(<App />, root)', 'del', 8], ["import { createRoot } from 'react-dom/client'", 'add', 1], ['createRoot(root).render(<App />)', 'add', 8]] },
   asgard: { code: [['// asgard · cashapps · package.json', '', 22], ['  "react": "17.0.2",', 'del', 24], ['  "react-dom": "17.0.2",', 'del', 25], ['  "react": "18.3.1",', 'add', 24], ['  "react-dom": "18.3.1",', 'add', 25]] },
@@ -106,8 +108,12 @@ const F = {
     { t: '## Done', c: T.text }, { t: 'React 18 · 17.0.2 → 18.3.1 · createRoot', pad: true }, { t: 'AR-aging StrictMode leak fixed (ResizeObserver)', pad: true },
     { t: '## Next', c: T.text }, { t: 'AntD v5 → v6 across all 3 repos', pad: true }, { t: 'branch: new-bundle', c: T.faint },
   ] } },
-  antdplan: { md: { title: 'AntD v6 Migration', lines: [
-    { t: '## Deprecated props', c: T.text }, { t: 'bordered            → variant', pad: true }, { t: 'dropdownClassName   → classNames.popup.root', pad: true }, { t: 'overlayClassName    → classNames.root', pad: true },
+  antdplan: { md: { title: 'Ant Design v6 — Deprecated Props', lines: [
+    { t: '## Found in codebase', c: T.text },
+    { t: 'dropdownRender  → popupRender', pad: true },
+    { t: 'overlayStyle    → styles.root', pad: true },
+    { t: 'bordered        → variant', pad: true },
+    { t: 'ASelect: 8 matches · .ant-card-bordered CSS', pad: true },
     { t: '## Reach', c: T.text }, { t: 'crm · cashapps · grow-components', pad: true },
   ] } },
   antd: { code: [['<Select bordered={false}', 'del', 8], ['  dropdownClassName="menu" />', 'del', 9], ['<Select variant="borderless"', 'add', 8], ['  classNames={{ popup: { root: "menu" } }} />', 'add', 9]] },
@@ -118,8 +124,12 @@ const F = {
   rte: { code: [["import { useEditor } from '@tiptap/react'", 'del', 1], ["import StarterKit from '@tiptap/starter-kit'", 'del', 2], ['import { useGrowEditor, commentPreset }', 'add', 1], ["  from '@sinecycle/growrte'", 'add', 2]] },
   vite: { code: [['manualChunks(id) {', '', 40], ["+  if (id.includes('@tiptap')) return 'rte'", 'add', 41], ["+  if (id.includes('cumul')) return 'charts'", 'add', 42], ['}', '', 43]] },
   tiptap: { md: { title: 'How the Tiptap Chain Got Into the Entry Chunk', lines: [
-    { t: '## The problem', c: T.text }, { t: 'modulepreload = eager, on every page', pad: true }, { t: 'a static import pulled @tiptap into the entry', pad: true },
-    { t: '## The fix', c: T.text }, { t: 'lazy-load the editor chunk', pad: true }, { t: 'entry chunk −195 KB', c: T.faint, pad: true },
+    { t: '## The three anti-patterns', c: T.text },
+    { t: '1. utility co-located in a heavy render component', pad: true },
+    { t: '2. styled-component beside heavy runtime imports', pad: true },
+    { t: '3. component map importing all variants', pad: true },
+    { t: '## The fix', c: T.text },
+    { t: 'React.lazy() each entry · entry chunk −195 KB', pad: true },
   ] } },
   filtermap: { md: { title: 'GrowFilter Migration — Legacy Cleanup Plan', lines: [
     { t: 'exact legacy files to delete once each page passes', c: T.faint }, { t: 'dev testing. Delete in phase order.', c: T.faint },
@@ -152,7 +162,7 @@ const S1 = [
   { tool: 'Read', target: 'docs/react-18-upgrade/REACT18_USEEFFECT_AUDIT.md', meta: 'Read 240 lines' },
   { say: ['React 17.0.2 across crm, cashapps, grow-components', 'legacy ReactDOM.render — removed in 18', 'StrictMode double-invokes effects · 83 files'], ask: 'Write the migration plan?', f: { file: 'backlog', focus: 'chat', dur: 5.5, work: '3.1k' } },
   { u: 'yes' },
-  { tool: 'Update', target: 'docs/REACT18_UPGRADE_PLAN.md', meta: 'Added 34 lines', diff: [['## Phase 1 — createRoot', 'add', 1], ['## Phase 2 — effect cleanup audit', 'add', 2]], f: { file: 'plan', focus: 'editor', dur: 6, type: true } },
+  { tool: 'Update', target: 'docs/REACT18_UPGRADE_PLAN.md', meta: 'Added 34 lines', diff: [['## Phase 1 — createRoot', 'add', 1], ['## Phase 2 — effect cleanup audit', 'add', 2]], f: { file: 'plan', focus: 'editor', dur: 6 } },
   { tool: 'Update', target: 'server/main.tsx', meta: 'Added 2, removed 2', diff: [["import ReactDOM from 'react-dom'", 'del', 1], ["import { createRoot } from 'react-dom/client'", 'add', 1], ['ReactDOM.render(<App/>, root)', 'del', 8], ['createRoot(root).render(<App/>)', 'add', 8]], f: { file: 'main', focus: 'editor', dur: 4.5 } },
   { tool: 'Bash', target: 'pnpm tsc --noEmit && pnpm vitest run', out: [['✓ 0 errors', ''], ['✓ 214 passed', '']], f: { file: 'main', focus: 'terminal', dur: 4, work: '8.4k' } },
   { say: ['React 18 done — crm on 18.3.1.'] },
@@ -173,7 +183,7 @@ const S1 = [
   // compact + handoff
   { compact: true, f: { file: 'aging', focus: 'chat', dur: 4 } },
   { u: 'write a handoff before we lose context', f: { file: 'handoff', focus: 'chat', dur: 3.5 } },
-  { tool: 'Update', target: 'docs/CONTEXT_HANDOFF.md', meta: 'Added 12 lines', diff: [['## Done: React 18 ✓', 'add', 1], ['## Next: AntD v6 across 3 repos', 'add', 2]], f: { file: 'handoff', focus: 'editor', dur: 5.5, type: true } },
+  { tool: 'Update', target: 'docs/CONTEXT_HANDOFF.md', meta: 'Added 12 lines', diff: [['## Done: React 18 ✓', 'add', 1], ['## Next: AntD v6 across 3 repos', 'add', 2]], f: { file: 'handoff', focus: 'editor', dur: 5.5 } },
   { say: ['Handoff written. Next session picks up AntD v6.'], f: { file: 'handoff', focus: 'chat', dur: 3 } },
 ]
 
@@ -184,7 +194,7 @@ const S2 = [
   { tool: 'Read', target: 'docs/CONTEXT_HANDOFF.md', meta: 'Read 12 lines' },
   { say: ['Picking up — AntD v5 → v6, all three repos.'], ask: 'Plan + codemod it everywhere?', f: { file: 'handoff', focus: 'chat', dur: 4.5, work: '2.7k' } },
   { u: 'do it' },
-  { tool: 'Update', target: 'docs/ANTD_V6_MIGRATION.md', meta: 'Added 20 lines', diff: [['bordered → variant', 'add', 1], ['dropdownClassName → classNames.popup', 'add', 2]], f: { file: 'antdplan', focus: 'editor', dur: 5, type: true } },
+  { tool: 'Update', target: 'docs/ANTD_V6_MIGRATION.md', meta: 'Added 20 lines', diff: [['bordered → variant', 'add', 1], ['dropdownClassName → classNames.popup', 'add', 2]], f: { file: 'antdplan', focus: 'editor', dur: 5 } },
   { tool: 'Bash', target: 'pnpm -r exec antd-deprecated-props-transform.cjs', out: [['✓ heisenberg · crm', T.green], ['✓ asgard · cashapps', T.green], ['✓ grow-components', T.green]], f: { file: 'antd', focus: 'terminal', dur: 4.5, work: '9.9k' } },
   { tool: 'Update', target: 'src/inbox/Toolbar.tsx', meta: 'Added 2, removed 2', diff: [['<Select bordered={false}', 'del', 8], ['<Select variant="borderless"', 'add', 8]], f: { file: 'antd', focus: 'editor', dur: 4 } },
   { say: ['AntD v6 across three codebases.'], done: 'AntD v6 ✓', ask: 'All good — what next?', f: { file: 'antd', focus: 'chat', dur: 4 } },
@@ -195,7 +205,7 @@ const S2 = [
   { tool: 'Read', target: '../asgard/src/notes/Editor.tsx', meta: 'Read 180 lines' },
   { say: ['4 near-identical Tiptap editors.', "I'll extract one package on Tiptap 3."], ask: 'Plan + build it?', f: { file: 'rte', focus: 'chat', dur: 5, work: '4.1k' } },
   { u: 'yes' },
-  { tool: 'Update', target: 'docs/GROW_RTE_PLAN.md', meta: 'Added 18 lines', diff: [['## @sinecycle/growrte', 'add', 1], ['email + comment presets', 'add', 2]], f: { file: 'rteplan', focus: 'editor', dur: 5.5, type: true } },
+  { tool: 'Update', target: 'docs/GROW_RTE_PLAN.md', meta: 'Added 18 lines', diff: [['## @sinecycle/growrte', 'add', 1], ['email + comment presets', 'add', 2]], f: { file: 'rteplan', focus: 'editor', dur: 5.5 } },
   { tool: 'Update', target: 'packages/grow-rte/lib/index.ts', meta: 'new package · 77 files' },
   { tool: 'Update', target: 'src/comments/CommentEditor.tsx', meta: 'Added 2, removed 3', diff: [["import { useEditor } from '@tiptap/react'", 'del', 1], ['import { useGrowEditor, commentPreset }', 'add', 1], ["  from '@sinecycle/growrte'", 'add', 2]], f: { file: 'rte', focus: 'editor', dur: 5 } },
   { say: ['@sinecycle/growrte — 30+ extensions, presets.', 'All four call sites import one package now.'], done: 'Grow RTE ✓', ask: 'All good — what next?', f: { file: 'rte', focus: 'chat', dur: 4.5 } },
@@ -204,13 +214,13 @@ const S2 = [
   { say: ['The tiptap chain slipped into the entry chunk.'] },
   { tool: 'Bash', target: 'pnpm build', out: [['entry chunk +195 KB', T.yellow], ['@tiptap in modulepreload ← eager', T.yellow]], f: { file: 'vite', focus: 'terminal', dur: 4.5, work: '6.2k' } },
   { tool: 'Update', target: 'vite.config.mts', meta: 'Added 2 lines', diff: [["+ if (id.includes('@tiptap')) return 'rte'", 'add', 41]], f: { file: 'vite', focus: 'editor', dur: 4 } },
-  { tool: 'Update', target: 'docs/tiptap-chain-learnings.md', meta: 'Added 24 lines', diff: [['## The problem', 'add', 1], ['## The fix — lazy-load', 'add', 2]], f: { file: 'tiptap', focus: 'editor', dur: 5.5, type: true } },
+  { tool: 'Update', target: 'docs/tiptap-chain-learnings.md', meta: 'Added 24 lines', diff: [['## The problem', 'add', 1], ['## The fix — lazy-load', 'add', 2]], f: { file: 'tiptap', focus: 'editor', dur: 5.5 } },
   { say: ['Entry chunk back down 195 KB. Documented.'], done: 'bundle chunk ✓', ask: 'All good — what next?', f: { file: 'tiptap', focus: 'chat', dur: 4 } },
   // Filter — map the legacy code, migrate module by module, verify, then remove
   { u: 'the filter logic is forked across a dozen pages — consolidate them', f: { file: 'backlog', focus: 'chat', dur: 5 } },
   { say: ['Legacy code — I’ll map every filter bar', 'across the repo before touching anything.'] },
   { tool: 'Grep', target: '**/Filters/**/*.tsx', meta: '12 legacy filter bars found' },
-  { tool: 'Update', target: 'docs/GROWFILTER_LEGACY_CLEANUP.md', meta: 'Added 40 lines — the migration map', diff: [['| Escalations   | grow bar | migrate |', 'add', 1], ['| Tasks · PTP · Disputes | grow bar | migrate |', 'add', 2], ['| AR Aging · Invoice List | grow bar | migrate |', 'add', 3]], f: { file: 'filtermap', focus: 'editor', dur: 6.5, type: true } },
+  { tool: 'Update', target: 'docs/GROWFILTER_LEGACY_CLEANUP.md', meta: 'Added 40 lines — the migration map', diff: [['| Escalations   | grow bar | migrate |', 'add', 1], ['| Tasks · PTP · Disputes | grow bar | migrate |', 'add', 2], ['| AR Aging · Invoice List | grow bar | migrate |', 'add', 3]], f: { file: 'filtermap', focus: 'editor', dur: 6.5 } },
   { say: ['12 pages on forked bars.', 'Migrating module by module onto GrowFilter.'] },
   { tool: 'Bash', target: 'node scripts/remap-filtercomponents-imports.cjs', out: [['✓ Escalations', T.green], ['✓ Tasks', T.green], ['✓ PTP', T.green], ['✓ Disputes', T.green]], f: { file: 'filtermap', focus: 'terminal', dur: 5, work: '7.3k' } },
   { say: ['4 modules migrated. AR Aging, All Customers', 'and Invoice List are next.'], ask: 'Verify these before I delete the legacy?', f: { file: 'filtermap', focus: 'chat', dur: 5.5 } },
@@ -231,9 +241,9 @@ const S2 = [
 // ── frames are the turns marked with `f` (cumulative reveal) ──────────────────
 const TAB_NAMES = { backlog: 'TECH_DEBT.md', plan: 'REACT18_UPGRADE_PLAN.md', main: 'server/main.tsx', asgard: 'asgard/package.json', aging: 'AgingTable.tsx', handoff: 'CONTEXT_HANDOFF.md', antdplan: 'ANTD_V6_MIGRATION.md', antd: 'Toolbar.tsx', rteplan: 'GROW_RTE_PLAN.md', rte: 'CommentEditor.tsx', vite: 'vite.config.mts', tiptap: 'tiptap-chain-learnings.md', filtermap: 'GROWFILTER_LEGACY_CLEANUP.md', filter: 'GrowFilter.tsx', styled: 'Toolbar.tsx', bundle: 'BUNDLE_OPTIMIZATION.md' }
 
-function Editor({ fileKey, type }) {
+function Editor({ fileKey }) {
   const f = F[fileKey]
-  if (f.md) return <FileMd {...f.md} typing={type} />
+  if (f.md) return <FileMd {...f.md} />
   return <FileCode rows={f.code} />
 }
 function lastTerminal(session, to) {
@@ -250,7 +260,7 @@ function lastTerminal(session, to) {
   }
   return null
 }
-function Frame({ s, to, file: fileKey, focus, work, type }) {
+function Frame({ s, to, file: fileKey, focus, work }) {
   const cur = s[to]
   const userTyping = !!cur.u
   const upto = userTyping ? to : to + 1
@@ -259,7 +269,7 @@ function Frame({ s, to, file: fileKey, focus, work, type }) {
   return (
     <Shell focus={focus} activeFile={fileKey} input={userTyping ? cur.u : null} working={work}
       tabs={[{ name: nm, active: true, dirty: true, icon, color: T.blue }]}
-      editor={<Editor fileKey={fileKey} type={type} />}
+      editor={<Editor fileKey={fileKey} />}
       terminal={focus === 'terminal' ? lastTerminal(s, to) : null}
       chat={s.slice(0, upto).map((b, i) => <Turn key={`${b.u ?? b.say?.[0] ?? b.tool ?? b.target ?? b.compact ?? b.divider ?? 'x'}-${i}`} block={b} fresh={i === upto - 1} />)} />
   )
