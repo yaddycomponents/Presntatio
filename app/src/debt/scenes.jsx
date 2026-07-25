@@ -20,6 +20,7 @@ function Turn({ block, fresh }) {
     <div className={cls} style={{ ...cbase }}>
       {block.say.map((l) => <div key={l} style={{ color: T.green, marginBottom: 6 }}>{dot}{l}</div>)}
       {block.ask && <div style={{ color: T.peach, marginTop: 6 }}>▸ {block.ask} <span style={{ color: T.faint }}>(y/n)</span></div>}
+      {block.done && <div style={{ color: T.green, display: 'flex', gap: 12, marginTop: 8 }}><span>✳</span><b style={{ color: T.bold }}>{block.done}</b></div>}
     </div>
   )
   // tool call: ● Verb(target)  ⎿ meta  [+ diff / output]
@@ -147,6 +148,18 @@ const F = {
     { t: 'now event-driven — fires once', c: T.muted },
     { t: '15 filter systems → 1', c: T.faint },
   ]} />,
+  styled: <FileCode rows={[
+    ['const Wrap = styled.div`', 'del', 1],
+    ['  padding: 8px; display: flex;`', 'del', 2],
+    ["import s from './Toolbar.module.css'", 'add', 1],
+    ['<div className={s.wrap}>', 'add', 14],
+  ]} />,
+  bundle: <FileMd title="grow-components bundle: what new-bundle achieved" lines={[
+    { t: 'styled-components in lib/:  38 → 0  (CSS Modules)', c: T.muted },
+    { t: 'export subpaths:  2 → 51  (per-component)', c: T.muted },
+    { t: '247.9 kB raw · 114.1 kB gzip', c: T.muted },
+    { t: '243 tree-shakeable files · build 0 errors', c: T.faint },
+  ]} />,
 }
 
 // ── SESSION 1 — React 18 + a real debugging arc ─────────────────────────────
@@ -203,7 +216,14 @@ const S2 = [
   { say: ['onApply fires from an effect watching the', 'contract — re-runs under StrictMode.'] },
   { tool: 'Update', target: 'packages/grow-components/GrowFilter.tsx', meta: 'onApply → event-driven', diff: [['- useEffect(() => onApply(contract))', 'del', 61], ['+ emitter.on("apply", onApply)', 'add', 61]] },
   { say: ['Fires once now. 15 filter systems → 1.'] },
-  { say: ['That’s the batch — React 18, AntD v6,', 'Grow RTE, filters, bundle, and a dozen more.'] },
+  // bundle — real grow-components retrospective
+  { u: 'last one — grow-components still ships styled-components' },
+  { say: ['38 styled-components files in lib/.', 'Moving them to CSS Modules.'] },
+  { tool: 'Bash', target: 'node scripts/styled-call-transform.cjs', out: [['✓ 38 files → CSS Modules', T.green], ['✓ tsc 0 errors (was: implicit-any)', T.green]] },
+  { tool: 'Read', target: 'BUNDLE_OPTIMIZATION.md', meta: 'Read 96 lines' },
+  { say: ['247.9 kB raw · 114.1 kB gzip', '243 tree-shakeable files · 2 → 51 subpaths'] },
+  // close on the real meta-stat
+  { say: ['That’s the batch — React 18, AntD v6, Grow', 'RTE, filters, and the bundle work.'], done: '16 debts · 3 repos · 159 docs · 29 codemods' },
 ]
 
 // ── frames: cumulative reveal + which file the editor shows ──────────────────
@@ -231,7 +251,11 @@ const FRAMES = [
   [S2, 15, 'vite', 'terminal', 4.5],// bundle regressed
   [S2, 17, 'vite', 'editor', 4.5],  // lazy chunk fix
   [S2, 20, 'filter', 'editor', 5],
-  [S2, 22, 'filter', 'chat', 5],
+  [S2, 22, 'filter', 'chat', 4],
+  [S2, 24, 'styled', 'chat', 4.5],   // styled-components → CSS Modules
+  [S2, 25, 'styled', 'terminal', 4], // codemod: 38 files
+  [S2, 27, 'bundle', 'editor', 5],   // real bundle retrospective
+  [S2, 28, 'bundle', 'chat', 6],     // closing meta-stat
 ]
 
 function Frame({ session, to, editorKey, focus }) {
@@ -244,7 +268,7 @@ function Frame({ session, to, editorKey, focus }) {
   )
 }
 function editorFile(session, to, key) {
-  const names = { backlog: 'TECH_DEBT.md', plan: 'REACT18_UPGRADE_PLAN.md', main: 'server/main.tsx', aging: 'AgingTable.tsx', handoff: 'CONTEXT_HANDOFF.md', antd: 'Toolbar.tsx', rte: 'CommentEditor.tsx', vite: 'vite.config.mts', tiptap: 'tiptap-chain-learnings.md', filter: 'GrowFilter.tsx' }
+  const names = { backlog: 'TECH_DEBT.md', plan: 'REACT18_UPGRADE_PLAN.md', main: 'server/main.tsx', aging: 'AgingTable.tsx', handoff: 'CONTEXT_HANDOFF.md', antd: 'Toolbar.tsx', rte: 'CommentEditor.tsx', vite: 'vite.config.mts', tiptap: 'tiptap-chain-learnings.md', filter: 'GrowFilter.tsx', styled: 'Toolbar.tsx', bundle: 'BUNDLE_OPTIMIZATION.md' }
   return names[key] ?? 'file'
 }
 function lastTerminal(session, to) {
