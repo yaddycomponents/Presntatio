@@ -183,7 +183,7 @@ function ClaudePanel({ children, input, working, splash, accent, context }) {
       <div style={{ padding: '12px 24px 0', flexShrink: 0 }}>
         <div style={{ border: `1px solid ${T.borderHi}`, borderRadius: 12, padding: '14px 18px', minHeight: 26, display: 'flex', gap: 10, fontFamily: mono, fontSize: 18, color: T.green }}>
           <span>❯</span>
-          {input != null ? <Type text={input} cps={55} /> : (working ? <span style={{ color: T.faint }} /> : <span className="caret" style={{ verticalAlign: 'middle' }} />)}
+          {input != null ? <Type text={input} cps={95} /> : (working ? <span style={{ color: T.faint }} /> : <span className="caret" style={{ verticalAlign: 'middle' }} />)}
         </div>
         {context != null && (
           <div style={{ textAlign: 'right', fontFamily: mono, fontSize: 13, color: context <= 10 ? T.yellow : T.faint, paddingTop: 5, paddingRight: 2 }}>
