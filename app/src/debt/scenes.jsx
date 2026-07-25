@@ -1,4 +1,4 @@
-import { Shell, T, mono, sans } from './Shell'
+import { Shell, T, mono, code, sans } from './Shell'
 
 // ONE continuous Claude Code session per context window — the transcript
 // accumulates and auto-scrolls, exactly like the real pane. Each frame reveals
@@ -8,7 +8,8 @@ import { Shell, T, mono, sans } from './Shell'
 // console.log into node_modules, finds the bug, reverts the log, fixes the root.
 
 // ── transcript block renderers (match the real CC pane) ─────────────────────
-const cbase = { fontFamily: mono, fontSize: 27, lineHeight: 1.6 }
+// chat = --chat 24/36, always ≤ editor (--code 26)
+const cbase = { fontFamily: mono, fontSize: 24, lineHeight: 1.5 }
 const dot = <span style={{ color: T.green, fontSize: '0.55em', verticalAlign: 'middle', marginRight: 12 }}>●</span>
 
 function Turn({ block, fresh }) {
@@ -63,7 +64,7 @@ function Diff({ rows }) {
 // ── editor interiors ────────────────────────────────────────────────────────
 function FileMd({ title, sub, lines }) {
   return (
-    <div style={{ padding: '40px 54px', fontFamily: mono, fontSize: 25, lineHeight: 1.7 }}>
+    <div style={{ padding: '40px 54px', fontFamily: code, fontSize: 26, lineHeight: 1.5 }}>
       <div style={{ fontSize: 34, fontWeight: 700, color: T.text, marginBottom: sub ? 6 : 22 }}># {title}</div>
       {sub && <div style={{ fontSize: 23, color: T.faint, marginBottom: 24 }}>{sub}</div>}
       {lines.map((l) => <div key={l.t} style={{ color: l.c ?? T.muted, marginBottom: 11, paddingLeft: l.pad ? 32 : 0 }}>{l.t}</div>)}
@@ -72,7 +73,7 @@ function FileMd({ title, sub, lines }) {
 }
 function FileCode({ rows }) {
   return (
-    <div style={{ padding: '34px 24px', fontFamily: mono, fontSize: 25, lineHeight: 1.85 }}>
+    <div style={{ padding: '34px 24px', fontFamily: code, fontSize: 26, lineHeight: 1.5 }}>
       {rows.map((r, i) => (
         <div key={`${r[0]}-${i}`} style={{ display: 'flex', background: r[1] === 'del' ? 'rgba(243,139,168,.1)' : r[1] === 'add' ? 'rgba(166,227,161,.1)' : 'transparent' }}>
           <span style={{ width: 48, textAlign: 'right', paddingRight: 16, color: T.faint }}>{r[2] ?? ''}</span>
@@ -276,10 +277,11 @@ function lastTerminal(session, to) {
   for (let i = to; i >= 0; i--) {
     const b = session[i]
     if (b.tool === 'Bash') {
+      // real terminal panel — output + cursor use the #00FD61 override
       return (
         <>
-          <div style={{ fontFamily: mono, fontSize: 22, color: T.text, marginBottom: 8 }}><span style={{ color: T.teal }}>$</span> {b.target}</div>
-          {(b.out ?? []).map((o) => <div key={o[0]} style={{ fontFamily: mono, fontSize: 22, lineHeight: 1.5, color: o[1] ?? T.muted, whiteSpace: 'nowrap' }}>{o[0]}</div>)}
+          <div style={{ fontFamily: mono, fontSize: 22, color: T.termGreen, marginBottom: 8 }}><span style={{ color: T.teal }}>$</span> {b.target}<span className="caret" style={{ marginLeft: 8, verticalAlign: 'middle' }} /></div>
+          {(b.out ?? []).map((o) => <div key={o[0]} style={{ fontFamily: mono, fontSize: 22, lineHeight: 1.5, color: T.termGreen, whiteSpace: 'nowrap' }}>{o[0]}</div>)}
         </>
       )
     }

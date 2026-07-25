@@ -5,14 +5,19 @@ import { useLayoutEffect, useRef, useState } from 'react'
 // terminal + status bar, always on screen. `focus` brightens one region and
 // dims the rest so it stays legible at video scale.
 
+// Catppuccin Frappé — verified against the real settings.json. Do not substitute
+// Mocha hexes. --term-green (#00FD61) is the real terminal.foreground override:
+// terminal panel output + cursor ONLY, never chat or UI.
 export const T = {
-  bg: '#11111B', surface: '#1E1E2E', sunken: '#181825', panel: '#1B1B29',
-  border: '#313244', borderHi: '#45475A',
-  text: '#CDD6F4', muted: '#A6ADC8', faint: '#6C7086', bold: '#F2F4FF',
-  green: '#A6E3A1', red: '#F38BA8', mauve: '#CBA6F7', teal: '#94E2D5',
-  peach: '#FAB387', yellow: '#F9E2AF', blue: '#89B4FA',
+  bg: '#232634', surface: '#303446', sunken: '#292C3C', panel: '#292C3C',
+  border: '#414559', borderHi: '#51576D',
+  text: '#C6D0F5', muted: '#A5ADCE', faint: '#838BA7', bold: '#EEF2FF',
+  green: '#A6D189', red: '#E78284', mauve: '#CA9EE6', teal: '#81C8BE',
+  peach: '#EF9F76', yellow: '#E5C890', blue: '#8CAAEE', termGreen: '#00FD61',
 }
-export const mono = "'Fira Code', ui-monospace, monospace"
+// editor/diff = Monaspace Neon; terminal + chat + UI = FiraCode Nerd Font Mono
+export const code = "'Monaspace Neon', 'Fira Code', ui-monospace, monospace"
+export const mono = "'FiraCode Nerd Font Mono', 'Fira Code', ui-monospace, monospace"
 export const sans = "'IBM Plex Sans', system-ui, sans-serif"
 
 const RAIL = 60
@@ -41,7 +46,7 @@ function Row({ depth = 0, icon, color = T.muted, children, active, badge, dim })
   return (
     <div style={{ display: 'flex', alignItems: 'center', gap: 9, padding: '5px 0', paddingLeft: 14 + depth * 22, background: active ? 'rgba(203,166,247,0.12)' : 'transparent', borderRadius: 6, opacity: dim ? 0.4 : 1 }}>
       {icon && <span style={{ color, fontFamily: mono, fontSize: 18, width: 18, textAlign: 'center' }}>{icon}</span>}
-      <span style={{ fontFamily: mono, fontSize: 21, color: active ? T.text : T.muted }}>{children}</span>
+      <span style={{ fontFamily: mono, fontSize: 20, color: active ? T.text : T.muted }}>{children}</span>
       {badge && <span style={{ marginLeft: 'auto', marginRight: 14, color: T.green, fontFamily: mono, fontSize: 16 }}>{badge}</span>}
     </div>
   )

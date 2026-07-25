@@ -1,68 +1,99 @@
-/* Mocha Terminal — video theme
-   Source: Catppuccin Mocha (VS Code) + Fira Code + Claude Code chat pane
-   Target: 1920x1080 @ 30fps, HTML -> video */
+/* Frappé Terminal — video theme
+   Source: Catppuccin Frappé (VS Code) + Monaspace Neon + FiraCode Nerd Font Mono
+   Target: 1920x1080 @ 30fps, HTML -> video
+   Verified against my real settings.json — do not substitute Mocha hexes. */
 
 @import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap');
 
 :root {
-  /* surfaces */
-  --bg:        #11111B;  /* video canvas, title + outro       */
-  --surface:   #1E1E2E;  /* editor body, main panels          */
-  --sunken:    #181825;  /* sidebar, cards, terminal rows     */
-  --border:    #313244;  /* hairlines, dividers, code chips   */
-  --border-hi: #45475A;  /* pill outlines                     */
+  /* surfaces — Frappé */
+  --bg:        #232634;  /* crust    · video canvas, title + outro */
+  --surface:   #303446;  /* base     · editor body, main panels    */
+  --sunken:    #292C3C;  /* mantle   · sidebar, cards, chat body   */
+  --border:    #414559;  /* surface0 · hairlines, code chips       */
+  --border-hi: #51576D;  /* surface1 · pill outlines, active row   */
 
   /* text */
-  --text:   #CDD6F4;     /* primary copy                      */
-  --muted:  #A6ADC8;     /* secondary, terminal output        */
-  --faint:  #6C7086;     /* captions, "Ran 1 shell command"   */
-  --bold:   #F2F4FF;     /* bold emphasis inside agent copy   */
+  --text:   #C6D0F5;     /* text     · primary copy               */
+  --muted:  #A5ADCE;     /* subtext0 · secondary, terminal output  */
+  --faint:  #838BA7;     /* overlay1 · captions, hints             */
+  --bold:   #EEF2FF;     /* bold emphasis inside agent copy        */
 
   /* accents — one dominant accent per scene */
-  --green:  #A6E3A1;     /* additions, wins, agent body voice */
-  --red:    #F38BA8;     /* removals, tech debt, before-state */
-  --mauve:  #CBA6F7;     /* primary accent, branch, labels    */
-  --teal:   #94E2D5;     /* filenames, metrics, shell prompt  */
-  --peach:  #FAB387;     /* transitions, arrows, status line  */
-  --yellow: #F9E2AF;     /* dirty git state, warnings         */
+  --green:  #A6D189;     /* additions, passing, agent body voice   */
+  --red:    #E78284;     /* removals, tech debt, before-state      */
+  --mauve:  #CA9EE6;     /* primary accent, git branch, labels     */
+  --teal:   #81C8BE;     /* filenames, metrics, shell prompt       */
+  --peach:  #EF9F76;     /* transitions, arrows, status line       */
+  --yellow: #E5C890;     /* dirty git state, warnings              */
+  --blue:   #8CAAEE;     /* links                                  */
+  --term-green: #00FD61; /* MY terminal.foreground override —
+                            real shell output + cursor ONLY        */
 
-  /* type */
+  /* type — real stack from settings.json */
   --font-sans: 'IBM Plex Sans', system-ui, sans-serif;
-  --font-mono: 'Fira Code', ui-monospace, monospace;  /* ligatures ON */
+  --font-code: 'Monaspace Neon', 'Fira Code', ui-monospace, monospace; /* editor  */
+  --font-term: 'FiraCode Nerd Font Mono', 'Fira Code', monospace;      /* term/chat */
+
+  /* ONE code size for every pane. Real editor is 16px/24 at zoomLevel 1;
+     scaled 1.6x for 1080p legibility. Chat is 2px smaller, like the real
+     terminal pane — never larger than the editor. */
+  --code: 26px;   --code-lh: 39px;   /* editor + diff  */
+  --chat: 24px;   --chat-lh: 36px;   /* Claude Code    */
+  --ui:   20px;                      /* tabs, sidebar, status bar */
 
   /* motion */
-  --ease:    cubic-bezier(.22, 1, .36, 1);  /* the only curve */
-  --beat:    480ms;                          /* base transition */
-  --stagger: 90ms;                           /* per-item delay  */
+  --ease:    cubic-bezier(.22, 1, .36, 1);
+  --beat:    480ms;
+  --stagger: 90ms;
 }
 
 html, body { margin: 0; background: var(--bg); color: var(--text); }
 body { font-family: var(--font-sans); font-feature-settings: 'liga' 1; }
-code, pre, .mono { font-family: var(--font-mono); }
-a { color: #89B4FA; text-decoration: none; }
-a:hover { color: #B4BEFE; }
+code, pre, .mono { font-family: var(--font-code); }
+a { color: var(--blue); text-decoration: none; }
+a:hover { color: #BABBF1; }
 
-/* stage — every scene is exactly this box */
 .stage { width: 1920px; height: 1080px; position: relative; overflow: hidden; background: var(--bg); }
 
-/* type scale @1080p — never go below 28px for anything narrated */
+/* narration type — sans only. Never mix these with pane text. */
 .t-title   { font-size: 96px; line-height: 1.02; font-weight: 700; letter-spacing: -0.025em; }
 .t-h2      { font-size: 64px; line-height: 1.04; font-weight: 700; letter-spacing: -0.02em; }
 .t-body    { font-size: 34px; line-height: 1.45; font-weight: 500; }
-.t-code    { font-family: var(--font-mono); font-size: 28px; line-height: 1.85; }
-.t-eyebrow { font-family: var(--font-mono); font-size: 18px; font-weight: 500;
+.t-eyebrow { font-family: var(--font-term); font-size: 18px; font-weight: 500;
              letter-spacing: 0.2em; text-transform: uppercase; color: var(--mauve); }
 .t-caption { font-size: 22px; line-height: 1.55; color: var(--faint); }
 
-/* agent-chat pane (Claude Code look) */
-.agent      { font-family: var(--font-mono); font-size: 28px; line-height: 1.65; color: var(--green); }
-.agent b    { color: var(--bold); font-weight: 700; }
-.agent code { background: var(--border); color: var(--text); border-radius: 4px; padding: 2px 8px; }
-.agent .dot { color: var(--green); font-size: 0.6em; vertical-align: 0.35em; }
-.agent .meta{ color: var(--faint); }
-.agent .status { color: var(--peach); }
+/* editor / diff */
+.code { font-family: var(--font-code); font-size: var(--code); line-height: var(--code-lh);
+        font-variant-ligatures: common-ligatures; }
+.code .add { color: var(--green); background: rgba(166,209,137,.12); }
+.code .del { color: var(--red);   background: rgba(231,130,132,.12); }
+.code .gutter { color: var(--faint); }
+.tabbar, .sidebar, .statusbar { font-family: var(--font-term); font-size: var(--ui); }
+.sidebar { background: var(--sunken); color: var(--muted); }
+.sidebar .active { background: var(--border); color: var(--text); }
+.statusbar { background: var(--surface); border-top: 1px solid var(--border);
+             height: 44px; color: var(--muted); }
 
-/* motion primitives — translate/opacity/scale only. No blur, rotate, skew. */
+/* Claude Code chat pane */
+.chat        { background: var(--bg); font-family: var(--font-term);
+               font-size: var(--chat); line-height: var(--chat-lh); color: var(--green);
+               display: flex; flex-direction: column; padding: 28px 32px; gap: 20px; }
+.chat .head  { display: flex; align-items: center; gap: 10px; height: 56px;
+               background: var(--surface); border-bottom: 1px solid var(--border);
+               color: var(--text); }
+.chat .head .star { color: var(--peach); }
+.chat .user  { color: var(--green); }        /* prompt ❯ AND its text */
+.chat .dot   { color: var(--green); font-size: .6em; vertical-align: .35em; }
+.chat b      { color: var(--bold); font-weight: 700; }
+.chat code   { background: var(--border); color: var(--text); border-radius: 4px; padding: 2px 8px; }
+.chat .ask   { color: var(--peach); }
+.chat .meta, .chat .hint { color: var(--faint); }
+.chat .foot  { margin-top: auto; border-top: 1px solid var(--border);
+               padding-top: 16px; font-size: var(--ui); }
+
+/* motion primitives — translate/opacity/scale only */
 @keyframes rise  { from { opacity: 0; transform: translateY(24px) } to { opacity: 1; transform: none } }
 @keyframes slide { from { opacity: 0; transform: translateX(40px) } to { opacity: 1; transform: none } }
 @keyframes pop   { 0% { transform: scale(0) } 60% { transform: scale(1.25) } 100% { transform: scale(1) } }
@@ -71,8 +102,8 @@ a:hover { color: #B4BEFE; }
 .rise  { animation: rise  var(--beat) var(--ease) both; }
 .slide { animation: slide var(--beat) var(--ease) both; }
 .pop   { animation: pop   320ms var(--ease) both; }
-.caret { display: inline-block; width: 14px; height: 34px; background: var(--text);
+.caret { display: inline-block; width: 13px; height: 28px; background: var(--term-green);
          animation: caret 1s step-end infinite; }
 
 /* stagger helper: set --i on each child (1,2,3…) */
-[class*="rise"], [class*="slide"] { animation-delay: calc(var(--i, 0) * var(--stagger)); }
+.rise, .slide { animation-delay: calc(var(--i, 0) * var(--stagger)); }
