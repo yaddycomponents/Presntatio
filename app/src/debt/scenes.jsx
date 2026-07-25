@@ -396,7 +396,7 @@ const BootTerm = () => (
     <div style={{ color: T.green }}>Found '/Users/yathavan/Growfin/heisenberg/.nvmrc' with version &lt;v24&gt;</div>
     <div style={{ color: T.green }}>Now using node v24.12.0 (npm v11.6.2)</div>
     <div style={{ color: T.muted }}>(base)</div>
-    <div><span style={{ color: T.teal }}>heisenberg</span> on <span style={{ color: T.mauve }}>⑂ feat/i18n-wire-heisenberg</span> <span style={{ color: T.yellow }}>[$!]</span> is <span style={{ color: T.peach }}>v0.1.10-beta</span> via <span style={{ color: T.green }}>v24.12.0</span></div>
+    <div><span style={{ color: T.teal }}>heisenberg</span> on <span style={{ color: T.mauve }}>⑂ new-bundle</span> <span style={{ color: T.yellow }}>[$!]</span> is <span style={{ color: T.peach }}>v0.1.10-beta</span> via <span style={{ color: T.green }}>v24.12.0</span></div>
     <div style={{ color: T.termGreen, marginTop: 4 }}>❯ <span className="caret" style={{ verticalAlign: 'middle' }} /></div>
   </div>
 )
