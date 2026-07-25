@@ -79,19 +79,22 @@ function Tab({ children, active, dirty, icon, color = T.blue }) {
   )
 }
 
+const CHAT_W = 900
+
 function ClaudePanel({ children, focus }) {
   return (
-    <div style={{ width: 820, background: T.bg, borderLeft: `1px solid ${T.border}`, display: 'flex', flexDirection: 'column', flexShrink: 0, opacity: focus === 'chat' || !focus ? 1 : 0.42, transition: 'opacity .4s' }}>
-      <div style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '0 24px', height: 56, borderBottom: `1px solid ${T.border}`, flexShrink: 0 }}>
+    <div style={{ width: CHAT_W, background: T.bg, borderLeft: `1px solid ${T.border}`, display: 'flex', flexDirection: 'column', flexShrink: 0, opacity: focus === 'chat' || !focus ? 1 : 0.42, transition: 'opacity .4s' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '0 32px', height: 56, borderBottom: `1px solid ${T.border}`, flexShrink: 0 }}>
         <span style={{ color: T.peach, fontSize: 24 }}>✳</span>
         <span style={{ fontFamily: mono, fontSize: 21, color: T.text }}>Claude Code</span>
         <div style={{ flex: 1 }} />
         <span style={{ fontFamily: mono, fontSize: 18, color: T.faint }}>◻ ⤢ ×</span>
       </div>
-      <div style={{ flex: 1, overflow: 'hidden', padding: '26px 30px' }}>{children}</div>
-      <div style={{ borderTop: `1px solid ${T.border}`, padding: '14px 24px', flexShrink: 0 }}>
-        <div style={{ fontFamily: mono, fontSize: 18, color: T.faint }}>app <span style={{ color: T.faint }}>(git:main)</span></div>
-        <div style={{ fontFamily: mono, fontSize: 18, color: T.peach, marginTop: 6 }}>▸▸ auto-accept edits on <span style={{ color: T.faint }}>(shift+tab to cycle)</span></div>
+      {/* top-anchored, one gap between blocks — no void above */}
+      <div style={{ flex: 1, minHeight: 0, overflow: 'hidden', display: 'flex', flexDirection: 'column', justifyContent: 'flex-start', gap: 20, padding: '28px 32px', fontFamily: mono }}>{children}</div>
+      <div style={{ borderTop: `1px solid ${T.border}`, padding: '14px 32px', flexShrink: 0 }}>
+        <div style={{ fontFamily: mono, fontSize: 20, color: T.green }}>app <span style={{ color: T.faint }}>(git:main)</span></div>
+        <div style={{ fontFamily: mono, fontSize: 20, color: T.peach, marginTop: 6 }}>▸▸ auto-accept edits on <span style={{ color: T.faint }}>(shift+tab to cycle)</span></div>
       </div>
     </div>
   )
@@ -136,15 +139,14 @@ export function Shell({ activeFile, tabs, editor, terminal, chat, focus }) {
         <ClaudePanel focus={focus}>{chat}</ClaudePanel>
       </div>
 
-      {/* status bar */}
-      <div style={{ height: STATUS, background: T.mauve, color: T.bg, display: 'flex', alignItems: 'center', padding: '0 16px', gap: 20, fontFamily: mono, fontSize: 16, flexShrink: 0 }}>
-        <span>⑂ main*</span>
+      {/* status bar — surface, not a glowing mauve band; accent only active items */}
+      <div style={{ height: 44, background: T.surface, borderTop: `1px solid ${T.border}`, color: T.muted, display: 'flex', alignItems: 'center', padding: '0 18px', gap: 22, fontFamily: mono, fontSize: 20, flexShrink: 0 }}>
+        <span style={{ color: T.mauve }}>⑂ main*</span>
         <span>Jira: yathavan prabhakar</span>
         <div style={{ flex: 1 }} />
         <span>◐ 0 ⚠ 0</span>
         <span>Pro</span>
-        <span>Quokka</span>
-        <span>▶ Go Live</span>
+        <span style={{ color: T.teal }}>▶ Go Live</span>
       </div>
     </div>
   )

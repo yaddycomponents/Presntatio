@@ -6,7 +6,8 @@ import './theme.css'
 // replay every time a scene becomes active — no JS animation library needed.
 export default function DebtStage({ scenes }) {
   const params = new URLSearchParams(window.location.search)
-  const clean = params.has('clean')
+  // finished video by default — player chrome (pager, hint) only with ?edit
+  const clean = !params.has('edit')
   const [i, setI] = useState(() => {
     const s = params.get('scene')
     if (!s) return 0
