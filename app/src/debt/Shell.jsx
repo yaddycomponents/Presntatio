@@ -1,3 +1,5 @@
+import { useLayoutEffect, useRef, useState } from 'react'
+
 // Persistent VS Code frame. Every beat of the film happens inside this — the
 // story is a live Claude Code session: explorer + editor + CC chat panel +
 // terminal + status bar, always on screen. `focus` brightens one region and
@@ -81,6 +83,24 @@ function Tab({ children, active, dirty, icon, color = T.blue }) {
 
 const CHAT_W = 900
 
+function ScrollTranscript({ children }) {
+  const outer = useRef(null)
+  const inner = useRef(null)
+  const [y, setY] = useState(0)
+  useLayoutEffect(() => {
+    const sh = inner.current?.scrollHeight ?? 0
+    const ch = outer.current?.clientHeight ?? 0
+    setY(Math.max(0, sh - ch)) // keep the newest turn pinned to the bottom
+  })
+  return (
+    <div ref={outer} style={{ flex: 1, minHeight: 0, overflow: 'hidden', position: 'relative', fontFamily: mono }}>
+      <div ref={inner} style={{ position: 'absolute', left: 0, right: 0, top: 0, padding: '28px 32px', display: 'flex', flexDirection: 'column', gap: 22, transform: `translateY(${-y}px)` }}>
+        {children}
+      </div>
+    </div>
+  )
+}
+
 function ClaudePanel({ children, focus }) {
   return (
     <div style={{ width: CHAT_W, background: T.bg, borderLeft: `1px solid ${T.border}`, display: 'flex', flexDirection: 'column', flexShrink: 0, opacity: focus === 'chat' || !focus ? 1 : 0.42, transition: 'opacity .4s' }}>
@@ -90,8 +110,9 @@ function ClaudePanel({ children, focus }) {
         <div style={{ flex: 1 }} />
         <span style={{ fontFamily: mono, fontSize: 18, color: T.faint }}>◻ ⤢ ×</span>
       </div>
-      {/* top-anchored, one gap between blocks — no void above */}
-      <div style={{ flex: 1, minHeight: 0, overflow: 'hidden', display: 'flex', flexDirection: 'column', justifyContent: 'flex-start', gap: 20, padding: '28px 32px', fontFamily: mono }}>{children}</div>
+      {/* one continuous transcript: top-anchored when short, auto-scrolled to the
+          bottom once it overflows — like a real Claude Code session */}
+      <ScrollTranscript>{children}</ScrollTranscript>
       <div style={{ borderTop: `1px solid ${T.border}`, padding: '14px 32px', flexShrink: 0 }}>
         <div style={{ fontFamily: mono, fontSize: 20, color: T.green }}>app <span style={{ color: T.faint }}>(git:main)</span></div>
         <div style={{ fontFamily: mono, fontSize: 20, color: T.peach, marginTop: 6 }}>▸▸ auto-accept edits on <span style={{ color: T.faint }}>(shift+tab to cycle)</span></div>
