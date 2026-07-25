@@ -199,7 +199,7 @@ function ClaudePanel({ children, input, working, splash, accent, context }) {
   )
 }
 
-export function Shell({ activeFile, created, tabs, editor, terminal, chat, focus, input, working, splash, context, noPanel }) {
+export function Shell({ activeFile, created, tabs, editor, terminal, chat, focus, input, working, splash, context, noPanel, panelIn }) {
   // Claude pane is the spine — it never dims below readable. Only the two context
   // regions (editor / terminal) dim when they're not the primary, and the primary
   // gets a mauve top accent so it's unambiguous which one to watch.
@@ -232,7 +232,7 @@ export function Shell({ activeFile, created, tabs, editor, terminal, chat, focus
       </div>
 
       {/* body */}
-      <div style={{ flex: 1, display: 'flex', minHeight: 0 }}>
+      <div style={{ flex: 1, display: 'flex', minHeight: 0, position: 'relative' }}>
         <ActivityRail />
         <Explorer activeFile={activeFile} created={created} />
 
@@ -253,7 +253,12 @@ export function Shell({ activeFile, created, tabs, editor, terminal, chat, focus
           )}
         </div>
 
-        {!noPanel && <ClaudePanel focus={focus} input={input} working={working} splash={splash} accent={chatPrimary} context={context}>{chat}</ClaudePanel>}
+        {!noPanel && !panelIn && <ClaudePanel focus={focus} input={input} working={working} splash={splash} accent={chatPrimary} context={context}>{chat}</ClaudePanel>}
+        {panelIn && (
+          <div className="panelin" style={{ position: 'absolute', top: 0, right: 0, bottom: 0, display: 'flex' }}>
+            <ClaudePanel focus={focus} input={input} working={working} splash={splash} accent={chatPrimary} context={context}>{chat}</ClaudePanel>
+          </div>
+        )}
       </div>
 
       {/* status bar — surface, not a glowing mauve band; accent only active items */}

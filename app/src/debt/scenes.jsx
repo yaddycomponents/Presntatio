@@ -409,16 +409,13 @@ const BootScene = () => (
   </div>
 )
 
-// session-start splash — the Claude panel opens with the banner
-const Splash = () => (
-  <Shell splash focus="chat" activeFile="backlog" created={new Set()} context={100}
-    tabs={[{ name: 'TECH_DEBT.md', active: true, icon: '≡', color: T.blue }]}
-    editor={<Editor fileKey="backlog" />} />
-)
+// session-start — the ✳ was clicked in the boot scene; the window stays put and
+// the Claude Code panel slides in from the right with the banner. No second
+// window animation — just the panel opening, like the real editor.
 const SplashScene = () => (
-  <div style={{ position: 'absolute', inset: 0, background: '#000' }}>
-    <div className="winopen" style={{ position: 'absolute', inset: 0 }}><Splash /></div>
-  </div>
+  <Shell panelIn splash focus="chat" activeFile="silent" created={new Set()} context={100}
+    tabs={[{ name: 'antd-v6-silent-breakages.md', active: true, icon: '≡', color: T.blue }]}
+    editor={<FileMd {...BOOT.md} />} terminal={<BootTerm />} />
 )
 
 // closing: the cursor travels to the red traffic light, clicks, the window
