@@ -1,0 +1,78 @@
+/* Mocha Terminal — video theme
+   Source: Catppuccin Mocha (VS Code) + Fira Code + Claude Code chat pane
+   Target: 1920x1080 @ 30fps, HTML -> video */
+
+@import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap');
+
+:root {
+  /* surfaces */
+  --bg:        #11111B;  /* video canvas, title + outro       */
+  --surface:   #1E1E2E;  /* editor body, main panels          */
+  --sunken:    #181825;  /* sidebar, cards, terminal rows     */
+  --border:    #313244;  /* hairlines, dividers, code chips   */
+  --border-hi: #45475A;  /* pill outlines                     */
+
+  /* text */
+  --text:   #CDD6F4;     /* primary copy                      */
+  --muted:  #A6ADC8;     /* secondary, terminal output        */
+  --faint:  #6C7086;     /* captions, "Ran 1 shell command"   */
+  --bold:   #F2F4FF;     /* bold emphasis inside agent copy   */
+
+  /* accents — one dominant accent per scene */
+  --green:  #A6E3A1;     /* additions, wins, agent body voice */
+  --red:    #F38BA8;     /* removals, tech debt, before-state */
+  --mauve:  #CBA6F7;     /* primary accent, branch, labels    */
+  --teal:   #94E2D5;     /* filenames, metrics, shell prompt  */
+  --peach:  #FAB387;     /* transitions, arrows, status line  */
+  --yellow: #F9E2AF;     /* dirty git state, warnings         */
+
+  /* type */
+  --font-sans: 'IBM Plex Sans', system-ui, sans-serif;
+  --font-mono: 'Fira Code', ui-monospace, monospace;  /* ligatures ON */
+
+  /* motion */
+  --ease:    cubic-bezier(.22, 1, .36, 1);  /* the only curve */
+  --beat:    480ms;                          /* base transition */
+  --stagger: 90ms;                           /* per-item delay  */
+}
+
+html, body { margin: 0; background: var(--bg); color: var(--text); }
+body { font-family: var(--font-sans); font-feature-settings: 'liga' 1; }
+code, pre, .mono { font-family: var(--font-mono); }
+a { color: #89B4FA; text-decoration: none; }
+a:hover { color: #B4BEFE; }
+
+/* stage — every scene is exactly this box */
+.stage { width: 1920px; height: 1080px; position: relative; overflow: hidden; background: var(--bg); }
+
+/* type scale @1080p — never go below 28px for anything narrated */
+.t-title   { font-size: 96px; line-height: 1.02; font-weight: 700; letter-spacing: -0.025em; }
+.t-h2      { font-size: 64px; line-height: 1.04; font-weight: 700; letter-spacing: -0.02em; }
+.t-body    { font-size: 34px; line-height: 1.45; font-weight: 500; }
+.t-code    { font-family: var(--font-mono); font-size: 28px; line-height: 1.85; }
+.t-eyebrow { font-family: var(--font-mono); font-size: 18px; font-weight: 500;
+             letter-spacing: 0.2em; text-transform: uppercase; color: var(--mauve); }
+.t-caption { font-size: 22px; line-height: 1.55; color: var(--faint); }
+
+/* agent-chat pane (Claude Code look) */
+.agent      { font-family: var(--font-mono); font-size: 28px; line-height: 1.65; color: var(--green); }
+.agent b    { color: var(--bold); font-weight: 700; }
+.agent code { background: var(--border); color: var(--text); border-radius: 4px; padding: 2px 8px; }
+.agent .dot { color: var(--green); font-size: 0.6em; vertical-align: 0.35em; }
+.agent .meta{ color: var(--faint); }
+.agent .status { color: var(--peach); }
+
+/* motion primitives — translate/opacity/scale only. No blur, rotate, skew. */
+@keyframes rise  { from { opacity: 0; transform: translateY(24px) } to { opacity: 1; transform: none } }
+@keyframes slide { from { opacity: 0; transform: translateX(40px) } to { opacity: 1; transform: none } }
+@keyframes pop   { 0% { transform: scale(0) } 60% { transform: scale(1.25) } 100% { transform: scale(1) } }
+@keyframes caret { 0%, 49% { opacity: 1 } 50%, 100% { opacity: 0 } }
+
+.rise  { animation: rise  var(--beat) var(--ease) both; }
+.slide { animation: slide var(--beat) var(--ease) both; }
+.pop   { animation: pop   320ms var(--ease) both; }
+.caret { display: inline-block; width: 14px; height: 34px; background: var(--text);
+         animation: caret 1s step-end infinite; }
+
+/* stagger helper: set --i on each child (1,2,3…) */
+[class*="rise"], [class*="slide"] { animation-delay: calc(var(--i, 0) * var(--stagger)); }
