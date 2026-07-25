@@ -19,7 +19,7 @@ import ffmpegStatic from 'ffmpeg-static'
 
 const OUT = process.env.OUT || 'heisenberg.mp4'
 const OUTFPS = Number(process.env.FPS || 30)
-const TAIL_MS = 7000
+const TAIL_MS = Number(process.env.TAIL || 7000)
 const DIR = 'frames'
 
 const FFMPEG = (ffmpegStatic && spawnSync(ffmpegStatic, ['-version']).status === 0)
@@ -33,7 +33,9 @@ await build()
 console.log('▸ starting preview…')
 const server = await preview({ preview: { port: 4173, strictPort: false } })
 const base = server.resolvedUrls.local[0].replace(/\/$/, '')
-const url = `${base}/?play${process.env.HOLD ? `&hold=${process.env.HOLD}` : ''}`
+// ROUTE selects the deck: '' = Heisenberg, 'debt' = the tech-debt film, 'ai'.
+const route = process.env.ROUTE ? `${process.env.ROUTE}&` : ''
+const url = `${base}/?${route}play${process.env.HOLD ? `&hold=${process.env.HOLD}` : ''}`
 
 rmSync(DIR, { recursive: true, force: true })
 mkdirSync(DIR, { recursive: true })

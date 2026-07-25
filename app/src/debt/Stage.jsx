@@ -56,7 +56,7 @@ export default function DebtStage({ scenes }) {
   return (
     <div style={{ position: 'fixed', inset: 0, background: '#000', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: clean || playing ? 'none' : 'default', overflow: 'hidden' }}>
       <div ref={wrap} style={{ width: 1920, height: 1080, transform: `scale(${scale})`, transformOrigin: 'center', flex: '0 0 auto' }}>
-        <div className="stage" data-scene={i} key={i}>
+        <div className="stage" data-scene={i} data-scene-count={count} key={i}>
           <Scene />
         </div>
       </div>

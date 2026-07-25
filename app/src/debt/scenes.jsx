@@ -52,7 +52,7 @@ function CompactAnim({ cls }) {
     let t0 = null
     const tick = (ts) => {
       if (t0 === null) t0 = ts
-      const p = Math.min(100, Math.round(((ts - t0) / 2600) * 100))
+      const p = Math.min(100, Math.round(((ts - t0) / 1500) * 100))
       setPct(p)
       if (p < 100) raf = requestAnimationFrame(tick)
     }
@@ -441,11 +441,18 @@ const FinScene = () => (
 const build = (sess) => sess.map((t, i) => (t.f ? { s: sess, to: i, ...t.f } : null)).filter(Boolean)
 const FRAMES = [...build(S1), ...build(S2)]
 
+// Oppenheimer tempo — the intro/outro are locked to their cursor keyframes, but
+// the 56 content beats are scaled to land the whole film on ~1:50 of fast cuts.
+// Each frame keeps its relative weight (dense diffs stay longer than one-liners),
+// with a floor so nothing flashes past faster than it can be read.
+const TEMPO = 0.80
+const beat = (d) => Math.max(1.25, +(d * TEMPO).toFixed(2))
+
 export const scenes = [
   { id: 'dock', dur: 3.8, Component: DockScene },
   { id: 'boot', dur: 4.5, Component: BootScene },
   { id: 'splash', dur: 4.2, Component: SplashScene },
-  ...FRAMES.map((f, i) => ({ id: `f${i}`, dur: f.dur, Component: () => <Frame {...f} /> })),
+  ...FRAMES.map((f, i) => ({ id: `f${i}`, dur: beat(f.dur), Component: () => <Frame {...f} /> })),
   { id: 'close', dur: 4.2, Component: CloseScene },
   { id: 'fin', dur: 3.5, Component: FinScene },
 ]
