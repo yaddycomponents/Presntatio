@@ -107,3 +107,7 @@ a:hover { color: #BABBF1; }
 
 /* stagger helper: set --i on each child (1,2,3…) */
 .rise, .slide { animation-delay: calc(var(--i, 0) * var(--stagger)); }
+
+/* loading spinner pulse — the "Pondering…" line breathes like the real one */
+@keyframes pulse { 0%, 100% { opacity: 1 } 50% { opacity: .45 } }
+.pulse { animation: pulse 1.3s ease-in-out infinite; }

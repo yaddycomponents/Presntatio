@@ -70,20 +70,34 @@ function Row({ depth = 0, icon, color = T.muted, children, active, badge, dim })
   )
 }
 
-function Explorer({ activeFile }) {
+// docs Claude WRITES during the session — they appear (green · "U" untracked)
+// only once created, so the tree grows as the story does.
+const CREATED_DOCS = [
+  ['react18', 'REACT18_UPGRADE_PLAN.md'],
+  ['antdplan', 'ANTD_V6_MIGRATION.md'],
+  ['tiptap', 'tiptap-chain-learnings.md'],
+  ['filtermap', 'GROWFILTER_LEGACY_CLEANUP.md'],
+  ['rteplan', 'GROW_RTE_PLAN.md'],
+  ['handoff', 'CONTEXT_HANDOFF.md'],
+]
+
+function Explorer({ activeFile, created }) {
+  const c = created ?? new Set()
   return (
     <div style={{ width: SIDEBAR, background: T.sunken, borderRight: `1px solid ${T.border}`, flexShrink: 0, overflow: 'hidden' }}>
       <div style={{ padding: '16px 18px', fontFamily: sans, fontSize: 16, letterSpacing: '0.14em', color: T.faint, textTransform: 'uppercase' }}>Growfin · 3 repos</div>
       <div style={{ padding: '0 8px', fontFamily: mono }}>
         <Row icon="▾" color={T.mauve}><b style={{ color: T.text }}>heisenberg</b> · crm</Row>
         <Row depth={1} icon="▾" color={T.teal}>docs / react-18-upgrade</Row>
-        <Row depth={2} icon="≡" color={T.blue} active={activeFile === 'react18'}>REACT18_UPGRADE_PLAN.md</Row>
+        {/* pre-existing docs Claude reads */}
         <Row depth={2} icon="≡" color={T.blue}>REACT18_USEEFFECT_AUDIT.md</Row>
         <Row depth={2} icon="≡" color={T.blue} active={activeFile === 'antd'}>ANTD_V6_DEPRECATED_PROPS.md</Row>
-        <Row depth={2} icon="≡" color={T.blue} active={activeFile === 'tiptap'}>tiptap-chain-learnings.md</Row>
+        <Row depth={2} icon="≡" color={T.blue} active={activeFile === 'filter'}>GROWFILTER_SYNC_ARCH.md</Row>
+        {/* docs written this session — appear as new once created */}
+        {CREATED_DOCS.filter(([k]) => c.has(k)).map(([k, label]) => (
+          <Row key={k} depth={2} icon="≡" color={T.green} active={activeFile === k} badge="U">{label}</Row>
+        ))}
         <Row depth={2} icon="≡" color={T.faint}>+ 50 more</Row>
-        <Row depth={1} icon="≡" color={T.blue} active={activeFile === 'filter'}>docs/GROWFILTER_SYNC_ARCH.md</Row>
-        <Row depth={1} icon="≡" color={T.blue} active={activeFile === 'handoff'}>docs/CONTEXT_HANDOFF.md</Row>
         <Row depth={1} icon="▾" color={T.peach}>scripts / codemods</Row>
         <Row depth={2} icon="⚙" color={T.peach} active={activeFile === 'antd'}>antd-deprecated-props.cjs</Row>
         <Row depth={2} icon="⚙" color={T.peach} active={activeFile === 'styled'}>styled-call-transform.cjs</Row>
@@ -128,10 +142,29 @@ function ScrollTranscript({ children }) {
   )
 }
 
-function ClaudePanel({ children, focus, input, working }) {
+function Banner() {
   return (
-    <div style={{ width: CHAT_W, background: T.bg, borderLeft: `1px solid ${T.border}`, display: 'flex', flexDirection: 'column', flexShrink: 0, opacity: focus === 'chat' || !focus ? 1 : 0.42, transition: 'opacity .4s' }}>
-      <div style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '0 32px', height: 56, borderBottom: `1px solid ${T.border}`, flexShrink: 0 }}>
+    <div className="rise" style={{ flex: 1, minHeight: 0, padding: '34px 32px', display: 'flex', flexDirection: 'column', fontFamily: mono }}>
+      <div style={{ display: 'flex', gap: 22 }}>
+        <pre style={{ margin: 0, color: T.peach, fontSize: 22, lineHeight: 1.15, fontFamily: mono }}>{` ▐▛███▜▌\n▝▜█████▛▘\n  ▘▘ ▝▝`}</pre>
+        <div style={{ fontSize: 20, lineHeight: 1.5, alignSelf: 'center' }}>
+          <div style={{ color: T.text }}>Claude Code <span style={{ color: T.faint }}>v2.1.220</span></div>
+          <div style={{ color: T.muted }}>Opus 4.8 <span style={{ color: T.faint }}>(1M context)</span></div>
+          <div style={{ color: T.muted }}>Claude Max</div>
+          <div style={{ color: T.faint }}>~/Growfin/heisenberg</div>
+        </div>
+      </div>
+      <div style={{ flex: 1 }} />
+      <div style={{ color: T.faint, fontSize: 18 }}>◐ medium · <span style={{ color: T.mauve }}>/effort</span></div>
+      <div style={{ height: 1, background: T.border, margin: '14px 0' }} />
+    </div>
+  )
+}
+
+function ClaudePanel({ children, input, working, splash, accent }) {
+  return (
+    <div style={{ width: CHAT_W, background: T.bg, borderLeft: `1px solid ${T.border}`, display: 'flex', flexDirection: 'column', flexShrink: 0, opacity: accent ? 1 : 0.82, transition: 'opacity .35s' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '0 32px', height: 56, borderBottom: `1px solid ${T.border}`, borderTop: `2px solid ${accent ? T.mauve : 'transparent'}`, flexShrink: 0, transition: 'border-color .35s' }}>
         <span style={{ color: T.peach, fontSize: 24 }}>✳</span>
         <span style={{ fontFamily: mono, fontSize: 19, color: T.text }}>Claude Code</span>
         <div style={{ flex: 1 }} />
@@ -139,9 +172,9 @@ function ClaudePanel({ children, focus, input, working }) {
       </div>
       {/* one continuous transcript: top-anchored when short, auto-scrolled to the
           bottom once it overflows — like a real Claude Code session */}
-      <ScrollTranscript>{children}</ScrollTranscript>
+      {splash ? <Banner /> : <ScrollTranscript>{children}</ScrollTranscript>}
       {working && (
-        <div style={{ padding: '0 32px 4px', flexShrink: 0, fontFamily: mono, fontSize: 15 }}>
+        <div className="pulse" style={{ padding: '0 32px 4px', flexShrink: 0, fontFamily: mono, fontSize: 15 }}>
           <span style={{ color: T.peach }}>✳ {working.split('(')[0].trim()}</span>{' '}
           <span style={{ color: T.faint }}>{working.includes('(') ? `(${working.split('(').slice(1).join('(')}` : ''}</span>
         </div>
@@ -161,8 +194,13 @@ function ClaudePanel({ children, focus, input, working }) {
   )
 }
 
-export function Shell({ activeFile, tabs, editor, terminal, chat, focus, input, working }) {
-  const dim = (region) => (focus && focus !== region ? 0.3 : 1)
+export function Shell({ activeFile, created, tabs, editor, terminal, chat, focus, input, working, splash }) {
+  // Claude pane is the spine — it never dims below readable. Only the two context
+  // regions (editor / terminal) dim when they're not the primary, and the primary
+  // gets a mauve top accent so it's unambiguous which one to watch.
+  const editorPrimary = focus === 'editor'
+  const chatPrimary = focus === 'chat' || !focus
+  const accent = (on) => (on ? T.mauve : 'transparent')
   return (
     <div className="stage" style={{ display: 'flex', flexDirection: 'column', background: T.bg, fontFamily: sans, color: T.text }}>
       {/* top bar */}
@@ -178,16 +216,16 @@ export function Shell({ activeFile, tabs, editor, terminal, chat, focus, input, 
       {/* body */}
       <div style={{ flex: 1, display: 'flex', minHeight: 0 }}>
         <ActivityRail />
-        <div style={{ opacity: dim('explorer'), transition: 'opacity .4s' }}><Explorer activeFile={activeFile} /></div>
+        <Explorer activeFile={activeFile} created={created} />
 
         {/* editor column */}
-        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', minWidth: 0, opacity: dim('editor'), transition: 'opacity .4s' }}>
-          <div style={{ height: 50, background: T.sunken, borderBottom: `1px solid ${T.border}`, display: 'flex', flexShrink: 0 }}>
+        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', minWidth: 0, opacity: editorPrimary || chatPrimary ? 1 : 0.55, transition: 'opacity .35s' }}>
+          <div style={{ height: 50, background: T.sunken, borderBottom: `1px solid ${T.border}`, borderTop: `2px solid ${accent(editorPrimary)}`, display: 'flex', flexShrink: 0, transition: 'border-color .35s' }}>
             {(tabs ?? []).map((t) => <Tab key={t.name} active={t.active} dirty={t.dirty} icon={t.icon} color={t.color}>{t.name}</Tab>)}
           </div>
           <div style={{ flex: 1, background: T.surface, overflow: 'hidden', minHeight: 0 }}>{editor}</div>
           {terminal && (
-            <div style={{ height: 320, background: T.bg, borderTop: `1px solid ${T.border}`, flexShrink: 0, opacity: dim('terminal'), transition: 'opacity .4s' }}>
+            <div style={{ height: 320, background: T.bg, borderTop: `2px solid ${accent(focus === 'terminal')}`, flexShrink: 0 }}>
               <div style={{ display: 'flex', gap: 26, padding: '0 24px', height: 44, alignItems: 'center', borderBottom: `1px solid ${T.border}`, fontFamily: sans, fontSize: 17 }}>
                 <span style={{ color: T.faint }}>PROBLEMS</span><span style={{ color: T.faint }}>OUTPUT</span>
                 <span style={{ color: T.text, borderBottom: `2px solid ${T.mauve}`, paddingBottom: 11 }}>TERMINAL</span>
@@ -197,7 +235,7 @@ export function Shell({ activeFile, tabs, editor, terminal, chat, focus, input, 
           )}
         </div>
 
-        <ClaudePanel focus={focus} input={input} working={working}>{chat}</ClaudePanel>
+        <ClaudePanel focus={focus} input={input} working={working} splash={splash} accent={chatPrimary}>{chat}</ClaudePanel>
       </div>
 
       {/* status bar — surface, not a glowing mauve band; accent only active items */}
