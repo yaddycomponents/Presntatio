@@ -445,14 +445,14 @@ const FRAMES = [...build(S1), ...build(S2)]
 // the 56 content beats are scaled to land the whole film on ~1:50 of fast cuts.
 // Each frame keeps its relative weight (dense diffs stay longer than one-liners),
 // with a floor so nothing flashes past faster than it can be read.
-const TEMPO = 0.80
+const TEMPO = 0.78
 const beat = (d) => Math.max(1.25, +(d * TEMPO).toFixed(2))
 
 export const scenes = [
-  { id: 'dock', dur: 3.8, Component: DockScene },
-  { id: 'boot', dur: 4.5, Component: BootScene },
-  { id: 'splash', dur: 4.2, Component: SplashScene },
+  { id: 'dock', dur: 2.9, Component: DockScene },
+  { id: 'boot', dur: 3.6, Component: BootScene },
+  { id: 'splash', dur: 3.8, Component: SplashScene },
   ...FRAMES.map((f, i) => ({ id: `f${i}`, dur: beat(f.dur), Component: () => <Frame {...f} /> })),
-  { id: 'close', dur: 4.2, Component: CloseScene },
-  { id: 'fin', dur: 3.5, Component: FinScene },
+  { id: 'close', dur: 3.3, Component: CloseScene },
+  { id: 'fin', dur: 3.3, Component: FinScene },
 ]

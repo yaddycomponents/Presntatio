@@ -118,7 +118,7 @@ a:hover { color: #BABBF1; }
   70% { transform: scale(.992) }
   100% { opacity: 0; transform: scale(.9) }
 }
-.winclose { animation: winclose 4.2s cubic-bezier(.5,0,.75,0) forwards; }
+.winclose { animation: winclose 3.0s cubic-bezier(.5,0,.75,0) forwards; }
 @keyframes curmove {
   0% { transform: translate(780px, 560px); opacity: 0 }
   12% { opacity: 1 }
@@ -127,7 +127,7 @@ a:hover { color: #BABBF1; }
   62% { transform: translate(28px, 23px) scale(1) }
   100% { transform: translate(28px, 23px); opacity: 0 }
 }
-.curmove { animation: curmove 4.2s cubic-bezier(.4,0,.3,1) forwards; }
+.curmove { animation: curmove 3.0s cubic-bezier(.4,0,.3,1) forwards; }
 
 /* intro — open the app from the dock, then click the ✳ to start the session */
 @keyframes dockcursor {
@@ -138,12 +138,12 @@ a:hover { color: #BABBF1; }
   73% { transform: translate(1286px, 1004px) scale(1) }
   100% { transform: translate(1286px, 1004px) }
 }
-.dockcursor { animation: dockcursor 3.6s cubic-bezier(.4,0,.3,1) forwards; }
+.dockcursor { animation: dockcursor 2.5s cubic-bezier(.4,0,.3,1) forwards; }
 @keyframes iconbounce {
   0%, 62% { transform: translateY(0) } 70% { transform: translateY(-30px) }
   82% { transform: translateY(0) } 90% { transform: translateY(-12px) } 100% { transform: translateY(0) }
 }
-.iconbounce { animation: iconbounce 3.6s ease forwards; }
+.iconbounce { animation: iconbounce 2.5s ease forwards; }
 @keyframes winopen { 0% { opacity: 0; transform: scale(.35) translate(360px, 300px) } 34% { opacity: 1 } 100% { opacity: 1; transform: none } }
 .winopen { animation: winopen 1s cubic-bezier(.22,1,.36,1) both; transform-origin: 68% 92%; }
 @keyframes starcursor {
@@ -154,7 +154,7 @@ a:hover { color: #BABBF1; }
   71% { transform: translate(1700px, 16px) scale(1) }
   100% { transform: translate(1700px, 16px); opacity: 0 }
 }
-.starcursor { animation: starcursor 3.8s cubic-bezier(.4,0,.3,1) forwards; }
+.starcursor { animation: starcursor 2.7s cubic-bezier(.4,0,.3,1) forwards; }
 /* clicking the ✳ opens the Claude Code panel — it slides in from the right,
    the rest of the window stays put (no second window animation) */
 @keyframes panelin {
