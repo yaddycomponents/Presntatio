@@ -1,0 +1,1589 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="design_doc_mode" content="canvas">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  body { margin:0; background:#e4e9f1; }
+  a { color:#4b57a3; text-decoration:none; }
+  a:hover { color:#3b4684; }
+  /* SaaS token contract — neutral surface ramp + one brand ramp + semantics.
+     Light is the product default; dark is the alternate. */
+  .pt {
+    --bg:#eef1f7; --panel:#f9fafc; --panel-2:#e9edf4; --raised:#fdfdff;
+    --line:#d6dce7; --line-soft:#e5e9f1; --void:#333a45;
+    --text:#171b22; --text-2:#4f5763; --text-3:#6a7380;
+    --accent:#4b57a3; --accent-ink:#ffffff; --accent-soft:rgba(75,87,163,.08); --accent-line:rgba(75,87,163,.28);
+    --ok:#1f7358; --warn:#8a6013; --err:#bd3b30;
+    --add-bg:rgba(31,115,88,.08); --add-line:#2f8768; --del-bg:rgba(189,59,48,.07); --del-line:#c4564a;
+    --shadow:0 10px 28px rgba(23,27,34,.09); --frame-label:#7c8492;
+  }
+  .pt[data-theme="dark"] {
+    --bg:#15181e; --panel:#1c2027; --panel-2:#232830; --raised:#2b303a;
+    --line:#383e49; --line-soft:#272c34; --void:#0c0e12;
+    --text:#eef1f6; --text-2:#a5adba; --text-3:#818a97;
+    --accent:#8f9ad6; --accent-ink:#131725; --accent-soft:rgba(143,154,214,.14); --accent-line:rgba(143,154,214,.38);
+    --ok:#4fae8c; --warn:#d3a457; --err:#dd7568;
+    --add-bg:rgba(79,174,140,.13); --add-line:#46a07f; --del-bg:rgba(221,117,104,.12); --del-line:#cd6f63;
+    --shadow:0 18px 44px rgba(4,4,6,.62); --frame-label:#83838d;
+  }
+  @keyframes emakiShot { 0%,30% { opacity:1 } 38%,95% { opacity:0 } 100% { opacity:1 } }
+  @keyframes emakiPlayhead { from { width:2% } to { width:100% } }
+  @keyframes emakiCount { 0%,20% { transform:translateY(0) } 100% { transform:translateY(-0.06em) } }
+  @keyframes emakiShimmer { from { background-position:-220px 0 } to { background-position:320px 0 } }
+</style>
+</helmet>
+
+<div class="pt" data-theme="{{ theme }}" style="background:var(--bg);color:var(--text);font-family:'Public Sans',system-ui,sans-serif;padding:56px 56px 120px;display:flex;flex-direction:column;gap:16px;min-height:100vh;box-sizing:border-box">
+
+  <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:32px;padding-bottom:8px">
+    <div style="display:flex;flex-direction:column;gap:8px">
+      <div style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--text-3)">emaki studio · ui design pass 06 · mcp</div>
+      <div style="font-size:26px;font-weight:600;letter-spacing:-.02em">Studio, live MCP updates, and Theme Studio</div>
+      <div style="font-size:13px;color:var(--text-2);max-width:640px;text-wrap:pretty">A SaaS token contract: a blue-grey surface ramp — no pure white — and one muted indigo accent, so the chrome never competes with the film being previewed. Plum stays where it belongs — in the deck themes. Dark is the default, light is the alternate; every data value is monospace.</div>
+    </div>
+    <div style="display:flex;align-items:center;gap:10px">
+      <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text-3)">theme</span>
+      <div style="display:flex;background:var(--panel);border:1px solid var(--line);border-radius:7px;padding:2px;gap:2px">
+        <button onClick="{{ setDark }}" style="{{ darkBtn }}">Dark</button>
+        <button onClick="{{ setLight }}" style="{{ lightBtn }}">Light</button>
+      </div>
+    </div>
+  </div>
+
+  <section style="display:flex;flex-direction:column;gap:56px">
+    <div style="display:flex;align-items:baseline;gap:14px;padding-top:12px;border-top:1px solid var(--line-soft)">
+      <span style="font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700;letter-spacing:.14em;color:var(--accent)">01</span>
+      <span style="font-size:17px;font-weight:600;letter-spacing:-.01em">Open something</span>
+      <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text-3)">emaki studio · no deck argument</span>
+    </div>
+
+<div id="1e" style="display:flex;flex-direction:column;gap:10px">
+      <div style="display:flex;align-items:center;gap:10px">
+        <span style="font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;letter-spacing:.1em;color:var(--accent-ink);background:var(--accent);padding:3px 7px;border-radius:4px">1e</span>
+        <span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--frame-label)">First run — no deck open</span>
+      </div>
+      <div style="width:1440px;height:900px;background:var(--panel);border:1px solid var(--line);border-radius:10px;overflow:hidden;display:flex;flex-direction:column;box-shadow:var(--shadow)">
+        <div style="height:44px;flex:none;display:flex;align-items:center;gap:12px;padding:0 12px;background:var(--panel-2);border-bottom:1px solid var(--line)">
+          <div style="width:16px;height:16px;border-radius:4px;background:var(--accent);display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;color:var(--accent-ink)">e</div>
+          <span style="font-weight:600;font-size:13px;color:var(--text-3)">no deck open</span>
+          <div style="flex:1"></div>
+          <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text-3)">emaki v0.6.2 · localhost:5175 · node 22.4</span>
+        </div>
+        <div style="flex:1;display:flex;min-height:0;background:var(--bg)">
+          <div style="flex:1;display:flex;flex-direction:column;justify-content:center;gap:34px;padding:0 72px;min-width:0">
+            <div style="display:flex;flex-direction:column;gap:10px">
+              <div style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--text-3)">emaki studio</div>
+              <div style="font-size:30px;font-weight:600;letter-spacing:-.02em;max-width:18em;line-height:1.2;text-wrap:pretty">Turn build output into a film you'd actually post.</div>
+              <div style="font-size:13px;color:var(--text-2);max-width:44em;line-height:1.6;text-wrap:pretty">Decks are JSON on disk. Rendering happens on this machine. Everything here has a command behind it.</div>
+            </div>
+
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;max-width:760px">
+              <div style="border:1px solid var(--accent-line);background:var(--accent-soft);border-radius:8px;padding:16px;display:flex;flex-direction:column;gap:8px;cursor:pointer">
+                <div style="font-size:14px;font-weight:600">Start from a template</div>
+                <div style="font-size:12px;color:var(--text-2);line-height:1.5">Six local templates. Preview before you commit.</div>
+                <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--accent);margin-top:auto">emaki new --template release-notes</div>
+              </div>
+              <div style="border:1px solid var(--line);background:var(--panel);border-radius:8px;padding:16px;display:flex;flex-direction:column;gap:8px;cursor:pointer">
+                <div style="font-size:14px;font-weight:600">Open a deck.json</div>
+                <div style="font-size:12px;color:var(--text-2);line-height:1.5">Anything matching the schema. Drop a file here.</div>
+                <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-3);margin-top:auto">emaki studio ./deck.json</div>
+              </div>
+              <div style="border:1px solid var(--line);background:var(--panel);border-radius:8px;padding:16px;display:flex;flex-direction:column;gap:10px;grid-column:span 2">
+                <div style="display:flex;align-items:baseline;gap:10px"><div style="font-size:14px;font-weight:600">Extract from build output</div><div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-3)">3 sources detected in this repo</div></div>
+                <div style="display:flex;gap:8px">
+                  <div style="flex:1;border:1px solid var(--line-soft);background:var(--panel-2);border-radius:6px;padding:10px;display:flex;flex-direction:column;gap:5px;cursor:pointer">
+                    <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text)">rollup stats</div>
+                    <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--ok)">dist/stats.json · 2m ago</div>
+                  </div>
+                  <div style="flex:1;border:1px solid var(--line-soft);background:var(--panel-2);border-radius:6px;padding:10px;display:flex;flex-direction:column;gap:5px;cursor:pointer">
+                    <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text)">lighthouse</div>
+                    <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-3)">.lh/report.json · 4d ago</div>
+                  </div>
+                  <div style="flex:1;border:1px solid var(--line-soft);background:var(--panel-2);border-radius:6px;padding:10px;display:flex;flex-direction:column;gap:5px;cursor:pointer">
+                    <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text)">git log</div>
+                    <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-3)">v1.3.0..HEAD · 41 commits</div>
+                  </div>
+                </div>
+                <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-3)">emaki extract rollup dist/stats.json -o deck.json</div>
+              </div>
+            </div>
+
+            <div style="display:flex;align-items:center;gap:16px;padding-top:4px;border-top:1px solid var(--line-soft);max-width:760px;padding-top:18px">
+              <div style="display:flex;flex-direction:column;gap:4px">
+                <div style="font-size:12px;color:var(--text-2)">Want AI? Connect Emaki to the AI app you already use.</div>
+                <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-3)">claude mcp add emaki -- emaki mcp serve</div>
+              </div>
+              <div style="flex:1"></div>
+              <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text-3);cursor:pointer">copy</span>
+              <span style="padding:7px 12px;border-radius:6px;border:1px solid var(--line);background:var(--panel);font-size:12px;color:var(--text-2);cursor:pointer">How MCP works</span>
+            </div>
+          </div>
+
+          <div style="width:420px;flex:none;border-left:1px solid var(--line);background:var(--panel);display:flex;flex-direction:column">
+            <div style="height:30px;flex:none;display:flex;align-items:center;padding:0 12px;border-bottom:1px solid var(--line-soft);font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--text-3)">Recent</div>
+            <div style="padding:10px 12px;border-bottom:1px solid var(--line-soft);display:flex;flex-direction:column;gap:3px;cursor:pointer"><div style="font-size:12px;font-weight:500">bundle-diff</div><div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-3)">~/src/site/decks · 6 scenes · yesterday</div></div>
+            <div style="padding:10px 12px;border-bottom:1px solid var(--line-soft);display:flex;flex-direction:column;gap:3px;cursor:pointer"><div style="font-size:12px;font-weight:500">v1.3.0 release</div><div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-3)">~/src/api/decks · 9 scenes · 4d</div></div>
+            <div style="padding:10px 12px;border-bottom:1px solid var(--line-soft);display:flex;flex-direction:column;gap:3px;cursor:pointer"><div style="font-size:12px;font-weight:500">lcp-story</div><div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--err)">missing · moved or deleted</div></div>
+            <div style="margin-top:auto;padding:12px;border-top:1px solid var(--line-soft);display:flex;flex-direction:column;gap:9px">
+              <div style="font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--text-3)">this session</div>
+              <div style="background:var(--void);border:1px solid var(--line-soft);border-radius:6px;padding:10px;font-family:'JetBrains Mono',monospace;font-size:10px;line-height:1.8;color:var(--text-2)">
+                <div><span style="color:var(--accent)">$</span> emaki studio</div>
+                <div style="color:var(--text-3)">ready on http://localhost:5175</div>
+                <div style="color:var(--text-3)">watching ./decks/*.deck.json</div>
+                <div style="color:var(--text-3)">remotion 4.0 · 12 workers</div>
+                <div style="color:var(--ok)">mcp server idle · no client attached</div>
+              </div>
+              <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-3);line-height:1.6">⌘K palette · ⌘O open · ⌘N new</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div style="display:flex;align-items:baseline;gap:14px;padding-top:12px;border-top:1px solid var(--line-soft)">
+      <span style="font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700;letter-spacing:.14em;color:var(--accent)">02</span>
+      <span style="font-size:17px;font-weight:600;letter-spacing:-.01em">Pick a template · point your AI app at the project</span>
+      <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text-3)">templates are local · nothing to configure inside Emaki</span>
+    </div>
+
+    
+
+    <div style="display:flex;gap:40px;flex-wrap:wrap;align-items:flex-start">
+      
+      <div id="1j" style="display:flex;flex-direction:column;gap:10px">
+        <div style="display:flex;align-items:center;gap:10px">
+          <span style="font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;letter-spacing:.1em;color:var(--accent-ink);background:var(--accent);padding:3px 7px;border-radius:4px">1j</span>
+          <span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--frame-label)">MCP panel — popover off the top-bar indicator · no inputs</span>
+        </div>
+        <div style="width:452px;background:var(--panel);border:1px solid var(--line);border-radius:10px;box-shadow:var(--shadow);overflow:hidden;font-size:13px">
+          <div style="padding:13px 15px;border-bottom:1px solid var(--line-soft);display:flex;align-items:center;gap:9px">
+            <span style="width:7px;height:7px;border-radius:50%;background:var(--ok)"></span>
+            <span style="font-size:13px;font-weight:600">claude-code attached</span>
+            <div style="flex:1"></div>
+            <span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-3)">since 14:02 · 3 calls</span>
+          </div>
+          <div style="padding:15px;display:flex;flex-direction:column;gap:15px">
+            <div style="font-size:12px;color:var(--text-2);line-height:1.55">Emaki doesn't call a model and never stores a key. Your AI app connects to this project and writes <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text)">deck.json</span>; Studio watches the file.</div>
+
+            <div style="display:flex;flex-direction:column;gap:6px">
+              <div style="font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--text-3)">add the server</div>
+              <div style="background:var(--void);border:1px solid var(--line);border-radius:6px;padding:9px 11px;font-family:'JetBrains Mono',monospace;font-size:11px;color:#d8dbe2;display:flex;align-items:center;gap:10px">
+                <span style="flex:1">claude mcp add emaki -- emaki mcp serve</span>
+                <span style="color:#8b90a0;cursor:pointer">copy</span>
+              </div>
+            </div>
+
+            <div style="display:flex;flex-direction:column;gap:8px">
+              <div style="font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--text-3)">tools exposed</div>
+              <div style="display:flex;flex-direction:column;gap:6px;font-family:'JetBrains Mono',monospace;font-size:11px">
+                <div style="display:flex;gap:10px"><span style="color:var(--accent);width:168px;flex:none">propose_scenes</span><span style="color:var(--text-3);font-family:'Public Sans',sans-serif;font-size:11px">returns ops for you to approve</span></div>
+                <div style="display:flex;gap:10px"><span style="color:var(--accent);width:168px;flex:none">apply_ops</span><span style="color:var(--text-3);font-family:'Public Sans',sans-serif;font-size:11px">writes approved ops to disk</span></div>
+                <div style="display:flex;gap:10px"><span style="color:var(--accent);width:168px;flex:none">extract</span><span style="color:var(--text-3);font-family:'Public Sans',sans-serif;font-size:11px">rollup · lighthouse · git log</span></div>
+                <div style="display:flex;gap:10px"><span style="color:var(--accent);width:168px;flex:none">create_theme_from_image</span><span style="color:var(--text-3);font-family:'Public Sans',sans-serif;font-size:11px">brand → theme file</span></div>
+                <div style="display:flex;gap:10px"><span style="color:var(--accent);width:168px;flex:none">render</span><span style="color:var(--text-3);font-family:'Public Sans',sans-serif;font-size:11px">local render, same as the CLI</span></div>
+              </div>
+            </div>
+
+            <div style="border-top:1px solid var(--line-soft);padding-top:13px;display:flex;flex-direction:column;gap:6px;font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-3);line-height:1.7">
+              <div>project  ~/src/site</div>
+              <div>watching ./decks/*.deck.json</div>
+              <div>last     apply_ops · 4s ago · 3 ops</div>
+            </div>
+          </div>
+          <div style="padding:11px 15px;border-top:1px solid var(--line-soft);background:var(--panel-2);display:flex;align-items:center;gap:10px;font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-3)">
+            <span style="cursor:pointer">emaki mcp status</span>
+            <div style="flex:1"></div>
+            <span style="cursor:pointer;color:var(--text-2)">docs</span>
+          </div>
+        </div>
+
+        <div style="width:452px;background:var(--panel);border:1px solid var(--line);border-radius:10px;box-shadow:var(--shadow);overflow:hidden;font-size:13px">
+          <div style="padding:13px 15px;border-bottom:1px solid var(--line-soft);display:flex;align-items:center;gap:9px">
+            <span style="width:7px;height:7px;border-radius:50%;background:var(--text-3)"></span>
+            <span style="font-size:13px;font-weight:600;color:var(--text-2)">No MCP client attached</span>
+          </div>
+          <div style="padding:15px;display:flex;flex-direction:column;gap:13px">
+            <div style="font-size:12px;color:var(--text-2);line-height:1.55">Everything in Studio works without one. Attach a client when you want an AI app to draft or edit scenes for you.</div>
+            <div style="background:var(--void);border:1px solid var(--line);border-radius:6px;padding:9px 11px;font-family:'JetBrains Mono',monospace;font-size:11px;color:#d8dbe2;display:flex;align-items:center;gap:10px">
+              <span style="flex:1">claude mcp add emaki -- emaki mcp serve</span><span style="color:#8b90a0;cursor:pointer">copy</span>
+            </div>
+            <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-3);line-height:1.7">then restart your client · Studio picks it up automatically</div>
+          </div>
+        </div>
+      </div>
+
+      <div id="1h" style="display:flex;flex-direction:column;gap:10px">
+      <div style="display:flex;align-items:center;gap:10px">
+        <span style="font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;letter-spacing:.1em;color:var(--accent-ink);background:var(--accent);padding:3px 7px;border-radius:4px">1h</span>
+        <span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--frame-label)">Template gallery — local templates/, marketplace-shaped</span>
+      </div>
+      <div style="width:1440px;height:900px;background:var(--panel);border:1px solid var(--line);border-radius:10px;overflow:hidden;display:flex;flex-direction:column;box-shadow:var(--shadow)">
+        <div style="height:44px;flex:none;display:flex;align-items:center;gap:14px;padding:0 12px;background:var(--panel-2);border-bottom:1px solid var(--line)">
+          <span style="font-size:13px;font-weight:600">Templates</span>
+          <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text-3)">./templates · 6 local</span>
+          <div style="flex:1"></div>
+          <div style="display:flex;background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:2px;gap:2px;font-family:'JetBrains Mono',monospace;font-size:11px">
+            <span style="padding:3px 9px;border-radius:4px;background:var(--accent-soft);color:var(--accent);border:1px solid var(--accent-line)">all</span>
+            <span style="padding:3px 9px;border-radius:4px;color:var(--text-3)">16:9</span>
+            <span style="padding:3px 9px;border-radius:4px;color:var(--text-3)">9:16</span>
+          </div>
+          <div style="width:200px;background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:5px 9px;font-size:12px;color:var(--text-3)">Filter templates…</div>
+          <span style="height:26px;padding:0 10px;border:1px solid var(--line);border-radius:6px;background:var(--panel);display:flex;align-items:center;font-size:12px;color:var(--text-2);cursor:pointer">Add from path</span>
+        </div>
+        <div style="flex:1;padding:18px;display:grid;grid-template-columns:repeat(4,1fr);grid-auto-rows:min-content;gap:14px;background:var(--bg);align-content:start">
+
+          <div style="border:1px solid var(--accent-line);background:var(--panel);border-radius:8px;overflow:hidden;cursor:pointer;box-shadow:0 0 0 1px var(--accent-line)">
+            <div style="aspect-ratio:16/9;background:#f3ece0;padding:16px;box-sizing:border-box;display:flex;flex-direction:column;justify-content:center;gap:6px;position:relative">
+              <div style="font-family:'JetBrains Mono',monospace;font-size:7px;letter-spacing:.16em;color:#b0705a">RELEASE NOTES</div>
+              <div style="font-size:19px;font-weight:600;color:#2f2a24;line-height:1.15;letter-spacing:-.02em">What shipped in v1.4</div>
+              <div style="display:flex;gap:4px"><div style="width:26px;height:4px;background:#e6d9c4"></div><div style="width:18px;height:4px;background:#dfe4d4"></div></div>
+              <div style="position:absolute;top:8px;right:8px;font-family:'JetBrains Mono',monospace;font-size:8px;color:#b0705a;background:rgba(255,255,255,.6);padding:2px 5px;border-radius:3px">▶ looping</div>
+            </div>
+            <div style="padding:10px 12px;display:flex;flex-direction:column;gap:5px;border-top:1px solid var(--line-soft)">
+              <div style="display:flex;align-items:center;justify-content:space-between"><span style="font-size:12px;font-weight:600">release-notes</span><span style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--accent)">selected</span></div>
+              <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-3)">emaki · 8 scenes · 16:9 1:1 9:16</div>
+            </div>
+          </div>
+
+          <div style="border:1px solid var(--line);background:var(--panel);border-radius:8px;overflow:hidden;cursor:pointer">
+            <div style="aspect-ratio:16/9;background:#edeef3;padding:16px;box-sizing:border-box;display:flex;flex-direction:column;justify-content:center;gap:7px">
+              <div style="font-family:'JetBrains Mono',monospace;font-size:24px;font-weight:700;color:#2c2b3a;letter-spacing:-.03em">−54%</div>
+              <div style="font-size:11px;color:#565471">bundle size after the split</div>
+              <div style="height:5px;background:linear-gradient(90deg,#e3a5c5,#8fa8e8);border-radius:99px"></div>
+            </div>
+            <div style="padding:10px 12px;display:flex;flex-direction:column;gap:5px;border-top:1px solid var(--line-soft)">
+              <div style="font-size:12px;font-weight:600">bundle-diff</div>
+              <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-3)">emaki · 6 scenes · 16:9 1:1 9:16</div>
+            </div>
+          </div>
+
+          <div style="border:1px solid var(--line);background:var(--panel);border-radius:8px;overflow:hidden;cursor:pointer">
+            <div style="aspect-ratio:16/9;background:#e9e4d8;padding:16px;box-sizing:border-box;display:flex;align-items:flex-end;gap:5px">
+              <div style="width:14%;height:34%;background:#c9b89a"></div><div style="width:14%;height:56%;background:#c9b89a"></div><div style="width:14%;height:44%;background:#c9b89a"></div><div style="width:14%;height:78%;background:#b0705a"></div><div style="width:14%;height:62%;background:#c9b89a"></div>
+              <div style="flex:1;font-family:'JetBrains Mono',monospace;font-size:8px;color:#7d6a52;text-align:right">LCP 1.2s</div>
+            </div>
+            <div style="padding:10px 12px;display:flex;flex-direction:column;gap:5px;border-top:1px solid var(--line-soft)">
+              <div style="font-size:12px;font-weight:600">lighthouse-story</div>
+              <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-3)">emaki · 7 scenes · 16:9 9:16</div>
+            </div>
+          </div>
+
+          <div style="border:1px solid var(--line);background:var(--panel);border-radius:8px;overflow:hidden;cursor:pointer">
+            <div style="aspect-ratio:16/9;background:#1d1c1a;padding:16px;box-sizing:border-box;display:flex;flex-direction:column;justify-content:center;gap:4px;font-family:'JetBrains Mono',monospace;font-size:8px;line-height:1.8">
+              <div style="color:#8fbf7a">+ 41 commits</div><div style="color:#d6c48a">~ 12 files changed</div><div style="color:#c98a7a">− 1 dependency</div><div style="color:#6f6a62">git log v1.3.0..HEAD</div>
+            </div>
+            <div style="padding:10px 12px;display:flex;flex-direction:column;gap:5px;border-top:1px solid var(--line-soft)">
+              <div style="font-size:12px;font-weight:600">changelog-scroll</div>
+              <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-3)">emaki · 5 scenes · 9:16</div>
+            </div>
+          </div>
+
+          <div style="border:1px solid var(--line);background:var(--panel);border-radius:8px;overflow:hidden;cursor:pointer">
+            <div style="aspect-ratio:16/9;background:#f0e7e4;padding:16px;box-sizing:border-box;display:flex;flex-direction:column;justify-content:center;gap:6px">
+              <div style="font-size:15px;font-weight:600;color:#4a2f2a;line-height:1.2">“We cut the vendor chunk in half.”</div>
+              <div style="font-family:'JetBrains Mono',monospace;font-size:8px;color:#a2705f">— nils, frontend</div>
+            </div>
+            <div style="padding:10px 12px;display:flex;flex-direction:column;gap:5px;border-top:1px solid var(--line-soft)">
+              <div style="font-size:12px;font-weight:600">quote-card</div>
+              <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-3)">community · 3 scenes · 1:1 9:16</div>
+            </div>
+          </div>
+
+          <div style="border:1px solid var(--line);background:var(--panel);border-radius:8px;overflow:hidden;cursor:pointer">
+            <div style="aspect-ratio:16/9;background:#dfe4d4;padding:16px;box-sizing:border-box;display:flex;flex-direction:column;justify-content:space-between">
+              <div style="font-family:'JetBrains Mono',monospace;font-size:8px;letter-spacing:.14em;color:#5d6b4d">BEFORE / AFTER</div>
+              <div style="display:flex;gap:6px;align-items:center"><div style="flex:1;height:20px;background:#c3cdb2"></div><span style="font-family:'JetBrains Mono',monospace;font-size:9px;color:#4d5a3f">→</span><div style="flex:1;height:20px;background:#8fa87a"></div></div>
+            </div>
+            <div style="padding:10px 12px;display:flex;flex-direction:column;gap:5px;border-top:1px solid var(--line-soft)">
+              <div style="font-size:12px;font-weight:600">before-after</div>
+              <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-3)">community · 4 scenes · 16:9 1:1</div>
+            </div>
+          </div>
+
+          <div style="border:1px dashed var(--line);border-radius:8px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;padding:20px;min-height:150px;cursor:pointer">
+            <div style="font-family:'JetBrains Mono',monospace;font-size:18px;color:var(--text-3)">+</div>
+            <div style="font-size:12px;color:var(--text-2)">Add a template folder</div>
+            <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-3);text-align:center;line-height:1.6">any dir with template.json<br>third-party templates land here</div>
+          </div>
+        </div>
+        <div style="flex:none;height:52px;display:flex;align-items:center;gap:14px;padding:0 16px;background:var(--panel-2);border-top:1px solid var(--line)">
+          <div style="display:flex;flex-direction:column;gap:2px">
+            <span style="font-size:12px;font-weight:600">release-notes</span>
+            <span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-3)">templates/release-notes · 8 scenes · needs git log or a manual list</span>
+          </div>
+          <div style="flex:1"></div>
+          <span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-3)">emaki new --template release-notes -o deck.json</span>
+          <span style="padding:7px 12px;border-radius:6px;border:1px solid var(--line);background:var(--panel);font-size:12px;color:var(--text-2);cursor:pointer">Preview</span>
+          <span style="padding:7px 12px;border-radius:6px;background:var(--accent);color:var(--accent-ink);font-size:12px;font-weight:600;cursor:pointer">Use template</span>
+        </div>
+      </div>
+    </div>
+    </div>
+
+    <div style="display:flex;align-items:baseline;gap:14px;padding-top:12px;border-top:1px solid var(--line-soft)">
+      <span style="font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700;letter-spacing:.14em;color:var(--accent)">03</span>
+      <span style="font-size:17px;font-weight:600;letter-spacing:-.01em">Work in the studio</span>
+      <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text-3)">three aspects · the canvas is the hero</span>
+    </div>
+
+<div id="1a" style="display:flex;flex-direction:column;gap:10px">
+      <div style="display:flex;align-items:center;gap:10px">
+        <span style="font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;letter-spacing:.1em;color:var(--accent-ink);background:var(--accent);padding:3px 7px;border-radius:4px">1a</span>
+        <span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--frame-label)">Studio shell — 16:9 — 1440×900</span>
+      </div>
+
+      <div style="width:1440px;height:900px;background:var(--panel);border:1px solid var(--line);border-radius:10px;overflow:hidden;display:flex;flex-direction:column;box-shadow:var(--shadow);font-size:13px">
+
+        <div style="height:44px;flex:none;display:flex;align-items:center;gap:14px;padding:0 12px;background:var(--panel-2);border-bottom:1px solid var(--line)">
+          <div style="display:flex;align-items:center;gap:8px;min-width:0">
+            <div style="width:16px;height:16px;border-radius:4px;background:var(--accent);display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;color:var(--accent-ink)">e</div>
+            <span style="font-weight:600;font-size:13px">bundle-diff</span>
+            <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text-3)">~/src/site/decks/bundle-diff.deck.json</span>
+            <span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--warn);border:1px solid var(--line);background:var(--panel);padding:2px 5px;border-radius:4px">unsaved ⌘S</span>
+          </div>
+          <div style="flex:1"></div>
+          <div style="display:flex;background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:2px;gap:2px;font-family:'JetBrains Mono',monospace;font-size:11px">
+            <span style="padding:3px 9px;border-radius:4px;background:var(--accent-soft);color:var(--accent);border:1px solid var(--accent-line)">16:9</span>
+            <span style="padding:3px 9px;border-radius:4px;color:var(--text-3)">1:1</span>
+            <span style="padding:3px 9px;border-radius:4px;color:var(--text-3)">9:16</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:6px;height:26px;padding:0 8px;background:var(--panel);border:1px solid var(--line);border-radius:6px;font-size:12px">
+            <span style="width:9px;height:9px;border-radius:2px;background:#e8ddc9;border:1px solid var(--line)"></span>
+            <span>Editorial Warm</span>
+            <span style="color:var(--text-3);font-size:10px">▾</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:6px;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--ok)">
+            <span style="width:6px;height:6px;border-radius:50%;background:var(--ok)"></span>schema ok · 6 scenes
+          </div>
+          <div style="width:1px;height:20px;background:var(--line)"></div>
+          <div style="display:flex;align-items:center;gap:6px;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text-2);cursor:pointer" title="claude-code attached · writing to this file">
+            <span style="width:6px;height:6px;border-radius:50%;background:var(--ok)"></span>mcp · claude-code
+          </div>
+          <button style="height:27px;padding:0 12px;border:none;border-radius:6px;background:var(--accent);color:var(--accent-ink);font-family:'Public Sans',sans-serif;font-size:12px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:7px">Render<span style="font-family:'JetBrains Mono',monospace;font-size:10px;opacity:.6">⌘R</span></button>
+        </div>
+
+        <div style="flex:1;display:flex;min-height:0">
+
+          <div style="width:238px;flex:none;border-right:1px solid var(--line);display:flex;flex-direction:column;background:var(--panel)">
+            <div style="height:30px;flex:none;display:flex;align-items:center;justify-content:space-between;padding:0 10px;border-bottom:1px solid var(--line-soft)">
+              <span style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--text-3)">Scenes</span>
+              <span style="font-family:'JetBrains Mono',monospace;font-size:14px;color:var(--text-3);cursor:pointer">+</span>
+            </div>
+            <div style="flex:1;overflow:hidden;display:flex;flex-direction:column">
+
+              <div style="height:22px;display:flex;align-items:center;gap:7px;padding:0 10px;background:var(--panel-2);border-bottom:1px solid var(--line-soft)">
+                <span style="font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--text-3)">Cold open</span>
+                <span style="flex:1;height:1px;background:var(--line-soft)"></span>
+                <span style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--text-3)">5.5s</span>
+              </div>
+
+              <div style="height:44px;display:flex;align-items:center;gap:9px;padding:0 10px;border-bottom:1px solid var(--line-soft);cursor:grab">
+                <span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-3);width:14px">01</span>
+                <span style="width:5px;height:5px;border-radius:50%;background:var(--ok);flex:none"></span>
+                <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:1px">
+                  <div style="font-size:12px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">188 KB, down from 412</div>
+                  <div style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--text-3)">title</div>
+                </div>
+                <span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-3)">3.0s</span>
+              </div>
+
+              <div style="height:44px;display:flex;align-items:center;gap:9px;padding:0 10px;border-bottom:1px solid var(--line-soft);cursor:grab">
+                <span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-3);width:14px">02</span>
+                <span style="width:5px;height:5px;border-radius:50%;background:var(--ok);flex:none"></span>
+                <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:1px">
+                  <div style="font-size:12px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Where the weight was</div>
+                  <div style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--text-3)">stat</div>
+                </div>
+                <span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-3)">2.5s</span>
+              </div>
+
+              <div style="height:22px;display:flex;align-items:center;gap:7px;padding:0 10px;background:var(--panel-2);border-top:1px solid var(--line-soft);border-bottom:1px solid var(--line-soft)">
+                <span style="font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--text-3)">The numbers</span>
+                <span style="flex:1;height:1px;background:var(--line-soft)"></span>
+                <span style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--text-3)">11.0s</span>
+              </div>
+
+              <div style="height:44px;display:flex;align-items:center;gap:9px;padding:0 10px;border-bottom:1px solid var(--line-soft);cursor:grab">
+                <span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-3);width:14px">03</span>
+                <span style="width:5px;height:5px;border-radius:50%;background:var(--ok);flex:none"></span>
+                <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:1px">
+                  <div style="font-size:12px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Chunk breakdown</div>
+                  <div style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--text-3)">chart</div>
+                </div>
+                <span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-3)">4.0s</span>
+              </div>
+
+              <div style="height:44px;display:flex;align-items:center;gap:9px;padding:0 10px;border-bottom:1px solid var(--line-soft);background:var(--accent-soft);box-shadow:inset 2px 0 0 var(--accent);cursor:grab">
+                <span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--accent);width:14px">04</span>
+                <span style="width:5px;height:5px;border-radius:50%;background:var(--ok);flex:none"></span>
+                <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:1px">
+                  <div style="font-size:12px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">vendor.js split three ways</div>
+                  <div style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--accent)">code</div>
+                </div>
+                <span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-2)">4.5s</span>
+              </div>
+
+              <div style="height:44px;display:flex;align-items:center;gap:9px;padding:0 10px;border-bottom:1px solid var(--line-soft);cursor:grab">
+                <span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-3);width:14px">05</span>
+                <span style="width:5px;height:5px;border-radius:50%;background:var(--err);flex:none"></span>
+                <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:1px">
+                  <div style="font-size:12px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--err)">Untitled comparison</div>
+                  <div style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--err)">compare · 1 error</div>
+                </div>
+                <span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-3)">2.5s</span>
+              </div>
+
+              <div style="height:22px;display:flex;align-items:center;gap:7px;padding:0 10px;background:var(--panel-2);border-bottom:1px solid var(--line-soft)">
+                <span style="font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--text-3)">Outro</span>
+                <span style="flex:1;height:1px;background:var(--line-soft)"></span>
+                <span style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--text-3)">2.0s</span>
+              </div>
+
+              <div style="height:44px;display:flex;align-items:center;gap:9px;padding:0 10px;border-bottom:1px solid var(--line-soft);cursor:grab">
+                <span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-3);width:14px">06</span>
+                <span style="width:5px;height:5px;border-radius:50%;background:var(--ok);flex:none"></span>
+                <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:1px">
+                  <div style="font-size:12px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">github.com/nils/site</div>
+                  <div style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--text-3)">outro</div>
+                </div>
+                <span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-3)">2.0s</span>
+              </div>
+
+              <div style="height:30px;display:flex;align-items:center;gap:8px;padding:0 10px;color:var(--text-3);font-size:12px;cursor:pointer">
+                <span style="font-family:'JetBrains Mono',monospace;font-size:12px;width:14px;text-align:center">+</span>Add scene
+              </div>
+            </div>
+            <div style="flex:none;height:26px;display:flex;align-items:center;justify-content:space-between;padding:0 10px;border-top:1px solid var(--line-soft);font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-3)">
+              <span>6 scenes</span><span>18.5s · 555f @30</span>
+            </div>
+          </div>
+
+          <div style="flex:1;min-width:0;display:flex;flex-direction:column;background:var(--void)">
+            <div style="flex:1;display:flex;align-items:center;justify-content:center;padding:28px;min-height:0">
+              <div style="width:100%;max-width:812px;aspect-ratio:16/9;background:#f3ece0;border-radius:3px;position:relative;overflow:hidden;display:flex;flex-direction:column;justify-content:center;gap:22px;padding:56px;box-sizing:border-box">
+                <div style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:#b0705a">04 · vendor split</div>
+                <div style="font-family:'Public Sans',sans-serif;font-size:44px;line-height:1.05;font-weight:600;color:#2f2a24;letter-spacing:-.02em;max-width:12em">vendor.js split three ways</div>
+                <div style="display:flex;gap:10px">
+                  <div style="background:#e6d9c4;border-radius:2px;padding:10px 14px;font-family:'JetBrains Mono',monospace;font-size:13px;color:#4a4237">react-dom · 41 KB</div>
+                  <div style="background:#dfe4d4;border-radius:2px;padding:10px 14px;font-family:'JetBrains Mono',monospace;font-size:13px;color:#3f4a37">charts · 63 KB</div>
+                  <div style="background:#f0d9d2;border-radius:2px;padding:10px 14px;font-family:'JetBrains Mono',monospace;font-size:13px;color:#5a3a33">rest · 84 KB</div>
+                </div>
+                <div style="position:absolute;inset:0;border:1px dashed rgba(47,42,36,.16);margin:34px;pointer-events:none"></div>
+              </div>
+            </div>
+            <div style="flex:none;height:20px;display:flex;align-items:center;justify-content:center;gap:14px;font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-3);padding-bottom:6px">
+              <span>1920×1080</span><span>·</span><span>30 fps</span><span>·</span><span>scene 04 · frame 214/555</span><span>·</span><span>title-safe shown</span>
+            </div>
+          </div>
+
+          <div style="width:328px;flex:none;border-left:1px solid var(--line);display:flex;flex-direction:column;background:var(--panel)">
+            <div style="height:30px;flex:none;display:flex;align-items:stretch;border-bottom:1px solid var(--line);padding:0 4px;gap:2px">
+              <button onClick="{{ tabInspector }}" style="{{ tInspector }}">Inspector</button>
+              <button onClick="{{ tabJson }}" style="{{ tJson }}">JSON</button>
+                <button onClick="{{ tabNarration }}" style="{{ tNarration }}">Narration</button>
+            </div>
+            <div style="flex:1;min-height:0;overflow:hidden">
+
+              <sc-if value="{{ isInspector }}" hint-placeholder-val="{{ true }}">
+                <div style="padding:12px;display:flex;flex-direction:column;gap:14px;height:100%;box-sizing:border-box;overflow:hidden">
+                  <div style="display:flex;align-items:center;justify-content:space-between">
+                    <div style="display:flex;align-items:center;gap:8px">
+                      <span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--accent);background:var(--accent-soft);border:1px solid var(--accent-line);padding:2px 6px;border-radius:4px">scene 04</span>
+                      <span style="font-size:12px;font-weight:600">code</span>
+                    </div>
+                    <span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-3)">blocks/code.tsx</span>
+                  </div>
+
+                  <div style="display:flex;flex-direction:column;gap:4px">
+                    <div style="font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--text-3)">headline</div>
+                    <div style="background:var(--raised);border:1px solid var(--line);border-radius:5px;padding:6px 8px;font-size:12px;line-height:1.45">vendor.js split three ways</div>
+                  </div>
+
+                  <div style="display:flex;flex-direction:column;gap:4px">
+                    <div style="font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--text-3)">caption</div>
+                    <div style="background:var(--raised);border:1px solid var(--line);border-radius:5px;padding:6px 8px;font-size:12px;line-height:1.45">Three chunks, three cache lifetimes.</div>
+                  </div>
+
+                  <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+                    <div style="display:flex;flex-direction:column;gap:4px">
+                      <div style="font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--text-3)">language</div>
+                      <div style="background:var(--raised);border:1px solid var(--line);border-radius:5px;padding:6px 8px;font-family:'JetBrains Mono',monospace;font-size:12px;display:flex;justify-content:space-between"><span>ts</span><span style="color:var(--text-3);font-size:9px">▾</span></div>
+                    </div>
+                    <div style="display:flex;flex-direction:column;gap:4px">
+                      <div style="font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--text-3)">duration · computed</div>
+                      <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text-3);padding:6px 0">4.5s · 135f</div>
+                    </div>
+                  </div>
+
+                  <div style="display:flex;flex-direction:column;gap:4px">
+                    <div style="font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--text-3)">source</div>
+                    <div style="background:var(--void);border:1px solid var(--line);border-radius:5px;padding:8px;font-family:'JetBrains Mono',monospace;font-size:11px;line-height:1.6;color:var(--text-2)">const vendor = [<br>&nbsp;&nbsp;<span style="color:var(--ok)">'react-dom'</span>,<br>&nbsp;&nbsp;<span style="color:var(--ok)">'recharts'</span>,<br>]</div>
+                  </div>
+
+                  <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+                    <div style="display:flex;flex-direction:column;gap:4px">
+                      <div style="font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--text-3)">emphasis</div>
+                      <div style="background:var(--raised);border:1px solid var(--line);border-radius:5px;padding:6px 8px;font-family:'JetBrains Mono',monospace;font-size:12px">lines 2–3</div>
+                    </div>
+                    <div style="display:flex;flex-direction:column;gap:4px">
+                      <div style="font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--text-3)">transition</div>
+                      <div style="background:var(--raised);border:1px solid var(--line);border-radius:5px;padding:6px 8px;font-family:'JetBrains Mono',monospace;font-size:12px;display:flex;justify-content:space-between"><span>cut</span><span style="color:var(--text-3);font-size:9px">▾</span></div>
+                    </div>
+                  </div>
+
+                  <div style="margin-top:auto;display:flex;flex-direction:column;gap:8px">
+                    <div style="display:flex;gap:8px;align-items:flex-start;background:var(--del-bg);border:1px solid var(--del-line);border-radius:6px;padding:8px 10px">
+                      <span style="color:var(--err);font-family:'JetBrains Mono',monospace;font-size:11px;line-height:1.3">!</span>
+                      <div style="font-size:11px;color:var(--text-2);line-height:1.45"><span style="color:var(--text);font-weight:600">scene 05 · body.headline</span> is required. <span style="font-family:'JetBrains Mono',monospace;color:var(--err);cursor:pointer">go to field →</span></div>
+                    </div>
+                    <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-3)">emaki patch deck.json --scene 04 --set body.lang=ts</div>
+                  </div>
+                </div>
+              </sc-if>
+
+              <sc-if value="{{ isJson }}" hint-placeholder-val="{{ false }}">
+                <div style="height:100%;display:flex;flex-direction:column;background:var(--void)">
+                  <div style="flex:1;padding:10px 8px;font-family:'JetBrains Mono',monospace;font-size:11px;line-height:1.75;color:var(--text-2);overflow:hidden">
+                    <div><span style="color:var(--text-3)">28&nbsp;&nbsp;</span>{</div>
+                    <div><span style="color:var(--text-3)">29&nbsp;&nbsp;</span>&nbsp;&nbsp;<span style="color:var(--accent)">"id"</span>: <span style="color:var(--ok)">"vendor-split"</span>,</div>
+                    <div><span style="color:var(--text-3)">30&nbsp;&nbsp;</span>&nbsp;&nbsp;<span style="color:var(--accent)">"block"</span>: <span style="color:var(--ok)">"code"</span>,</div>
+                    <div><span style="color:var(--text-3)">31&nbsp;&nbsp;</span>&nbsp;&nbsp;<span style="color:var(--accent)">"body"</span>: {</div>
+                    <div style="background:var(--accent-soft)"><span style="color:var(--text-3)">32&nbsp;&nbsp;</span>&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:var(--accent)">"headline"</span>: <span style="color:var(--ok)">"vendor.js split three ways"</span>,</div>
+                    <div><span style="color:var(--text-3)">33&nbsp;&nbsp;</span>&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:var(--accent)">"lang"</span>: <span style="color:var(--ok)">"ts"</span>,</div>
+                    <div><span style="color:var(--text-3)">34&nbsp;&nbsp;</span>&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:var(--accent)">"emphasis"</span>: [2, 3]</div>
+                    <div><span style="color:var(--text-3)">35&nbsp;&nbsp;</span>&nbsp;&nbsp;},</div>
+                    <div><span style="color:var(--text-3)">36&nbsp;&nbsp;</span>&nbsp;&nbsp;<span style="color:var(--accent)">"beats"</span>: 9</div>
+                    <div><span style="color:var(--text-3)">37&nbsp;&nbsp;</span>},</div>
+                    <div style="background:var(--del-bg);box-shadow:inset 2px 0 0 var(--del-line)"><span style="color:var(--text-3)">38&nbsp;&nbsp;</span>{ <span style="color:var(--accent)">"block"</span>: <span style="color:var(--ok)">"compare"</span>, <span style="color:var(--err)">/* headline missing */</span></div>
+                  </div>
+                  <div style="height:26px;flex:none;border-top:1px solid var(--line-soft);background:var(--panel);display:flex;align-items:center;justify-content:space-between;padding:0 10px;font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-3)">
+                    <span>Ln 32, Col 18 · json</span><span style="color:var(--err)">1 problem</span>
+                  </div>
+                </div>
+              </sc-if>
+
+
+              <sc-if value="{{ isNarration }}" hint-placeholder-val="{{ false }}">
+                <div style="height:100%;display:flex;flex-direction:column">
+                  <div style="flex:1;overflow:hidden">
+                    <div style="display:flex;gap:10px;padding:10px 12px;border-bottom:1px solid var(--line-soft)">
+                      <span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-3)">01</span>
+                      <div style="flex:1;display:flex;flex-direction:column;gap:3px">
+                        <div style="font-size:12px;color:var(--text-2);line-height:1.45">We shipped 188 kilobytes. It used to be 412.</div>
+                        <div style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--text-3)">3.0s · 9 words · fits</div>
+                      </div>
+                    </div>
+                    <div style="display:flex;gap:10px;padding:10px 12px;border-bottom:1px solid var(--line-soft)">
+                      <span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-3)">02</span>
+                      <div style="flex:1;display:flex;flex-direction:column;gap:3px">
+                        <div style="font-size:12px;color:var(--text-2);line-height:1.45">Most of it was one vendor chunk.</div>
+                        <div style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--text-3)">2.5s · 6 words · fits</div>
+                      </div>
+                    </div>
+                    <div style="display:flex;gap:10px;padding:10px 12px;border-bottom:1px solid var(--line-soft)">
+                      <span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-3)">03</span>
+                      <div style="flex:1;display:flex;flex-direction:column;gap:3px">
+                        <div style="font-size:12px;color:var(--text-2);line-height:1.45">Here is the breakdown, per chunk, after the split.</div>
+                        <div style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--text-3)">4.0s · 9 words · fits</div>
+                      </div>
+                    </div>
+                    <div style="display:flex;gap:10px;padding:10px 12px;border-bottom:1px solid var(--line-soft);background:var(--accent-soft);box-shadow:inset 2px 0 0 var(--accent)">
+                      <span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--accent)">03</span>
+                      <div style="flex:1;display:flex;flex-direction:column;gap:3px">
+                        <div style="font-size:12px;line-height:1.45">React and the chart library sit in their own files now, so a release only busts one of them.</div>
+                        <div style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--warn)">4.5s · 18 words · 0.4s over</div>
+                      </div>
+                    </div>
+                    <div style="display:flex;gap:10px;padding:10px 12px;border-bottom:1px solid var(--line-soft)">
+                      <span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-3)">05</span>
+                      <div style="flex:1;display:flex;flex-direction:column;gap:3px">
+                        <div style="font-size:12px;color:var(--text-3);line-height:1.45">No script yet.</div>
+                        <div style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--text-3)">2.5s</div>
+                      </div>
+                    </div>
+                  </div>
+                  <div style="flex:none;height:26px;border-top:1px solid var(--line);display:flex;align-items:center;gap:10px;padding:0 10px;font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-3)">
+                    <span>emaki narrate deck.json --voice local</span><span style="margin-left:auto;color:var(--warn)">1 overrun</span>
+                  </div>
+                </div>
+              </sc-if>
+
+            </div>
+          </div>
+        </div>
+
+        <div style="flex:none;height:52px;display:flex;align-items:center;gap:14px;padding:0 12px;background:var(--panel-2);border-top:1px solid var(--line)">
+          <div style="display:flex;align-items:center;gap:4px">
+            <span style="width:26px;height:26px;border-radius:5px;border:1px solid var(--line);background:var(--panel);display:flex;align-items:center;justify-content:center;font-size:10px;color:var(--text-2);cursor:pointer">⏮</span>
+            <span style="width:26px;height:26px;border-radius:5px;border:1px solid var(--line);background:var(--panel);display:flex;align-items:center;justify-content:center;font-size:10px;color:var(--text-2);cursor:pointer">◀</span>
+            <span style="width:30px;height:26px;border-radius:5px;border:1px solid var(--accent-line);background:var(--accent-soft);color:var(--accent);display:flex;align-items:center;justify-content:center;font-size:10px;cursor:pointer">❚❚</span>
+            <span style="width:26px;height:26px;border-radius:5px;border:1px solid var(--line);background:var(--panel);display:flex;align-items:center;justify-content:center;font-size:10px;color:var(--text-2);cursor:pointer">▶</span>
+            <span style="width:26px;height:26px;border-radius:5px;border:1px solid var(--line);background:var(--panel);display:flex;align-items:center;justify-content:center;font-size:10px;color:var(--text-2);cursor:pointer">⏭</span>
+          </div>
+          <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text-2);min-width:96px">00:07.13 / 00:18.50</span>
+          <div style="flex:1;display:flex;flex-direction:column;gap:4px;position:relative">
+            <div style="display:flex;gap:2px;height:14px;align-items:stretch">
+              <div style="width:16.2%;background:var(--raised);border-radius:2px"></div>
+              <div style="width:13.5%;background:var(--raised);border-radius:2px"></div>
+              <div style="width:21.6%;background:var(--raised);border-radius:2px"></div>
+              <div style="width:24.3%;background:var(--accent-soft);border:1px solid var(--accent-line);border-radius:2px;position:relative;box-sizing:border-box"><div style="position:absolute;left:0;top:0;bottom:0;width:38%;background:var(--accent);opacity:.35"></div></div>
+              <div style="width:13.5%;background:var(--del-bg);border:1px solid var(--del-line);border-radius:2px;box-sizing:border-box"></div>
+              <div style="width:10.9%;background:var(--raised);border-radius:2px"></div>
+            </div>
+            <div style="display:flex;gap:2px;font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--text-3)">
+              <span style="width:16.2%">01</span><span style="width:13.5%">02</span><span style="width:21.6%">03</span><span style="width:24.3%;color:var(--accent)">04</span><span style="width:13.5%;color:var(--err)">05</span><span style="width:10.9%">06</span>
+            </div>
+            <div style="position:absolute;left:63.4%;top:-4px;bottom:14px;width:1px;background:var(--accent)"><div style="width:7px;height:7px;background:var(--accent);border-radius:2px;margin-left:-3px;margin-top:-3px"></div></div>
+          </div>
+          <div style="display:flex;align-items:center;gap:6px;height:26px;padding:0 9px;border:1px solid var(--line);border-radius:6px;background:var(--panel);font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-2);cursor:pointer">↻ loop</div>
+          <div style="display:flex;align-items:center;gap:6px;height:26px;padding:0 9px;border:1px solid var(--line);border-radius:6px;background:var(--panel);font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-2);cursor:pointer">⌐ clean preview</div>
+          <span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-3)">space · ←→ · home/end</span>
+        </div>
+
+        <div data-cmdbar="true" style="flex:none;height:26px;display:flex;align-items:center;gap:10px;padding:0 12px;background:var(--panel);border-top:1px solid var(--line-soft);font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-3)">
+          <span style="color:var(--accent)">›</span>
+          <span style="color:var(--text-2)">emaki patch deck.json --scene 04 --set body.lang=ts</span>
+          <span style="color:var(--ok)">ok · 12ms</span>
+          <div style="flex:1"></div>
+          <span style="cursor:pointer">copy</span><span>·</span><span style="cursor:pointer">history (14)</span><span>·</span><span style="cursor:pointer">⌘K palette</span>
+        </div>
+      </div>
+    </div>
+
+    <div style="display:flex;gap:40px;flex-wrap:wrap;align-items:flex-start">
+      <div id="1b" style="display:flex;flex-direction:column;gap:10px">
+        <div style="display:flex;align-items:center;gap:10px">
+          <span style="font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;letter-spacing:.1em;color:var(--accent-ink);background:var(--accent);padding:3px 7px;border-radius:4px">1b</span>
+          <span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--frame-label)">Studio shell — 1:1 — 1440×900</span>
+        </div>
+        <div style="width:1440px;height:900px;background:var(--panel);border:1px solid var(--line);border-radius:10px;overflow:hidden;display:flex;flex-direction:column;box-shadow:var(--shadow);font-size:13px">
+          <div style="height:44px;flex:none;display:flex;align-items:center;gap:14px;padding:0 12px;background:var(--panel-2);border-bottom:1px solid var(--line)">
+            <div style="width:16px;height:16px;border-radius:4px;background:var(--accent);display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;color:var(--accent-ink)">e</div>
+            <span style="font-weight:600;font-size:13px">bundle-diff</span>
+            <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text-3)">~/src/site/decks/bundle-diff.deck.json</span>
+            <div style="flex:1"></div>
+            <div style="display:flex;background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:2px;gap:2px;font-family:'JetBrains Mono',monospace;font-size:11px">
+              <span style="padding:3px 9px;border-radius:4px;color:var(--text-3)">16:9</span>
+              <span style="padding:3px 9px;border-radius:4px;background:var(--accent-soft);color:var(--accent);border:1px solid var(--accent-line)">1:1</span>
+              <span style="padding:3px 9px;border-radius:4px;color:var(--text-3)">9:16</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:6px;height:26px;padding:0 8px;background:var(--panel);border:1px solid var(--line);border-radius:6px;font-size:12px"><span style="width:9px;height:9px;border-radius:2px;background:#c9c4e0;border:1px solid var(--line)"></span><span>Product Grey</span><span style="color:var(--text-3);font-size:10px">▾</span></div>
+            <div style="display:flex;align-items:center;gap:6px;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--ok)"><span style="width:6px;height:6px;border-radius:50%;background:var(--ok)"></span>schema ok</div>
+            <button style="height:27px;padding:0 12px;border:none;border-radius:6px;background:var(--accent);color:var(--accent-ink);font-family:'Public Sans',sans-serif;font-size:12px;font-weight:600;cursor:pointer">Render</button>
+          </div>
+          <div style="flex:1;display:flex;min-height:0">
+            <div style="width:238px;flex:none;border-right:1px solid var(--line);display:flex;flex-direction:column">
+              <div style="height:30px;flex:none;display:flex;align-items:center;padding:0 10px;border-bottom:1px solid var(--line-soft);font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--text-3)">Scenes</div>
+              <div style="height:44px;display:flex;align-items:center;gap:9px;padding:0 10px;border-bottom:1px solid var(--line-soft)"><span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-3);width:14px">01</span><span style="width:5px;height:5px;border-radius:50%;background:var(--ok)"></span><div style="flex:1;font-size:12px">188 KB, down from 412</div><span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-3)">3.0s</span></div>
+              <div style="height:44px;display:flex;align-items:center;gap:9px;padding:0 10px;border-bottom:1px solid var(--line-soft);background:var(--accent-soft);box-shadow:inset 2px 0 0 var(--accent)"><span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--accent);width:14px">02</span><span style="width:5px;height:5px;border-radius:50%;background:var(--ok)"></span><div style="flex:1;font-size:12px;font-weight:600">Where the weight was</div><span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-2)">2.5s</span></div>
+              <div style="height:44px;display:flex;align-items:center;gap:9px;padding:0 10px;border-bottom:1px solid var(--line-soft)"><span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-3);width:14px">03</span><span style="width:5px;height:5px;border-radius:50%;background:var(--ok)"></span><div style="flex:1;font-size:12px">Chunk breakdown</div><span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-3)">4.0s</span></div>
+              <div style="height:44px;display:flex;align-items:center;gap:9px;padding:0 10px;border-bottom:1px solid var(--line-soft)"><span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-3);width:14px">04</span><span style="width:5px;height:5px;border-radius:50%;background:var(--ok)"></span><div style="flex:1;font-size:12px">vendor.js split three ways</div><span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-3)">4.5s</span></div>
+            </div>
+            <div style="flex:1;min-width:0;display:flex;flex-direction:column;background:var(--void)">
+              <div style="flex:1;display:flex;align-items:center;justify-content:center;padding:24px;min-height:0">
+                <div style="height:100%;aspect-ratio:1/1;background:#edeef3;border-radius:3px;display:flex;flex-direction:column;justify-content:space-between;padding:44px;box-sizing:border-box;position:relative;overflow:hidden">
+                  <div style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:#7b6fa8">02 · the weight</div>
+                  <div style="display:flex;flex-direction:column;gap:16px">
+                    <div style="font-family:'JetBrains Mono',monospace;font-size:66px;font-weight:700;color:#2c2b3a;letter-spacing:-.03em">224 KB</div>
+                    <div style="font-size:22px;color:#565471;line-height:1.35;max-width:14em">of the old bundle was one vendor chunk nobody had looked at.</div>
+                  </div>
+                  <div style="display:flex;gap:6px;align-items:center"><div style="height:8px;flex:1;background:linear-gradient(90deg,#e3a5c5,#8fa8e8);border-radius:99px"></div><span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#7b6fa8">54%</span></div>
+                </div>
+              </div>
+              <div style="flex:none;height:26px;display:flex;align-items:center;justify-content:center;gap:14px;font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-3)"><span>1080×1080</span><span>·</span><span>30 fps</span><span>·</span><span>frame 96/555</span></div>
+            </div>
+            <div style="width:328px;flex:none;border-left:1px solid var(--line);display:flex;flex-direction:column">
+              <div style="height:30px;flex:none;display:flex;align-items:stretch;border-bottom:1px solid var(--line);padding:0 4px;gap:2px;font-size:11px">
+                <span style="flex:1;display:flex;align-items:center;justify-content:center;color:var(--accent);font-weight:600;box-shadow:inset 0 -2px 0 var(--accent)">Inspector</span>
+                <span style="flex:1;display:flex;align-items:center;justify-content:center;color:var(--text-3)">JSON</span>
+                <span style="flex:1;display:flex;align-items:center;justify-content:center;color:var(--text-3)">AI</span>
+                <span style="flex:1;display:flex;align-items:center;justify-content:center;color:var(--text-3)">Narration</span>
+              </div>
+              <div style="padding:12px;display:flex;flex-direction:column;gap:14px">
+                <div style="display:flex;align-items:center;gap:8px"><span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--accent);background:var(--accent-soft);border:1px solid var(--accent-line);padding:2px 6px;border-radius:4px">scene 02</span><span style="font-size:12px;font-weight:600">stat</span></div>
+                <div style="display:flex;flex-direction:column;gap:4px"><div style="font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--text-3)">value</div><div style="background:var(--raised);border:1px solid var(--line);border-radius:5px;padding:6px 8px;font-family:'JetBrains Mono',monospace;font-size:12px">224 KB</div></div>
+                <div style="display:flex;flex-direction:column;gap:4px"><div style="font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--text-3)">caption</div><div style="background:var(--raised);border:1px solid var(--line);border-radius:5px;padding:6px 8px;font-size:12px;line-height:1.45">of the old bundle was one vendor chunk nobody had looked at.</div></div>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+                  <div style="display:flex;flex-direction:column;gap:4px"><div style="font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--text-3)">ratio bar</div><div style="background:var(--raised);border:1px solid var(--line);border-radius:5px;padding:6px 8px;font-family:'JetBrains Mono',monospace;font-size:12px">0.54</div></div>
+                  <div style="display:flex;flex-direction:column;gap:4px"><div style="font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--text-3)">duration · computed</div><div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text-3);padding:6px 0">2.5s · 75f</div></div>
+                </div>
+                <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-3);line-height:1.6">1:1 crops the flanks — the stat block<br>re-anchors to the square safe area.</div>
+              </div>
+            </div>
+          </div>
+          <div style="flex:none;height:52px;display:flex;align-items:center;gap:14px;padding:0 12px;background:var(--panel-2);border-top:1px solid var(--line)">
+            <div style="display:flex;align-items:center;gap:4px">
+              <span style="width:26px;height:26px;border-radius:5px;border:1px solid var(--line);background:var(--panel);display:flex;align-items:center;justify-content:center;font-size:10px;color:var(--text-2)">◀</span>
+              <span style="width:30px;height:26px;border-radius:5px;border:1px solid var(--line);background:var(--panel);display:flex;align-items:center;justify-content:center;font-size:10px;color:var(--text-2)">▶</span>
+              <span style="width:26px;height:26px;border-radius:5px;border:1px solid var(--line);background:var(--panel);display:flex;align-items:center;justify-content:center;font-size:10px;color:var(--text-2)">⏭</span>
+            </div>
+            <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text-2);min-width:96px">00:03.20 / 00:18.50</span>
+            <div style="flex:1;display:flex;gap:2px;height:14px">
+              <div style="width:16.2%;background:var(--raised);border-radius:2px"></div>
+              <div style="width:13.5%;background:var(--accent-soft);border:1px solid var(--accent-line);border-radius:2px;box-sizing:border-box"></div>
+              <div style="width:21.6%;background:var(--raised);border-radius:2px"></div>
+              <div style="width:24.3%;background:var(--raised);border-radius:2px"></div>
+              <div style="width:13.5%;background:var(--del-bg);border:1px solid var(--del-line);border-radius:2px;box-sizing:border-box"></div>
+              <div style="width:10.9%;background:var(--raised);border-radius:2px"></div>
+            </div>
+            <div style="display:flex;align-items:center;gap:6px;height:26px;padding:0 9px;border:1px solid var(--line);border-radius:6px;background:var(--panel);font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-2)">↻ loop</div>
+            <div style="display:flex;align-items:center;gap:6px;height:26px;padding:0 9px;border:1px solid var(--line);border-radius:6px;background:var(--panel);font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-2)">⌐ clean preview</div>
+          </div>
+          <div data-cmdbar="true" style="flex:none;height:26px;display:flex;align-items:center;gap:10px;padding:0 12px;background:var(--panel);border-top:1px solid var(--line-soft);font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-3)">
+            <span style="color:var(--accent)">›</span><span style="color:var(--text-2)">emaki preview deck.json --aspect 1:1</span><span style="color:var(--ok)">ok</span>
+          </div>
+        </div>
+      </div>
+      <div id="1c" style="display:flex;flex-direction:column;gap:10px">
+        <div style="display:flex;align-items:center;gap:10px">
+          <span style="font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;letter-spacing:.1em;color:var(--accent-ink);background:var(--accent);padding:3px 7px;border-radius:4px">1c</span>
+          <span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--frame-label)">Studio shell — 9:16 — flanks carry the filmstrip and transport</span>
+        </div>
+        <div style="width:1440px;height:900px;background:var(--panel);border:1px solid var(--line);border-radius:10px;overflow:hidden;display:flex;flex-direction:column;box-shadow:var(--shadow);font-size:13px">
+          <div style="height:44px;flex:none;display:flex;align-items:center;gap:14px;padding:0 12px;background:var(--panel-2);border-bottom:1px solid var(--line)">
+            <div style="width:16px;height:16px;border-radius:4px;background:var(--accent);display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;color:var(--accent-ink)">e</div>
+            <span style="font-weight:600;font-size:13px">bundle-diff</span>
+            <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text-3)">~/src/site/decks/bundle-diff.deck.json</span>
+            <div style="flex:1"></div>
+            <div style="display:flex;background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:2px;gap:2px;font-family:'JetBrains Mono',monospace;font-size:11px">
+              <span style="padding:3px 9px;border-radius:4px;color:var(--text-3)">16:9</span>
+              <span style="padding:3px 9px;border-radius:4px;color:var(--text-3)">1:1</span>
+              <span style="padding:3px 9px;border-radius:4px;background:var(--accent-soft);color:var(--accent);border:1px solid var(--accent-line)">9:16</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:6px;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--ok)"><span style="width:6px;height:6px;border-radius:50%;background:var(--ok)"></span>schema ok</div>
+            <button style="height:27px;padding:0 12px;border:none;border-radius:6px;background:var(--accent);color:var(--accent-ink);font-family:'Public Sans',sans-serif;font-size:12px;font-weight:600;cursor:pointer">Render 9:16</button>
+          </div>
+          <div style="flex:1;display:flex;min-height:0;background:var(--void)">
+
+            <div style="width:196px;flex:none;background:var(--panel);border-right:1px solid var(--line);display:flex;flex-direction:column">
+              <div style="height:26px;flex:none;display:flex;align-items:center;padding:0 10px;border-bottom:1px solid var(--line-soft);font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--text-3)">Filmstrip</div>
+              <div style="flex:1;padding:10px;display:flex;flex-direction:column;gap:8px;overflow:hidden">
+                <div style="display:flex;gap:8px;align-items:center"><span style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--text-3);width:14px">01</span><div style="width:52px;height:92px;border-radius:3px;background:#f3ece0;border:1px solid var(--line-soft)"></div><div style="flex:1;font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--text-3);line-height:1.5">title<br>3.0s</div></div>
+                <div style="display:flex;gap:8px;align-items:center"><span style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--text-3);width:14px">02</span><div style="width:52px;height:92px;border-radius:3px;background:#e8ddc9;border:1px solid var(--line-soft)"></div><div style="flex:1;font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--text-3);line-height:1.5">stat<br>2.5s</div></div>
+                <div style="display:flex;gap:8px;align-items:center"><span style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--accent);width:14px">03</span><div style="width:52px;height:92px;border-radius:3px;background:#dfe4d4;border:1px solid var(--accent);box-shadow:0 0 0 2px var(--accent-soft)"></div><div style="flex:1;font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--accent);line-height:1.5">chart<br>4.0s</div></div>
+                <div style="display:flex;gap:8px;align-items:center"><span style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--text-3);width:14px">04</span><div style="width:52px;height:92px;border-radius:3px;background:#f0d9d2;border:1px solid var(--line-soft)"></div><div style="flex:1;font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--text-3);line-height:1.5">code<br>4.5s</div></div>
+                <div style="display:flex;gap:8px;align-items:center"><span style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--err);width:14px">05</span><div style="width:52px;height:92px;border-radius:3px;background:var(--del-bg);border:1px dashed var(--del-line)"></div><div style="flex:1;font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--err);line-height:1.5">compare<br>invalid</div></div>
+              </div>
+            </div>
+
+            <div style="flex:1;min-width:0;display:flex;align-items:center;justify-content:center;position:relative">
+              <div style="height:calc(100% - 48px);aspect-ratio:9/16;background:#f3ece0;border-radius:3px;display:flex;flex-direction:column;justify-content:flex-end;gap:18px;padding:40px 32px 64px;box-sizing:border-box;position:relative;overflow:hidden">
+                <div style="position:absolute;top:32px;left:32px;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:#b0705a">03 · breakdown</div>
+                <div style="display:flex;flex-direction:column;gap:10px">
+                  <div style="display:flex;align-items:center;gap:10px"><div style="height:26px;width:38%;background:#e6d9c4;border-radius:2px"></div><span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#4a4237">41 KB</span></div>
+                  <div style="display:flex;align-items:center;gap:10px"><div style="height:26px;width:58%;background:#dfe4d4;border-radius:2px"></div><span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#3f4a37">63 KB</span></div>
+                  <div style="display:flex;align-items:center;gap:10px"><div style="height:26px;width:78%;background:#f0d9d2;border-radius:2px"></div><span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#5a3a33">84 KB</span></div>
+                </div>
+                <div style="font-family:'Public Sans',sans-serif;font-size:30px;line-height:1.15;font-weight:600;color:#2f2a24;letter-spacing:-.02em">Three chunks, after the split</div>
+                <div style="position:absolute;inset:0;border:1px dashed rgba(47,42,36,.16);margin:26px 22px;pointer-events:none"></div>
+              </div>
+              <div style="position:absolute;bottom:12px;left:0;right:0;text-align:center;font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-3)">1080×1920 · 30 fps · frame 271/555</div>
+            </div>
+
+            <div style="width:150px;flex:none;background:var(--panel);border-left:1px solid var(--line);display:flex;flex-direction:column;align-items:stretch;padding:12px 10px;gap:12px">
+              <div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--text-3)">Transport</div>
+              <div style="display:flex;gap:4px">
+                <span style="flex:1;height:28px;border-radius:5px;border:1px solid var(--line);background:var(--panel-2);display:flex;align-items:center;justify-content:center;font-size:10px;color:var(--text-2)">◀</span>
+                <span style="flex:1.3;height:28px;border-radius:5px;border:1px solid var(--accent-line);background:var(--accent-soft);color:var(--accent);display:flex;align-items:center;justify-content:center;font-size:10px">❚❚</span>
+                <span style="flex:1;height:28px;border-radius:5px;border:1px solid var(--line);background:var(--panel-2);display:flex;align-items:center;justify-content:center;font-size:10px;color:var(--text-2)">▶</span>
+              </div>
+              <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text-2)">00:09.03<br><span style="color:var(--text-3)">/ 00:18.50</span></div>
+              <div style="flex:1;display:flex;gap:8px;min-height:0">
+                <div style="width:8px;display:flex;flex-direction:column;gap:2px">
+                  <div style="height:16.2%;background:var(--raised);border-radius:2px"></div>
+                  <div style="height:13.5%;background:var(--raised);border-radius:2px"></div>
+                  <div style="height:21.6%;background:var(--accent-soft);border:1px solid var(--accent-line);border-radius:2px;box-sizing:border-box"></div>
+                  <div style="height:24.3%;background:var(--raised);border-radius:2px"></div>
+                  <div style="height:13.5%;background:var(--del-bg);border:1px solid var(--del-line);border-radius:2px;box-sizing:border-box"></div>
+                  <div style="flex:1;background:var(--raised);border-radius:2px"></div>
+                </div>
+                <div style="flex:1;display:flex;flex-direction:column;font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--text-3)">
+                  <span style="height:16.2%">01</span><span style="height:13.5%">02</span><span style="height:21.6%;color:var(--accent)">03</span><span style="height:24.3%">04</span><span style="height:13.5%;color:var(--err)">05</span><span>06</span>
+                </div>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:6px;font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-2)">
+                <span style="border:1px solid var(--line);border-radius:5px;padding:5px 7px;background:var(--panel-2)">↻ loop</span>
+                <span style="border:1px solid var(--line);border-radius:5px;padding:5px 7px;background:var(--panel-2)">⌐ clean</span>
+              </div>
+            </div>
+
+            <div style="width:300px;flex:none;background:var(--panel);border-left:1px solid var(--line);display:flex;flex-direction:column">
+              <div style="height:30px;flex:none;display:flex;align-items:stretch;border-bottom:1px solid var(--line);padding:0 4px;gap:2px;font-size:11px">
+                <span style="flex:1;display:flex;align-items:center;justify-content:center;color:var(--accent);font-weight:600;box-shadow:inset 0 -2px 0 var(--accent)">Inspector</span>
+                <span style="flex:1;display:flex;align-items:center;justify-content:center;color:var(--text-3)">JSON</span>
+                <span style="flex:1;display:flex;align-items:center;justify-content:center;color:var(--text-3)">AI</span>
+                <span style="flex:1;display:flex;align-items:center;justify-content:center;color:var(--text-3)">Narration</span>
+              </div>
+              <div style="padding:12px;display:flex;flex-direction:column;gap:14px">
+                <div style="display:flex;align-items:center;gap:8px"><span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--accent);background:var(--accent-soft);border:1px solid var(--accent-line);padding:2px 6px;border-radius:4px">scene 03</span><span style="font-size:12px;font-weight:600">chart</span></div>
+                <div style="display:flex;flex-direction:column;gap:4px"><div style="font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--text-3)">headline</div><div style="background:var(--raised);border:1px solid var(--line);border-radius:5px;padding:6px 8px;font-size:12px">Three chunks, after the split</div></div>
+                <div style="display:flex;flex-direction:column;gap:4px"><div style="font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--text-3)">series · from rollup stats</div><div style="background:var(--void);border:1px solid var(--line);border-radius:5px;padding:8px;font-family:'JetBrains Mono',monospace;font-size:11px;line-height:1.6;color:var(--text-2)">react-dom  41<br>charts     63<br>rest       84</div></div>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+                  <div style="display:flex;flex-direction:column;gap:4px"><div style="font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--text-3)">layout · 9:16</div><div style="background:var(--raised);border:1px solid var(--line);border-radius:5px;padding:6px 8px;font-family:'JetBrains Mono',monospace;font-size:12px;display:flex;justify-content:space-between"><span>stacked</span><span style="color:var(--text-3);font-size:9px">▾</span></div></div>
+                  <div style="display:flex;flex-direction:column;gap:4px"><div style="font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--text-3)">duration · computed</div><div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text-3);padding:6px 0">4.0s · 120f</div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div data-cmdbar="true" style="flex:none;height:26px;display:flex;align-items:center;gap:10px;padding:0 12px;background:var(--panel);border-top:1px solid var(--line);font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-3)">
+            <span style="color:var(--accent)">›</span><span style="color:var(--text-2)">emaki render deck.json --aspect 9:16</span><span>queued</span>
+            <div style="flex:1"></div><span>copy</span><span>·</span><span>history (15)</span><span>·</span><span>⌘K palette</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div style="display:flex;align-items:baseline;gap:14px;padding-top:12px;border-top:1px solid var(--line-soft)">
+      <span style="font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700;letter-spacing:.14em;color:var(--accent)">04</span>
+      <span style="font-size:17px;font-weight:600;letter-spacing:-.01em">An MCP tool call lands on disk</span>
+      <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text-3)">approved in Claude Code · Studio reacts to the file, it never calls a model</span>
+    </div>
+
+    <div id="1k" style="display:flex;flex-direction:column;gap:10px">
+      <div style="display:flex;align-items:center;gap:10px">
+        <span style="font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;letter-spacing:.1em;color:var(--accent-ink);background:var(--accent);padding:3px 7px;border-radius:4px">1k</span>
+        <span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--frame-label)">Live update — three scenes just changed on disk</span>
+      </div>
+      <div style="width:1440px;height:900px;background:var(--panel);border:1px solid var(--line);border-radius:10px;overflow:hidden;display:flex;flex-direction:column;box-shadow:var(--shadow);font-size:13px">
+
+        <div style="height:44px;flex:none;display:flex;align-items:center;gap:14px;padding:0 12px;background:var(--panel-2);border-bottom:1px solid var(--line)">
+          <div style="display:flex;align-items:center;gap:8px;min-width:0">
+            <div style="width:16px;height:16px;border-radius:4px;background:var(--accent);display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;color:var(--accent-ink)">e</div>
+            <span style="font-weight:600;font-size:13px">bundle-diff</span>
+            <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text-3)">~/src/site/decks/bundle-diff.deck.json</span>
+            <span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--accent);border:1px solid var(--accent-line);background:var(--accent-soft);padding:2px 6px;border-radius:4px">reloaded 4s ago</span>
+          </div>
+          <div style="flex:1"></div>
+          <div style="display:flex;background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:2px;gap:2px;font-family:'JetBrains Mono',monospace;font-size:11px">
+            <span style="padding:3px 9px;border-radius:4px;background:var(--accent-soft);color:var(--accent);border:1px solid var(--accent-line)">16:9</span>
+            <span style="padding:3px 9px;border-radius:4px;color:var(--text-3)">1:1</span>
+            <span style="padding:3px 9px;border-radius:4px;color:var(--text-3)">9:16</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:6px;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--ok)"><span style="width:6px;height:6px;border-radius:50%;background:var(--ok)"></span>schema ok · 6 scenes</div>
+          <div style="width:1px;height:20px;background:var(--line)"></div>
+          <div style="display:flex;align-items:center;gap:6px;height:24px;padding:0 8px;border:1px solid var(--line);border-radius:6px;background:var(--panel);font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text-2);cursor:pointer" title="claude-code attached · apply_ops wrote 3 scenes">
+            <span style="width:6px;height:6px;border-radius:50%;background:var(--ok)"></span>mcp · claude-code
+          </div>
+          <button style="height:27px;padding:0 12px;border:none;border-radius:6px;background:var(--accent);color:var(--accent-ink);font-family:'Public Sans',sans-serif;font-size:12px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:7px">Render<span style="font-family:'JetBrains Mono',monospace;font-size:10px;opacity:.6">⌘R</span></button>
+        </div>
+
+        <div style="flex:1;display:flex;min-height:0">
+
+          <div style="width:252px;flex:none;border-right:1px solid var(--line);display:flex;flex-direction:column;background:var(--panel)">
+            <div style="height:30px;flex:none;display:flex;align-items:center;justify-content:space-between;padding:0 10px;border-bottom:1px solid var(--line-soft)">
+              <span style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--text-3)">Scenes</span>
+              <span style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--accent);cursor:pointer">3 updated · dismiss</span>
+            </div>
+
+            <div style="height:22px;display:flex;align-items:center;gap:7px;padding:0 10px;background:var(--panel-2);border-bottom:1px solid var(--line-soft)">
+              <span style="font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--text-3)">Cold open</span>
+              <span style="flex:1;height:1px;background:var(--line-soft)"></span>
+              <span style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--text-3)">5.1s</span>
+            </div>
+
+            <div style="height:44px;display:flex;align-items:center;gap:9px;padding:0 10px;border-bottom:1px solid var(--line-soft)">
+              <span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-3);width:14px">01</span>
+              <span style="width:5px;height:5px;border-radius:50%;background:var(--ok);flex:none"></span>
+              <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:1px">
+                <div style="font-size:12px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">188 KB, down from 412</div>
+                <div style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--text-3)">title</div>
+              </div>
+              <span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-3)">3.0s</span>
+            </div>
+
+            <div style="height:44px;display:flex;align-items:center;gap:9px;padding:0 10px;border-bottom:1px solid var(--line-soft);background:var(--accent-soft);box-shadow:inset 2px 0 0 var(--accent)">
+              <span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--accent);width:14px">02</span>
+              <span style="width:5px;height:5px;border-radius:50%;background:var(--ok);flex:none"></span>
+              <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:1px">
+                <div style="font-size:12px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">224 KB was one chunk</div>
+                <div style="display:flex;align-items:center;gap:6px"><span style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--accent)">stat</span><span style="font-family:'JetBrains Mono',monospace;font-size:8px;letter-spacing:.06em;text-transform:uppercase;color:var(--accent-ink);background:var(--accent);padding:1px 4px;border-radius:3px">updated</span></div>
+              </div>
+              <span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-2)">2.1s</span>
+            </div>
+
+            <div style="height:44px;display:flex;align-items:center;gap:9px;padding:0 10px;border-bottom:1px solid var(--line-soft);background:var(--add-bg);box-shadow:inset 2px 0 0 var(--add-line)">
+              <span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--add-line);width:14px">03</span>
+              <span style="width:5px;height:5px;border-radius:50%;background:var(--ok);flex:none"></span>
+              <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:1px">
+                <div style="font-size:12px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Chunk sizes, three ways</div>
+                <div style="display:flex;align-items:center;gap:6px"><span style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--text-3)">chart</span><span style="font-family:'JetBrains Mono',monospace;font-size:8px;letter-spacing:.06em;text-transform:uppercase;color:var(--add-line);border:1px solid var(--add-line);padding:0 4px;border-radius:3px">new</span></div>
+              </div>
+              <span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-3)">2.0s</span>
+            </div>
+
+            <div style="height:22px;display:flex;align-items:center;gap:7px;padding:0 10px;background:var(--panel-2);border-top:1px solid var(--line-soft);border-bottom:1px solid var(--line-soft)">
+              <span style="font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--text-3)">The numbers</span>
+              <span style="flex:1;height:1px;background:var(--line-soft)"></span>
+              <span style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--text-3)">8.5s</span>
+            </div>
+
+            <div style="height:44px;display:flex;align-items:center;gap:9px;padding:0 10px;border-bottom:1px solid var(--line-soft)">
+              <span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-3);width:14px">04</span>
+              <span style="width:5px;height:5px;border-radius:50%;background:var(--ok);flex:none"></span>
+              <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:1px">
+                <div style="font-size:12px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Chunk breakdown</div>
+                <div style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--text-3)">chart</div>
+              </div>
+              <span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-3)">4.0s</span>
+            </div>
+
+            <div style="height:44px;display:flex;align-items:center;gap:9px;padding:0 10px;border-bottom:1px solid var(--line-soft)">
+              <span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-3);width:14px">05</span>
+              <span style="width:5px;height:5px;border-radius:50%;background:var(--ok);flex:none"></span>
+              <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:1px">
+                <div style="font-size:12px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">vendor.js split three ways</div>
+                <div style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--text-3)">code</div>
+              </div>
+              <span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-3)">4.5s</span>
+            </div>
+
+            <div style="height:44px;display:flex;align-items:center;gap:9px;padding:0 10px;border-bottom:1px solid var(--line-soft);background:var(--del-bg);box-shadow:inset 2px 0 0 var(--del-line);opacity:.7">
+              <span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--del-line);width:14px">−</span>
+              <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:1px">
+                <div style="font-size:12px;color:var(--text-2);text-decoration:line-through;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Untitled comparison</div>
+                <div style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--del-line)">removed · was scene 05</div>
+              </div>
+              <span style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--text-3);cursor:pointer">undo</span>
+            </div>
+
+            <div style="height:44px;display:flex;align-items:center;gap:9px;padding:0 10px;border-bottom:1px solid var(--line-soft)">
+              <span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-3);width:14px">06</span>
+              <span style="width:5px;height:5px;border-radius:50%;background:var(--ok);flex:none"></span>
+              <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:1px">
+                <div style="font-size:12px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">github.com/nils/site</div>
+                <div style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--text-3)">outro</div>
+              </div>
+              <span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-3)">2.0s</span>
+            </div>
+
+            <div style="margin-top:auto;flex:none;height:26px;display:flex;align-items:center;justify-content:space-between;padding:0 10px;border-top:1px solid var(--line-soft);font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-3)">
+              <span>6 scenes</span><span>17.6s · 528f @30</span>
+            </div>
+          </div>
+
+          <div style="flex:1;min-width:0;display:flex;flex-direction:column;background:var(--void)">
+            <div style="flex:1;display:flex;align-items:center;justify-content:center;padding:28px;min-height:0">
+              <div style="width:100%;max-width:790px;aspect-ratio:16/9;background:#f3ece0;border-radius:3px;position:relative;overflow:hidden;display:flex;flex-direction:column;justify-content:center;gap:20px;padding:56px;box-sizing:border-box">
+                <div style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:#b0705a">02 · the weight</div>
+                <div style="font-family:'JetBrains Mono',monospace;font-size:74px;font-weight:700;color:#2f2a24;letter-spacing:-.04em;line-height:1">224 KB</div>
+                <div style="font-size:24px;color:#5f574c;line-height:1.35;max-width:20em">of the old bundle was one vendor chunk nobody had looked at.</div>
+              </div>
+            </div>
+            <div style="flex:none;height:20px;display:flex;align-items:center;justify-content:center;gap:14px;font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-3);padding-bottom:6px">
+              <span>1920×1080</span><span>·</span><span>30 fps</span><span>·</span><span>scene 02 · frame 96/528</span>
+            </div>
+          </div>
+
+          <div style="width:328px;flex:none;border-left:1px solid var(--line);display:flex;flex-direction:column;background:var(--panel)">
+            <div style="height:30px;flex:none;display:flex;align-items:stretch;border-bottom:1px solid var(--line);padding:0 4px;gap:2px;font-size:11px">
+              <span style="flex:1;display:flex;align-items:center;justify-content:center;color:var(--text-3)">Inspector</span>
+              <span style="flex:1;display:flex;align-items:center;justify-content:center;color:var(--accent);font-weight:600;box-shadow:inset 0 -2px 0 var(--accent)">JSON</span>
+              <span style="flex:1;display:flex;align-items:center;justify-content:center;color:var(--text-3)">Narration</span>
+            </div>
+
+            <div style="flex:none;padding:10px 12px;border-bottom:1px solid var(--line-soft);background:var(--accent-soft);display:flex;flex-direction:column;gap:7px">
+              <div style="display:flex;align-items:center;gap:8px">
+                <span style="font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:var(--accent)">from an mcp tool call</span>
+                <div style="flex:1"></div>
+                <span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-3);cursor:pointer">dismiss</span>
+              </div>
+              <div style="font-size:12px;color:var(--text-2);line-height:1.5">“The caption restated the title, so I replaced it with the number the title doesn't give.”</div>
+              <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-3);line-height:1.6">apply_ops · patch scene 02 · claude-code<br>4 seconds ago · 3 of 4 ops written</div>
+            </div>
+
+            <div style="flex:1;min-height:0;display:flex;flex-direction:column;background:var(--void)">
+              <div style="flex:1;padding:10px 8px;font-family:'JetBrains Mono',monospace;font-size:11px;line-height:1.75;color:var(--text-2);overflow:hidden">
+                <div><span style="color:var(--text-3)">14&nbsp;&nbsp;</span>&nbsp;&nbsp;<span style="color:var(--accent)">"block"</span>: <span style="color:var(--ok)">"stat"</span>,</div>
+                <div><span style="color:var(--text-3)">15&nbsp;&nbsp;</span>&nbsp;&nbsp;<span style="color:var(--accent)">"body"</span>: {</div>
+                <div><span style="color:var(--text-3)">16&nbsp;&nbsp;</span>&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:var(--accent)">"value"</span>: <span style="color:var(--ok)">"224 KB"</span>,</div>
+                <div style="background:var(--del-bg);box-shadow:inset 2px 0 0 var(--del-line)"><span style="color:var(--text-3)">17&nbsp;&nbsp;</span><span style="color:var(--del-line)">−</span>&nbsp;<span style="color:var(--accent)">"caption"</span>: <span style="color:var(--ok)">"188 KB, down from 412 KB"</span>,</div>
+                <div style="background:var(--add-bg);box-shadow:inset 2px 0 0 var(--add-line)"><span style="color:var(--text-3)">17&nbsp;&nbsp;</span><span style="color:var(--add-line)">+</span>&nbsp;<span style="color:var(--accent)">"caption"</span>: <span style="color:var(--ok)">"of the old bundle was one vendor chunk"</span>,</div>
+                <div style="background:var(--del-bg);box-shadow:inset 2px 0 0 var(--del-line)"><span style="color:var(--text-3)">18&nbsp;&nbsp;</span><span style="color:var(--del-line)">−</span>&nbsp;<span style="color:var(--accent)">"beats"</span>: 6</div>
+                <div style="background:var(--add-bg);box-shadow:inset 2px 0 0 var(--add-line)"><span style="color:var(--text-3)">18&nbsp;&nbsp;</span><span style="color:var(--add-line)">+</span>&nbsp;<span style="color:var(--accent)">"beats"</span>: 5</div>
+                <div><span style="color:var(--text-3)">19&nbsp;&nbsp;</span>&nbsp;&nbsp;},</div>
+                <div><span style="color:var(--text-3)">20&nbsp;&nbsp;</span>},</div>
+                <div style="background:var(--add-bg);box-shadow:inset 2px 0 0 var(--add-line)"><span style="color:var(--text-3)">21&nbsp;&nbsp;</span><span style="color:var(--add-line)">+</span>&nbsp;{ <span style="color:var(--accent)">"id"</span>: <span style="color:var(--ok)">"chunk-sizes"</span>, <span style="color:var(--accent)">"block"</span>: <span style="color:var(--ok)">"chart"</span>,</div>
+                <div style="background:var(--add-bg);box-shadow:inset 2px 0 0 var(--add-line)"><span style="color:var(--text-3)">22&nbsp;&nbsp;</span><span style="color:var(--add-line)">+</span>&nbsp;&nbsp;&nbsp;<span style="color:var(--accent)">"source"</span>: <span style="color:var(--ok)">"dist/stats.json"</span> },</div>
+              </div>
+              <div style="height:26px;flex:none;border-top:1px solid var(--line-soft);background:var(--panel);display:flex;align-items:center;justify-content:space-between;padding:0 10px;font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-3)">
+                <span>Ln 17, Col 14 · json</span><span style="color:var(--add-line)">+3 −2 · reloaded from disk</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div style="flex:none;height:52px;display:flex;align-items:center;gap:14px;padding:0 12px;background:var(--panel-2);border-top:1px solid var(--line)">
+          <div style="display:flex;align-items:center;gap:4px">
+            <span style="width:26px;height:26px;border-radius:5px;border:1px solid var(--line);background:var(--panel);display:flex;align-items:center;justify-content:center;font-size:10px;color:var(--text-2)">⏮</span>
+            <span style="width:26px;height:26px;border-radius:5px;border:1px solid var(--line);background:var(--panel);display:flex;align-items:center;justify-content:center;font-size:10px;color:var(--text-2)">◀</span>
+            <span style="width:30px;height:26px;border-radius:5px;border:1px solid var(--line);background:var(--panel);display:flex;align-items:center;justify-content:center;font-size:10px;color:var(--text-2)">▶</span>
+            <span style="width:26px;height:26px;border-radius:5px;border:1px solid var(--line);background:var(--panel);display:flex;align-items:center;justify-content:center;font-size:10px;color:var(--text-2)">▶</span>
+            <span style="width:26px;height:26px;border-radius:5px;border:1px solid var(--line);background:var(--panel);display:flex;align-items:center;justify-content:center;font-size:10px;color:var(--text-2)">⏭</span>
+          </div>
+          <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text-2);min-width:96px">00:03.20 / 00:17.60</span>
+          <div style="flex:1;display:flex;flex-direction:column;gap:4px">
+            <div style="display:flex;gap:2px;height:14px;align-items:stretch">
+              <div style="width:17%;background:var(--raised);border-radius:2px"></div>
+              <div style="width:12%;background:var(--accent-soft);border:1px solid var(--accent-line);border-radius:2px;box-sizing:border-box"></div>
+              <div style="width:11.4%;background:var(--add-bg);border:1px solid var(--add-line);border-radius:2px;box-sizing:border-box"></div>
+              <div style="width:22.7%;background:var(--raised);border-radius:2px"></div>
+              <div style="width:25.6%;background:var(--raised);border-radius:2px"></div>
+              <div style="width:11.3%;background:var(--raised);border-radius:2px"></div>
+            </div>
+            <div style="display:flex;gap:2px;font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--text-3)">
+              <span style="width:17%">01</span><span style="width:12%;color:var(--accent)">02</span><span style="width:11.4%;color:var(--add-line)">03 new</span><span style="width:22.7%">04</span><span style="width:25.6%">05</span><span style="width:11.3%">06</span>
+            </div>
+          </div>
+          <div style="display:flex;align-items:center;gap:6px;height:26px;padding:0 9px;border:1px solid var(--line);border-radius:6px;background:var(--panel);font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-2);cursor:pointer">↻ loop</div>
+          <div style="display:flex;align-items:center;gap:6px;height:26px;padding:0 9px;border:1px solid var(--line);border-radius:6px;background:var(--panel);font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-2);cursor:pointer">⌐ clean preview</div>
+          <span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-3)">space · ←→ · home/end</span>
+        </div>
+
+        <div data-cmdbar="true" style="flex:none;height:26px;display:flex;align-items:center;gap:10px;padding:0 12px;background:var(--panel);border-top:1px solid var(--line-soft);font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-3)">
+          <span style="color:var(--accent)">›</span>
+          <span style="color:var(--text-2)">deck.json changed on disk · reloaded 6 scenes</span>
+          <span style="color:var(--ok)">ok · 31ms</span>
+          <div style="flex:1"></div>
+          <span style="cursor:pointer">copy</span><span>·</span><span style="cursor:pointer">history (16)</span><span>·</span><span style="cursor:pointer">⌘K palette</span>
+        </div>
+      </div>
+    </div>
+
+
+
+    <div style="display:flex;align-items:baseline;gap:14px;padding-top:12px;border-top:1px solid var(--line-soft)">
+      <span style="font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700;letter-spacing:.14em;color:var(--accent)">05</span>
+      <span style="font-size:17px;font-weight:600;letter-spacing:-.01em">Render</span>
+      <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text-3)">in progress · failed</span>
+    </div>
+
+<div id="1f" style="display:flex;flex-direction:column;gap:10px">
+        <div style="display:flex;align-items:center;gap:10px">
+          <span style="font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;letter-spacing:.1em;color:var(--accent-ink);background:var(--accent);padding:3px 7px;border-radius:4px">1f</span>
+          <span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--frame-label)">Render dialog — rendering / failed</span>
+        </div>
+        <div style="display:flex;gap:20px">
+          <div style="width:472px;background:var(--panel);border:1px solid var(--line);border-radius:10px;box-shadow:var(--shadow);overflow:hidden">
+            <div style="padding:14px 16px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:10px">
+              <span style="font-size:14px;font-weight:600">Rendering</span>
+              <span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--accent);background:var(--accent-soft);border:1px solid var(--accent-line);padding:2px 6px;border-radius:4px">9:16</span>
+              <div style="flex:1"></div>
+              <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text-3)">12 workers</span>
+            </div>
+            <div style="padding:16px;display:flex;flex-direction:column;gap:14px">
+              <div style="display:flex;flex-direction:column;gap:7px">
+                <div style="display:flex;justify-content:space-between;font-family:'JetBrains Mono',monospace;font-size:11px"><span style="color:var(--text-2)">387 / 555 frames</span><span style="color:var(--text-3)">70%</span></div>
+                <div style="height:5px;background:var(--raised);border-radius:99px;overflow:hidden"><div style="width:70%;height:100%;background:var(--accent)"></div></div>
+                <div style="display:flex;justify-content:space-between;font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-3)"><span>elapsed 00:41</span><span>eta 00:17 · 9.4 fps</span></div>
+              </div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px 14px;font-family:'JetBrains Mono',monospace;font-size:11px">
+                <div style="display:flex;justify-content:space-between;color:var(--text-3)"><span>fps</span><span style="color:var(--text-2)">30</span></div>
+                <div style="display:flex;justify-content:space-between;color:var(--text-3)"><span>scale</span><span style="color:var(--text-2)">1× · 1080×1920</span></div>
+                <div style="display:flex;justify-content:space-between;color:var(--text-3)"><span>codec</span><span style="color:var(--text-2)">h264 · crf 18</span></div>
+                <div style="display:flex;justify-content:space-between;color:var(--text-3)"><span>audio</span><span style="color:var(--text-2)">narration.wav</span></div>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:5px">
+                <div style="font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--text-3)">output</div>
+                <div style="background:var(--void);border:1px solid var(--line);border-radius:5px;padding:8px 10px;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text-2)">out/bundle-diff-9x16.mp4</div>
+              </div>
+              <div style="background:var(--void);border:1px solid var(--line-soft);border-radius:6px;padding:9px 10px;font-family:'JetBrains Mono',monospace;font-size:10px;line-height:1.8;color:var(--text-3)">
+                <div><span style="color:var(--accent)">›</span> emaki render deck.json --aspect 9:16 --audio narration.wav</div>
+                <div>bundled in 1.2s · chunk 4/7</div>
+              </div>
+            </div>
+            <div style="padding:12px 16px;border-top:1px solid var(--line);display:flex;align-items:center;gap:10px;background:var(--panel-2)">
+              <span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-3)">runs in the terminal too — safe to close</span>
+              <div style="flex:1"></div>
+              <span style="padding:7px 12px;border-radius:6px;border:1px solid var(--line);background:var(--panel);font-size:12px;color:var(--text-2);cursor:pointer">Cancel</span>
+            </div>
+          </div>
+
+          <div style="width:472px;background:var(--panel);border:1px solid var(--line);border-radius:10px;box-shadow:var(--shadow);overflow:hidden">
+            <div style="padding:14px 16px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:10px">
+              <span style="width:7px;height:7px;border-radius:50%;background:var(--err)"></span>
+              <span style="font-size:14px;font-weight:600">Render failed</span>
+              <div style="flex:1"></div>
+              <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text-3)">at frame 214 · 00:23</span>
+            </div>
+            <div style="padding:16px;display:flex;flex-direction:column;gap:14px">
+              <div style="display:flex;flex-direction:column;gap:7px">
+                <div style="height:5px;background:var(--raised);border-radius:99px;overflow:hidden"><div style="width:38%;height:100%;background:var(--err)"></div></div>
+                <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-3)">214 / 555 frames · stopped</div>
+              </div>
+              <div style="background:var(--del-bg);border:1px solid var(--del-line);border-radius:6px;padding:10px 12px;display:flex;flex-direction:column;gap:7px">
+                <div style="font-size:12px;font-weight:600;color:var(--text)">Scene 04 threw during frame 214</div>
+                <div style="font-family:'JetBrains Mono',monospace;font-size:10px;line-height:1.8;color:var(--text-2)">TypeError: Cannot read properties of undefined<br>&nbsp;&nbsp;(reading 'length')<br>&nbsp;&nbsp;at CodeBlock (blocks/code.tsx:41:22)<br>&nbsp;&nbsp;body.emphasis references line 3 of a 2-line source</div>
+              </div>
+              <div style="display:flex;gap:8px">
+                <span style="padding:6px 11px;border-radius:5px;border:1px solid var(--line);background:var(--panel-2);font-size:11px;color:var(--text-2);cursor:pointer">Copy error</span>
+                <span style="padding:6px 11px;border-radius:5px;border:1px solid var(--line);background:var(--panel-2);font-size:11px;color:var(--text-2);cursor:pointer">Open scene 04</span>
+                <span style="padding:6px 11px;border-radius:5px;border:1px solid var(--line);background:var(--panel-2);font-size:11px;color:var(--text-2);cursor:pointer">Show full log</span>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:5px">
+                <div style="font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--text-3)">retry with</div>
+                <div style="background:var(--void);border:1px solid var(--line);border-radius:5px;padding:9px 10px;font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-2);line-height:1.7">emaki render deck.json --aspect 9:16 \<br>&nbsp;&nbsp;--from-frame 214 --log verbose</div>
+                <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-3);cursor:pointer">copy</div>
+              </div>
+            </div>
+            <div style="padding:12px 16px;border-top:1px solid var(--line);display:flex;align-items:center;gap:10px;background:var(--panel-2)">
+              <span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-3)">partial output discarded</span>
+              <div style="flex:1"></div>
+              <span style="padding:7px 12px;border-radius:6px;border:1px solid var(--line);background:var(--panel);font-size:12px;color:var(--text-2);cursor:pointer">Close</span>
+              <span style="padding:7px 12px;border-radius:6px;background:var(--accent);color:var(--accent-ink);font-size:12px;font-weight:600;cursor:pointer">Fix and retry</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    <div style="display:flex;align-items:baseline;gap:14px;padding-top:12px;border-top:1px solid var(--line-soft)">
+      <span style="font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700;letter-spacing:.14em;color:var(--accent)">06</span>
+      <span style="font-size:17px;font-weight:600;letter-spacing:-.01em">Theme Studio</span>
+      <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text-3)">a designer brings a brand in · no JSON, no token names, no schema errors</span>
+    </div>
+
+    <div id="1l" style="display:flex;flex-direction:column;gap:10px">
+      <div style="display:flex;align-items:center;gap:10px">
+        <span style="font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;letter-spacing:.1em;color:var(--accent-ink);background:var(--accent);padding:3px 7px;border-radius:4px">1l</span>
+        <span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--frame-label)">Theme gallery — create menu open</span>
+      </div>
+      <div style="width:1440px;height:900px;background:var(--panel);border:1px solid var(--line);border-radius:10px;overflow:hidden;display:flex;flex-direction:column;box-shadow:var(--shadow)">
+        <div style="height:44px;flex:none;display:flex;align-items:center;gap:14px;padding:0 14px;background:var(--panel-2);border-bottom:1px solid var(--line)">
+          <div style="width:16px;height:16px;border-radius:4px;background:var(--accent);display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;color:var(--accent-ink)">e</div>
+          <span style="font-size:13px;font-weight:600">Themes</span>
+          <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text-3)">./themes · 4 local</span>
+          <div style="flex:1"></div>
+          <div style="width:190px;background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:5px 9px;font-size:12px;color:var(--text-3)">Filter…</div>
+          <div style="position:relative">
+            <span style="height:27px;padding:0 12px;border-radius:6px;background:var(--accent);color:var(--accent-ink);display:flex;align-items:center;font-size:12px;font-weight:600;cursor:pointer">+ Create</span>
+            <div style="position:absolute;top:34px;right:0;width:288px;background:var(--panel);border:1px solid var(--line);border-radius:9px;box-shadow:var(--shadow);padding:5px;display:flex;flex-direction:column;gap:2px;z-index:5">
+              <div style="padding:10px;border-radius:6px;display:flex;flex-direction:column;gap:3px;background:var(--accent-soft);cursor:pointer">
+                <div style="font-size:12px;font-weight:600">Choose from theme</div>
+                <div style="font-size:11px;color:var(--text-2);line-height:1.45">Start from one that already exists</div>
+              </div>
+              <div style="padding:10px;border-radius:6px;display:flex;flex-direction:column;gap:3px;cursor:pointer">
+                <div style="font-size:12px;font-weight:600">Import from brand</div>
+                <div style="font-size:11px;color:var(--text-2);line-height:1.45">A site, a screenshot, or a brand PDF</div>
+              </div>
+              <div style="padding:10px;border-radius:6px;display:flex;flex-direction:column;gap:3px;cursor:pointer">
+                <div style="font-size:12px;font-weight:600">Start blank</div>
+                <div style="font-size:11px;color:var(--text-2);line-height:1.45">Pick colours and fonts yourself</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div style="flex:1;padding:20px;display:grid;grid-template-columns:repeat(4,1fr);grid-auto-rows:min-content;gap:16px;background:var(--bg);align-content:start">
+
+          <div style="border:1px solid var(--accent-line);background:var(--panel);border-radius:9px;overflow:hidden;cursor:pointer;box-shadow:0 0 0 1px var(--accent-line)">
+            <div style="aspect-ratio:16/9;background:#f3ece0;padding:20px;box-sizing:border-box;display:flex;flex-direction:column;justify-content:center;gap:9px">
+              <div style="font-family:'JetBrains Mono',monospace;font-size:8px;letter-spacing:.16em;color:#b0705a">THIS WEEK</div>
+              <div style="font-size:22px;font-weight:600;color:#2f2a24;line-height:1.12;letter-spacing:-.02em">Load time, halved</div>
+              <div style="display:flex;gap:5px"><div style="width:30px;height:5px;background:#e6d9c4"></div><div style="width:20px;height:5px;background:#dfe4d4"></div><div style="width:14px;height:5px;background:#f0d9d2"></div></div>
+            </div>
+            <div style="padding:11px 13px;border-top:1px solid var(--line-soft);display:flex;flex-direction:column;gap:4px">
+              <div style="display:flex;align-items:center;justify-content:space-between"><span style="font-size:12px;font-weight:600">Editorial Warm</span><span style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--accent)">in use</span></div>
+              <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-3)">seed theme · edited 3d ago</div>
+            </div>
+          </div>
+
+          <div style="border:1px solid var(--line);background:var(--panel);border-radius:9px;overflow:hidden;cursor:pointer">
+            <div style="aspect-ratio:16/9;background:#edeef3;padding:20px;box-sizing:border-box;display:flex;flex-direction:column;justify-content:center;gap:9px">
+              <div style="font-family:'JetBrains Mono',monospace;font-size:26px;font-weight:700;color:#2c2b3a;letter-spacing:-.03em">−54%</div>
+              <div style="font-size:12px;color:#565471">bundle size after the split</div>
+              <div style="height:5px;background:linear-gradient(90deg,#e3a5c5,#8fa8e8);border-radius:99px"></div>
+            </div>
+            <div style="padding:11px 13px;border-top:1px solid var(--line-soft);display:flex;flex-direction:column;gap:4px">
+              <div style="font-size:12px;font-weight:600">Product Grey</div>
+              <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-3)">seed theme · edited 3d ago</div>
+            </div>
+          </div>
+
+          <div style="border:1px solid var(--line);background:var(--panel);border-radius:9px;overflow:hidden;cursor:pointer">
+            <div style="aspect-ratio:16/9;background:#101418;padding:20px;box-sizing:border-box;display:flex;flex-direction:column;justify-content:center;gap:9px">
+              <div style="font-family:'JetBrains Mono',monospace;font-size:8px;letter-spacing:.16em;color:#4fd1a5">SHIPPED</div>
+              <div style="font-size:22px;font-weight:600;color:#eef2f6;line-height:1.12;letter-spacing:-.02em">Three regions, one deploy</div>
+              <div style="display:flex;gap:5px"><div style="width:30px;height:5px;background:#4fd1a5"></div><div style="width:20px;height:5px;background:#2a3540"></div></div>
+            </div>
+            <div style="padding:11px 13px;border-top:1px solid var(--line-soft);display:flex;flex-direction:column;gap:4px">
+              <div style="font-size:12px;font-weight:600">Nightshift</div>
+              <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-3)">from brand · edited 4h ago</div>
+            </div>
+          </div>
+
+          <div style="border:1px solid var(--line);background:var(--panel);border-radius:9px;overflow:hidden;cursor:pointer">
+            <div style="aspect-ratio:16/9;background:#fdf6ef;padding:20px;box-sizing:border-box;display:flex;flex-direction:column;justify-content:center;gap:9px;position:relative">
+              <div style="font-size:22px;font-weight:600;color:#3b2f26;line-height:1.12;letter-spacing:-.02em">Warmer, quieter</div>
+              <div style="display:flex;gap:5px"><div style="width:26px;height:5px;background:#e0956a"></div><div style="width:26px;height:5px;background:#c7bda9"></div></div>
+              <div style="position:absolute;top:10px;right:10px;font-family:'JetBrains Mono',monospace;font-size:8px;color:var(--warn);background:var(--panel);border:1px solid var(--line);padding:2px 5px;border-radius:3px">2 slots empty</div>
+            </div>
+            <div style="padding:11px 13px;border-top:1px solid var(--line-soft);display:flex;flex-direction:column;gap:4px">
+              <div style="font-size:12px;font-weight:600">Draft — acme.com</div>
+              <div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-3)">from brand · 6m ago</div>
+            </div>
+          </div>
+
+          <div style="border:1px dashed var(--line);border-radius:9px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;padding:22px;min-height:168px;cursor:pointer">
+            <div style="font-family:'JetBrains Mono',monospace;font-size:18px;color:var(--text-3)">+</div>
+            <div style="font-size:12px;color:var(--text-2)">Create a theme</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="1m" style="display:flex;flex-direction:column;gap:10px">
+      <div style="display:flex;align-items:center;gap:10px">
+        <span style="font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;letter-spacing:.1em;color:var(--accent-ink);background:var(--accent);padding:3px 7px;border-radius:4px">1m</span>
+        <span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--frame-label)">Import from brand — extraction landed, two slots to fill</span>
+      </div>
+      <div style="width:1440px;height:900px;background:var(--panel);border:1px solid var(--line);border-radius:10px;overflow:hidden;display:flex;flex-direction:column;box-shadow:var(--shadow)">
+        <div style="height:52px;flex:none;display:flex;align-items:center;gap:14px;padding:0 18px;background:var(--panel-2);border-bottom:1px solid var(--line)">
+          <span style="font-size:12px;color:var(--text-3);cursor:pointer">← Themes</span>
+          <div style="width:1px;height:18px;background:var(--line)"></div>
+          <div style="display:flex;flex-direction:column;gap:2px">
+            <span style="font-size:14px;font-weight:600">Draft — acme.com</span>
+            <span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-3)">created from a screenshot · 6 minutes ago</span>
+          </div>
+          <div style="flex:1"></div>
+          <div style="display:flex;align-items:center;gap:7px;height:26px;padding:0 10px;border:1px solid var(--add-line);background:var(--add-bg);border-radius:6px;font-size:12px;color:var(--text-2)">
+            <span style="width:6px;height:6px;border-radius:50%;background:var(--ok)"></span>10 of 12 filled automatically
+          </div>
+          <span style="padding:7px 12px;border-radius:6px;border:1px solid var(--line);background:var(--panel);font-size:12px;color:var(--text-2);cursor:pointer">Discard</span>
+          <span style="padding:7px 14px;border-radius:6px;background:var(--accent);color:var(--accent-ink);font-size:12px;font-weight:600;cursor:pointer">Save theme</span>
+        </div>
+
+        <div style="flex:1;display:flex;min-height:0">
+          <div style="flex:1;min-width:0;display:flex;flex-direction:column;background:var(--void)">
+            <div style="flex:1;display:flex;align-items:center;justify-content:center;padding:30px;min-height:0">
+              <div style="width:100%;max-width:760px;aspect-ratio:16/9;background:#fdf6ef;border-radius:3px;display:flex;flex-direction:column;justify-content:center;gap:22px;padding:52px;box-sizing:border-box">
+                <div style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:#e0956a">performance</div>
+                <div style="font-size:42px;font-weight:600;color:#3b2f26;line-height:1.08;letter-spacing:-.02em;max-width:13em">Everything got faster this month</div>
+                <div style="display:flex;gap:22px;align-items:flex-end">
+                  <div style="display:flex;flex-direction:column;gap:7px"><div style="font-family:'JetBrains Mono',monospace;font-size:13px;color:#8a7d6d">before</div><div style="width:120px;height:26px;background:#ded4c4"></div></div>
+                  <div style="display:flex;flex-direction:column;gap:7px"><div style="font-family:'JetBrains Mono',monospace;font-size:13px;color:#8a7d6d">after</div><div style="width:64px;height:26px;background:#e0956a"></div></div>
+                </div>
+              </div>
+            </div>
+            <div style="flex:none;height:44px;display:flex;align-items:center;justify-content:center;gap:14px;background:var(--panel);border-top:1px solid var(--line-soft);font-size:12px;color:var(--text-3)">
+              <span style="width:26px;height:26px;border-radius:50%;background:var(--accent);color:var(--accent-ink);display:flex;align-items:center;justify-content:center;font-size:9px;cursor:pointer">❚❚</span>
+              <span>Previewing your real film with this theme — it updates as you fill slots</span>
+            </div>
+          </div>
+
+          <div style="width:398px;flex:none;border-left:1px solid var(--line);background:var(--panel);display:flex;flex-direction:column">
+            <div style="flex:none;padding:14px 16px;border-bottom:1px solid var(--line-soft);display:flex;flex-direction:column;gap:5px">
+              <div style="font-size:13px;font-weight:600">Two things to pick</div>
+              <div style="font-size:12px;color:var(--text-2);line-height:1.5">We took the rest from your screenshot. Nothing is saved until you press Save theme.</div>
+            </div>
+
+            <div style="flex:1;padding:16px;display:flex;flex-direction:column;gap:18px;overflow:hidden">
+              <div style="display:flex;flex-direction:column;gap:10px">
+                <div style="font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--text-3)">Needs you</div>
+
+                <div style="border:1px solid var(--warn);background:var(--panel-2);border-radius:9px;padding:12px;display:flex;flex-direction:column;gap:9px">
+                  <div style="font-size:12px;color:var(--text-2);line-height:1.5">We couldn't find a colour for <span style="color:var(--text);font-weight:600">negative trends</span> — pick one.</div>
+                  <div style="display:flex;gap:7px;align-items:center">
+                    <span style="width:30px;height:30px;border-radius:7px;background:#c4553c;box-shadow:0 0 0 2px var(--accent-soft),0 0 0 3px var(--accent);cursor:pointer"></span>
+                    <span style="width:30px;height:30px;border-radius:7px;background:#b0705a;cursor:pointer"></span>
+                    <span style="width:30px;height:30px;border-radius:7px;background:#9a6b4f;cursor:pointer"></span>
+                    <span style="width:30px;height:30px;border-radius:7px;border:1px dashed var(--line);display:flex;align-items:center;justify-content:center;font-size:12px;color:var(--text-3);cursor:pointer">+</span>
+                    <span style="font-size:11px;color:var(--text-3);margin-left:2px">suggested from your palette</span>
+                  </div>
+                </div>
+
+                <div style="border:1px solid var(--warn);background:var(--panel-2);border-radius:9px;padding:12px;display:flex;flex-direction:column;gap:9px">
+                  <div style="font-size:12px;color:var(--text-2);line-height:1.5">Your site's <span style="color:var(--text);font-weight:600">display font</span> isn't one we can embed. Closest matches:</div>
+                  <div style="display:flex;flex-direction:column;gap:6px">
+                    <div style="display:flex;align-items:center;gap:10px;border:1px solid var(--accent);background:var(--accent-soft);border-radius:7px;padding:8px 10px;cursor:pointer"><span style="font-size:16px;font-weight:600">Instrument Serif</span><div style="flex:1"></div><span style="font-size:11px;color:var(--accent)">closest</span></div>
+                    <div style="display:flex;align-items:center;gap:10px;border:1px solid var(--line);border-radius:7px;padding:8px 10px;cursor:pointer"><span style="font-size:16px;font-weight:600">Fraunces</span></div>
+                    <div style="display:flex;align-items:center;gap:10px;border:1px solid var(--line);border-radius:7px;padding:8px 10px;cursor:pointer"><span style="font-size:16px;font-weight:600">Newsreader</span></div>
+                  </div>
+                </div>
+              </div>
+
+              <div style="display:flex;flex-direction:column;gap:10px;border-top:1px solid var(--line-soft);padding-top:16px">
+                <div style="display:flex;align-items:center;justify-content:between;gap:10px">
+                  <span style="font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--text-3)">Taken from your brand</span>
+                  <div style="flex:1"></div>
+                  <span style="font-size:11px;color:var(--text-3);cursor:pointer">Edit any of these</span>
+                </div>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:9px">
+                  <div style="display:flex;align-items:center;gap:9px"><span style="width:24px;height:24px;border-radius:6px;background:#fdf6ef;border:1px solid var(--line)"></span><span style="font-size:12px;color:var(--text-2)">Background</span></div>
+                  <div style="display:flex;align-items:center;gap:9px"><span style="width:24px;height:24px;border-radius:6px;background:#3b2f26"></span><span style="font-size:12px;color:var(--text-2)">Heading text</span></div>
+                  <div style="display:flex;align-items:center;gap:9px"><span style="width:24px;height:24px;border-radius:6px;background:#7a6b5c"></span><span style="font-size:12px;color:var(--text-2)">Body text</span></div>
+                  <div style="display:flex;align-items:center;gap:9px"><span style="width:24px;height:24px;border-radius:6px;background:#e0956a"></span><span style="font-size:12px;color:var(--text-2)">Highlight</span></div>
+                  <div style="display:flex;align-items:center;gap:9px"><span style="width:24px;height:24px;border-radius:6px;background:#6f8a5c"></span><span style="font-size:12px;color:var(--text-2)">Positive trend</span></div>
+                  <div style="display:flex;align-items:center;gap:9px"><span style="width:24px;height:24px;border-radius:6px;background:#ded4c4"></span><span style="font-size:12px;color:var(--text-2)">Muted fill</span></div>
+                  <div style="display:flex;align-items:center;gap:9px"><span style="width:24px;height:24px;border-radius:6px;background:#c7bda9"></span><span style="font-size:12px;color:var(--text-2)">Rules &amp; lines</span></div>
+                  <div style="display:flex;align-items:center;gap:9px"><span style="width:24px;height:24px;border-radius:6px;background:#fff;border:1px solid var(--line)"></span><span style="font-size:12px;color:var(--text-2)">Card surface</span></div>
+                </div>
+                <div style="display:flex;align-items:center;gap:9px;padding-top:4px"><span style="font-size:15px;font-weight:600">Aa</span><span style="font-size:12px;color:var(--text-2)">Body font — Inter Tight</span></div>
+              </div>
+            </div>
+
+            <div style="flex:none;padding:12px 16px;border-top:1px solid var(--line-soft);background:var(--panel-2);font-size:11px;color:var(--text-3);line-height:1.6">
+              Written by <span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-2)">create_theme_from_image</span> · Studio picked up the file
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="1n" style="display:flex;flex-direction:column;gap:10px">
+      <div style="display:flex;align-items:center;gap:10px">
+        <span style="font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;letter-spacing:.1em;color:var(--accent-ink);background:var(--accent);padding:3px 7px;border-radius:4px">1n</span>
+        <span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--frame-label)">Start blank — manual builder, live preview</span>
+      </div>
+      <div style="width:1440px;height:760px;background:var(--panel);border:1px solid var(--line);border-radius:10px;overflow:hidden;display:flex;flex-direction:column;box-shadow:var(--shadow)">
+        <div style="height:52px;flex:none;display:flex;align-items:center;gap:14px;padding:0 18px;background:var(--panel-2);border-bottom:1px solid var(--line)">
+          <span style="font-size:12px;color:var(--text-3);cursor:pointer">← Themes</span>
+          <div style="width:1px;height:18px;background:var(--line)"></div>
+          <span style="font-size:14px;font-weight:600">Untitled theme</span>
+          <div style="flex:1"></div>
+          <span style="padding:7px 12px;border-radius:6px;border:1px solid var(--line);background:var(--panel);font-size:12px;color:var(--text-2);cursor:pointer">Preview full screen</span>
+          <span style="padding:7px 14px;border-radius:6px;background:var(--accent);color:var(--accent-ink);font-size:12px;font-weight:600;cursor:pointer">Save theme</span>
+        </div>
+        <div style="flex:1;display:flex;min-height:0">
+          <div style="width:378px;flex:none;border-right:1px solid var(--line);display:flex;flex-direction:column;background:var(--panel)">
+            <div style="flex:1;padding:16px;display:flex;flex-direction:column;gap:16px;overflow:hidden">
+              <div style="display:flex;flex-direction:column;gap:10px">
+                <div style="font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--text-3)">Colours</div>
+                <div style="display:flex;flex-direction:column;gap:8px">
+                  <div style="display:flex;align-items:center;gap:11px"><span style="width:26px;height:26px;border-radius:6px;background:#12161c;border:1px solid var(--line);cursor:pointer"></span><span style="font-size:12px;flex:1">Background</span><span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-3)">#12161C</span></div>
+                  <div style="display:flex;align-items:center;gap:11px"><span style="width:26px;height:26px;border-radius:6px;background:#f2f5f8;border:1px solid var(--line);cursor:pointer"></span><span style="font-size:12px;flex:1">Heading text</span><span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-3)">#F2F5F8</span></div>
+                  <div style="display:flex;align-items:center;gap:11px"><span style="width:26px;height:26px;border-radius:6px;background:#93a1b0;cursor:pointer"></span><span style="font-size:12px;flex:1">Body text</span><span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-3)">#93A1B0</span></div>
+                  <div style="display:flex;align-items:center;gap:11px;padding:6px;margin:-6px;border-radius:7px;background:var(--accent-soft);border:1px solid var(--accent-line)"><span style="width:26px;height:26px;border-radius:6px;background:#4fd1a5;cursor:pointer"></span><span style="font-size:12px;flex:1;font-weight:600">Highlight</span><span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-2)">#4FD1A5</span></div>
+                  <div style="display:flex;align-items:center;gap:11px"><span style="width:26px;height:26px;border-radius:6px;background:#4fd1a5;cursor:pointer"></span><span style="font-size:12px;flex:1">Positive trend</span><span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-3)">#4FD1A5</span></div>
+                  <div style="display:flex;align-items:center;gap:11px"><span style="width:26px;height:26px;border-radius:6px;background:#e2725b;cursor:pointer"></span><span style="font-size:12px;flex:1">Negative trend</span><span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-3)">#E2725B</span></div>
+                  <div style="display:flex;align-items:center;gap:11px"><span style="width:26px;height:26px;border-radius:6px;background:#232a33;cursor:pointer"></span><span style="font-size:12px;flex:1">Muted fill</span><span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-3)">#232A33</span></div>
+                </div>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:10px;border-top:1px solid var(--line-soft);padding-top:16px">
+                <div style="font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--text-3)">Fonts</div>
+                <div style="display:flex;flex-direction:column;gap:5px">
+                  <div style="font-size:11px;color:var(--text-3)">Display</div>
+                  <div style="background:var(--raised);border:1px solid var(--line);border-radius:7px;padding:9px 11px;display:flex;align-items:center;justify-content:space-between;cursor:pointer"><span style="font-size:16px;font-weight:600">Archivo</span><span style="font-size:10px;color:var(--text-3)">▾</span></div>
+                </div>
+                <div style="display:flex;flex-direction:column;gap:5px">
+                  <div style="font-size:11px;color:var(--text-3)">Body</div>
+                  <div style="background:var(--raised);border:1px solid var(--line);border-radius:7px;padding:9px 11px;display:flex;align-items:center;justify-content:space-between;cursor:pointer"><span style="font-size:15px">Public Sans</span><span style="font-size:10px;color:var(--text-3)">▾</span></div>
+                </div>
+                <div style="font-size:11px;color:var(--text-3);line-height:1.55">Both fonts ship with your films, so viewers see them exactly as you do.</div>
+              </div>
+            </div>
+          </div>
+          <div style="flex:1;min-width:0;display:flex;flex-direction:column;background:var(--void)">
+            <div style="flex:1;display:flex;align-items:center;justify-content:center;padding:28px;min-height:0">
+              <div style="width:100%;max-width:700px;aspect-ratio:16/9;background:#12161c;border-radius:3px;display:flex;flex-direction:column;justify-content:center;gap:20px;padding:48px;box-sizing:border-box">
+                <div style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:#4fd1a5">this release</div>
+                <div style="font-size:40px;font-weight:600;color:#f2f5f8;line-height:1.08;letter-spacing:-.02em;max-width:12em">Three regions, one deploy</div>
+                <div style="display:flex;gap:20px;align-items:flex-end">
+                  <div style="display:flex;flex-direction:column;gap:6px"><span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#93a1b0">p95 before</span><div style="width:130px;height:24px;background:#232a33"></div></div>
+                  <div style="display:flex;flex-direction:column;gap:6px"><span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#93a1b0">after</span><div style="width:58px;height:24px;background:#4fd1a5"></div></div>
+                </div>
+              </div>
+            </div>
+            <div style="flex:none;height:40px;display:flex;align-items:center;justify-content:center;gap:12px;background:var(--panel);border-top:1px solid var(--line-soft);font-size:12px;color:var(--text-3)">
+              <span>Updates as you change anything · scene 2 of 6</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div style="display:flex;align-items:baseline;gap:14px;padding-top:12px;border-top:1px solid var(--line-soft)">
+      <span style="font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700;letter-spacing:.14em;color:var(--accent)">07</span>
+      <span style="font-size:17px;font-weight:600;letter-spacing:-.01em">Foundations</span>
+      <span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text-3)">component inventory · tokens</span>
+    </div>
+
+<div id="1i" style="display:flex;flex-direction:column;gap:10px">
+      <div style="display:flex;align-items:center;gap:10px">
+        <span style="font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;letter-spacing:.1em;color:var(--accent-ink);background:var(--accent);padding:3px 7px;border-radius:4px">1i</span>
+        <span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--frame-label)">Component inventory &amp; tokens</span>
+      </div>
+      <div style="width:1440px;background:var(--panel);border:1px solid var(--line);border-radius:10px;box-shadow:var(--shadow);padding:24px;display:grid;grid-template-columns:1fr 1fr;gap:28px 32px;box-sizing:border-box">
+
+        <div style="display:flex;flex-direction:column;gap:12px">
+          <div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--text-3);border-bottom:1px solid var(--line-soft);padding-bottom:7px">Buttons</div>
+          <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+            <span style="padding:7px 12px;border-radius:6px;background:var(--accent);color:var(--accent-ink);font-size:12px;font-weight:600">Primary</span>
+            <span style="padding:7px 12px;border-radius:6px;border:1px solid var(--line);background:var(--panel-2);font-size:12px;color:var(--text-2)">Secondary</span>
+            <span style="padding:7px 12px;border-radius:6px;font-size:12px;color:var(--text-2)">Ghost</span>
+            <span style="padding:7px 12px;border-radius:6px;border:1px solid var(--del-line);color:var(--err);font-size:12px">Destructive</span>
+            <span style="padding:7px 12px;border-radius:6px;border:1px solid var(--line);background:var(--panel-2);font-size:12px;color:var(--text-3);opacity:.5">Disabled</span>
+            <span style="width:28px;height:28px;border-radius:6px;border:1px solid var(--line);background:var(--panel-2);display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--text-2)">▶</span>
+          </div>
+
+          <div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--text-3);border-bottom:1px solid var(--line-soft);padding-bottom:7px;margin-top:8px">Inputs &amp; selects</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+            <div style="background:var(--raised);border:1px solid var(--line);border-radius:5px;padding:6px 8px;font-size:12px">Text value</div>
+            <div style="background:var(--raised);border:1px solid var(--accent);border-radius:5px;padding:6px 8px;font-size:12px;box-shadow:0 0 0 3px var(--accent-soft)">Focused</div>
+            <div style="background:var(--raised);border:1px solid var(--line);border-radius:5px;padding:6px 8px;font-family:'JetBrains Mono',monospace;font-size:12px;display:flex;justify-content:space-between"><span>ts</span><span style="color:var(--text-3);font-size:9px">▾</span></div>
+            <div style="background:var(--raised);border:1px solid var(--del-line);border-radius:5px;padding:6px 8px;font-size:12px;color:var(--err)">Invalid</div>
+            <div style="background:var(--raised);border:1px solid var(--line);border-radius:5px;padding:6px 8px;font-size:12px;color:var(--text-3)">Placeholder…</div>
+            <div style="display:flex;align-items:center;gap:8px;font-size:12px;color:var(--text-2)"><span style="width:30px;height:17px;border-radius:99px;background:var(--accent);position:relative;display:inline-block"><span style="position:absolute;right:2px;top:2px;width:13px;height:13px;border-radius:50%;background:var(--accent-ink)"></span></span>Loop</div>
+          </div>
+
+          <div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--text-3);border-bottom:1px solid var(--line-soft);padding-bottom:7px;margin-top:8px">Tabs · segmented · tooltip</div>
+          <div style="display:flex;gap:14px;align-items:center;flex-wrap:wrap">
+            <div style="display:flex;gap:2px;border-bottom:1px solid var(--line);font-size:11px">
+              <span style="padding:6px 10px;color:var(--accent);font-weight:600;box-shadow:inset 0 -2px 0 var(--accent)">Inspector</span>
+              <span style="padding:6px 10px;color:var(--text-3)">JSON</span>
+              <span style="padding:6px 10px;color:var(--text-3)">AI</span>
+            </div>
+            <div style="display:flex;background:var(--panel-2);border:1px solid var(--line);border-radius:6px;padding:2px;gap:2px;font-family:'JetBrains Mono',monospace;font-size:11px">
+              <span style="padding:3px 9px;border-radius:4px;background:var(--accent-soft);color:var(--accent);border:1px solid var(--accent-line)">16:9</span>
+              <span style="padding:3px 9px;border-radius:4px;color:var(--text-3)">1:1</span>
+              <span style="padding:3px 9px;border-radius:4px;color:var(--text-3)">9:16</span>
+            </div>
+            <div style="background:var(--raised);border:1px solid var(--line);border-radius:5px;padding:5px 8px;font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-2);box-shadow:var(--shadow)">step one frame · →</div>
+          </div>
+
+          <div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--text-3);border-bottom:1px solid var(--line-soft);padding-bottom:7px;margin-top:8px">Scene-list row · states</div>
+          <div style="border:1px solid var(--line-soft);border-radius:6px;overflow:hidden">
+            <div style="height:44px;display:flex;align-items:center;gap:9px;padding:0 10px;border-bottom:1px solid var(--line-soft)"><span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-3);width:14px">01</span><span style="width:5px;height:5px;border-radius:50%;background:var(--ok)"></span><div style="flex:1;display:flex;flex-direction:column"><span style="font-size:12px">Default</span><span style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--text-3)">title</span></div><span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-3)">3.0s</span></div>
+            <div style="height:44px;display:flex;align-items:center;gap:9px;padding:0 10px;border-bottom:1px solid var(--line-soft);background:var(--accent-soft);box-shadow:inset 2px 0 0 var(--accent)"><span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--accent);width:14px">02</span><span style="width:5px;height:5px;border-radius:50%;background:var(--ok)"></span><div style="flex:1;display:flex;flex-direction:column"><span style="font-size:12px;font-weight:600">Selected</span><span style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--accent)">stat</span></div><span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-2)">2.5s</span></div>
+            <div style="height:44px;display:flex;align-items:center;gap:9px;padding:0 10px;border-bottom:1px solid var(--line-soft);background:var(--panel-2)"><span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-3);width:14px">⠿</span><span style="width:5px;height:5px;border-radius:50%;background:var(--ok)"></span><div style="flex:1;display:flex;flex-direction:column"><span style="font-size:12px">Dragging</span><span style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--text-3)">chart</span></div><span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-3)">4.0s</span></div>
+            <div style="height:44px;display:flex;align-items:center;gap:9px;padding:0 10px"><span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--err);width:14px">04</span><span style="width:5px;height:5px;border-radius:50%;background:var(--err)"></span><div style="flex:1;display:flex;flex-direction:column"><span style="font-size:12px;color:var(--err)">Invalid</span><span style="font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--err)">compare · 1 error</span></div><span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-3)">2.5s</span></div>
+          </div>
+        </div>
+
+        <div style="display:flex;flex-direction:column;gap:12px">
+          <div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--text-3);border-bottom:1px solid var(--line-soft);padding-bottom:7px">“Updated” indicators</div>
+          <div style="display:flex;flex-direction:column;gap:7px">
+            <div style="display:flex;align-items:center;gap:9px;border:1px solid var(--line);background:var(--panel-2);border-radius:6px;padding:8px 10px"><span style="font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;text-transform:uppercase;color:var(--add-line);border:1px solid var(--add-line);padding:2px 6px;border-radius:4px">new</span><span style="font-size:12px;flex:1">scene 03 · written 4s ago</span><span style="font-size:11px;color:var(--text-3);cursor:pointer">dismiss</span></div>
+            <div style="display:flex;align-items:center;gap:9px;border:1px solid var(--line);background:var(--panel-2);border-radius:6px;padding:8px 10px"><span style="font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;text-transform:uppercase;color:var(--accent-ink);background:var(--accent);padding:2px 6px;border-radius:4px">updated</span><span style="font-size:12px;flex:1">scene 02 · patched by apply_ops</span><span style="font-size:11px;color:var(--text-3);cursor:pointer">dismiss</span></div>
+            <div style="display:flex;align-items:center;gap:9px;border:1px solid var(--line);background:var(--panel-2);border-radius:6px;padding:8px 10px;opacity:.6"><span style="font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;text-transform:uppercase;color:var(--del-line);border:1px solid var(--del-line);padding:2px 6px;border-radius:4px">removed</span><span style="font-size:12px;flex:1;text-decoration:line-through">scene 05</span><span style="font-size:11px;color:var(--text-3);cursor:pointer">undo</span></div>
+          </div>
+
+          <div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--text-3);border-bottom:1px solid var(--line-soft);padding-bottom:7px;margin-top:8px">Validation · progress · command chip</div>
+          <div style="display:flex;flex-direction:column;gap:9px">
+            <div style="display:flex;gap:8px;background:var(--del-bg);border:1px solid var(--del-line);border-radius:6px;padding:8px 10px;font-size:11px;color:var(--text-2)"><span style="color:var(--err);font-family:'JetBrains Mono',monospace">!</span><span><span style="color:var(--text);font-weight:600">scene 05 · body.headline</span> is required · <span style="font-family:'JetBrains Mono',monospace;color:var(--err)">go to field →</span></span></div>
+            <div style="display:flex;gap:8px;background:var(--add-bg);border:1px solid var(--ok);border-radius:6px;padding:8px 10px;font-size:11px;color:var(--text-2)"><span style="color:var(--ok);font-family:'JetBrains Mono',monospace">✓</span><span>deck validates · 6 scenes · 18.5s</span></div>
+            <div style="display:flex;flex-direction:column;gap:5px"><div style="height:5px;background:var(--raised);border-radius:99px;overflow:hidden"><div style="width:62%;height:100%;background:var(--accent)"></div></div><div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-3)">344 / 555 frames · eta 00:21</div></div>
+            <div style="display:flex;align-items:center;gap:9px;background:var(--void);border:1px solid var(--line);border-radius:5px;padding:7px 9px;font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-2)"><span style="color:var(--accent)">›</span><span style="flex:1">emaki render deck.json --aspect 9:16</span><span style="color:var(--text-3)">copy</span></div>
+          </div>
+
+          <div style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--text-3);border-bottom:1px solid var(--line-soft);padding-bottom:7px;margin-top:8px">Tokens — CSS custom properties</div>
+          <div style="display:flex;flex-direction:column;gap:10px;font-family:'JetBrains Mono',monospace;font-size:10px">
+            <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:6px 14px;color:var(--text-3)">
+              <div style="display:flex;align-items:center;gap:8px"><span style="width:14px;height:14px;border-radius:3px;background:var(--bg);border:1px solid var(--line)"></span><span>--bg</span></div>
+              <div style="display:flex;align-items:center;gap:8px"><span style="width:14px;height:14px;border-radius:3px;background:var(--panel);border:1px solid var(--line)"></span><span>--panel</span></div>
+              <div style="display:flex;align-items:center;gap:8px"><span style="width:14px;height:14px;border-radius:3px;background:var(--panel-2);border:1px solid var(--line)"></span><span>--panel-2</span></div>
+              <div style="display:flex;align-items:center;gap:8px"><span style="width:14px;height:14px;border-radius:3px;background:var(--raised);border:1px solid var(--line)"></span><span>--raised</span></div>
+              <div style="display:flex;align-items:center;gap:8px"><span style="width:14px;height:14px;border-radius:3px;background:var(--void);border:1px solid var(--line)"></span><span>--void · canvas letterbox</span></div>
+              <div style="display:flex;align-items:center;gap:8px"><span style="width:14px;height:14px;border-radius:3px;background:var(--line)"></span><span>--line / --line-soft</span></div>
+              <div style="display:flex;align-items:center;gap:8px"><span style="width:14px;height:14px;border-radius:3px;background:var(--text)"></span><span>--text</span></div>
+              <div style="display:flex;align-items:center;gap:8px"><span style="width:14px;height:14px;border-radius:3px;background:var(--text-2)"></span><span>--text-2 / --text-3</span></div>
+              <div style="display:flex;align-items:center;gap:8px"><span style="width:14px;height:14px;border-radius:3px;background:var(--accent)"></span><span>--accent</span></div>
+              <div style="display:flex;align-items:center;gap:8px"><span style="width:14px;height:14px;border-radius:3px;background:var(--accent-soft);border:1px solid var(--accent-line)"></span><span>--accent-soft / -line</span></div>
+              <div style="display:flex;align-items:center;gap:8px"><span style="width:14px;height:14px;border-radius:3px;background:var(--ok)"></span><span>--ok</span></div>
+              <div style="display:flex;align-items:center;gap:8px"><span style="width:14px;height:14px;border-radius:3px;background:var(--err)"></span><span>--err / --warn</span></div>
+              <div style="display:flex;align-items:center;gap:8px"><span style="width:14px;height:14px;border-radius:3px;background:var(--add-bg);border:1px solid var(--add-line)"></span><span>--add-bg / -line</span></div>
+              <div style="display:flex;align-items:center;gap:8px"><span style="width:14px;height:14px;border-radius:3px;background:var(--del-bg);border:1px solid var(--del-line)"></span><span>--del-bg / -line</span></div>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;border-top:1px solid var(--line-soft);padding-top:10px;color:var(--text-3);line-height:1.9">
+              <div>
+                <div style="color:var(--text-2)">type</div>
+                <div>--fs-9 … --fs-30 · 9 10 11 12 13 14 18 22 30</div>
+                <div>--font-ui  'Public Sans'</div>
+                <div>--font-mono 'JetBrains Mono'</div>
+                <div style="color:var(--text-2);margin-top:6px">space</div>
+                <div>--s-1 2 · --s-2 4 · --s-3 6 · --s-4 10</div>
+                <div>--s-5 12 · --s-6 16 · --s-7 24</div>
+              </div>
+              <div>
+                <div style="color:var(--text-2)">radii</div>
+                <div>--r-sm 4 · --r-md 6 · --r-lg 8 · --r-xl 10</div>
+                <div style="color:var(--text-2);margin-top:6px">elevation</div>
+                <div>--shadow  0 18px 44px rgb(0 0 0 / .5)</div>
+                <div>--focus   0 0 0 3px var(--accent-soft)</div>
+                <div style="color:var(--text-2);margin-top:6px">chrome heights</div>
+                <div>--h-topbar 44 · --h-row 44</div>
+                <div>--h-transport 52 · --h-cmdbar 26</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1600,&quot;height&quot;:1100},&quot;theme&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;dark&quot;,&quot;light&quot;],&quot;default&quot;:&quot;dark&quot;,&quot;tsType&quot;:&quot;'dark' | 'light'&quot;,&quot;section&quot;:&quot;Chrome&quot;},&quot;accent&quot;:{&quot;editor&quot;:&quot;color&quot;,&quot;options&quot;:[&quot;#4b57a3&quot;,&quot;#3f6493&quot;,&quot;#4a6b62&quot;,&quot;#5a5a72&quot;],&quot;default&quot;:&quot;#4b57a3&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Chrome&quot;},&quot;showCommandBar&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Chrome&quot;}}">
+class Component extends DCLogic {
+  state = { theme: null, tab: 'inspector' };
+
+  componentDidMount() { this.applyAccent(); this.applyCmdBar(); }
+  componentDidUpdate() { this.applyAccent(); this.applyCmdBar(); }
+
+  applyAccent() {
+    const root = document.querySelector('.pt');
+    if (!root) return;
+    const a = this.props.accent;
+    const light = (this.state.theme || this.props.theme || 'dark') === 'light';
+    // untouched prop → let the stylesheet's per-theme tokens win
+    if (!a || a.toLowerCase() === '#4b57a3') {
+      ['--accent', '--accent-soft', '--accent-line', '--accent-ink'].forEach(p => root.style.removeProperty(p));
+      return;
+    }
+    const shift = (hex, amt) => '#' + [1, 3, 5].map(i => {
+      const v = Math.max(0, Math.min(255, parseInt(hex.slice(i, i + 2), 16) + amt));
+      return v.toString(16).padStart(2, '0');
+    }).join('');
+    const base = light ? a : shift(a, 44);
+    root.style.setProperty('--accent', base);
+    root.style.setProperty('--accent-soft', base + (light ? '1f' : '2b'));
+    root.style.setProperty('--accent-line', base + (light ? '66' : '73'));
+    root.style.setProperty('--accent-ink', light ? '#ffffff' : '#1b0d16');
+  }
+
+  applyCmdBar() {
+    const show = this.props.showCommandBar !== false;
+    document.querySelectorAll('.pt [data-cmdbar]').forEach(el => { el.style.display = show ? 'flex' : 'none'; });
+  }
+
+  seg(active) {
+    return 'flex:1;border:none;border-radius:0;background:transparent;cursor:pointer;font-family:\'Public Sans\',sans-serif;font-size:11px;font-weight:' + (active ? '600' : '500') +
+      ';color:' + (active ? 'var(--accent)' : 'var(--text-3)') +
+      ';box-shadow:' + (active ? 'inset 0 -2px 0 var(--accent)' : 'none');
+  }
+  themeBtn(active) {
+    return 'border:none;border-radius:5px;padding:5px 12px;cursor:pointer;font-family:\'Public Sans\',sans-serif;font-size:12px;font-weight:' + (active ? '600' : '500') +
+      ';background:' + (active ? 'var(--accent-soft)' : 'transparent') +
+      ';color:' + (active ? 'var(--accent)' : 'var(--text-3)');
+  }
+
+  renderVals() {
+    const t = this.state.tab;
+    return {
+      isInspector: t === 'inspector',
+      isJson: t === 'json',
+      isNarration: t === 'narration',
+      theme: this.state.theme || this.props.theme || 'dark',
+      setDark: () => this.setState({ theme: 'dark' }),
+      setLight: () => this.setState({ theme: 'light' }),
+      darkBtn: this.themeBtn((this.state.theme || this.props.theme || 'dark') === 'dark'),
+      lightBtn: this.themeBtn((this.state.theme || this.props.theme || 'dark') === 'light'),
+      tabInspector: () => this.setState({ tab: 'inspector' }),
+      tabJson: () => this.setState({ tab: 'json' }),
+      tabNarration: () => this.setState({ tab: 'narration' }),
+      tInspector: this.seg(t === 'inspector'),
+      tJson: this.seg(t === 'json'),
+      tNarration: this.seg(t === 'narration')
+    };
+  }
+}
+</script>
+</body>
+</html>
